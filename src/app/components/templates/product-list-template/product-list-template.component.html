@@ -1,42 +1,43 @@
 <div class="container">
-    <div class="container__categories">
-        <label class="container__categories__label">Filtrar por Categoría:</label>
-        <select class="container__categories__select" [(ngModel)]="selectedCategoryId"
-            (change)="filterProductsByCategory()">
-            <option value="" selected>Todas las Categorías</option>
-            <option *ngFor="let category of categories" [value]="category._id">{{ category.name }}</option>
-        </select>
+  <div class="container__categories">
+    <label class="container__categories__label">Filtrar por Categoría:</label>
+    <select class="container__categories__select" [(ngModel)]="selectedCategoryId"
+      (change)="filterProductsByCategory()">
+      <option value="" selected>Todas las Categorías</option>
+      @for (category of categories; track category) {
+        <option [value]="category._id">{{ category.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="container__products">
+
+    @if (noProductsMessage) {
+      <div class="container__products__noproductsMessage">
+        <p>{{ noProductsMessage }}</p>
+      </div>
+    }
+
+    @for (product of products; track product) {
+      <div class="container__products__list">
+        <div class="container__products__list__item">
+          <div class="container__products__list__item__image">
+            <img [src]="'http://localhost:3000/products/uploads/' + product.filenames[0]" alt="Product Image">
+            <!-- <img [src]="product.imagesURL" class="card-img"> -->
+            <!-- <div *ngFor="let filename of product.filenames" class="picture">
+            <img [src]="'http://localhost:3000/products/uploads/' + filename" alt="Product Image">
+          </div> -->
+        </div>
+        <div class="container__products__list__item__details">
+          <h4> name: {{product.name}} </h4>
+          <h4> description: {{product.description}} </h4>
+          <h4> price: {{product.price}} </h4>
+          <h4> category: {{product.category}} </h4>
+          <h4> createdAt: {{product.createdAt}} </h4>
+          <h4> id: {{product._id}} </h4>
+          <button (click)="deleteProduct(product?._id)" class="btn btn-danger"> Delete </button>
+          <button [routerLink]="['/product/update', product._id]" class="btn btn-secondary"> Edit </button>
+        </div>
+      </div>
     </div>
-
-    <div class="container__products">
-
-        <div *ngIf="noProductsMessage" class="container__products__noproductsMessage">
-            <p>{{ noProductsMessage }}</p>
-        </div>
-
-        <div *ngFor="let product of products" class="container__products__list">
-            <div class="container__products__list__item">
-                <div class="container__products__list__item__image">
-                    <img [src]="'http://localhost:3000/products/uploads/' + product.filenames[0]" alt="Product Image">
-
-                    <!-- <img [src]="product.imagesURL" class="card-img"> -->
-                    <!-- <div *ngFor="let filename of product.filenames" class="picture">
-                        <img [src]="'http://localhost:3000/products/uploads/' + filename" alt="Product Image">
-
-                    </div> -->
-                </div>
-                <div class="container__products__list__item__details">
-
-                    <h4> name: {{product.name}} </h4>
-                    <h4> description: {{product.description}} </h4>
-                    <h4> price: {{product.price}} </h4>
-                    <h4> category: {{product.category}} </h4>
-                    <h4> createdAt: {{product.createdAt}} </h4>
-                    <h4> id: {{product._id}} </h4>
-
-                    <button (click)="deleteProduct(product?._id)" class="btn btn-danger"> Delete </button>
-                    <button [routerLink]="['/product/update', product._id]" class="btn btn-secondary"> Edit </button>
-                </div>
-
-            </div>
-        </div>
+  }

@@ -1,20 +1,22 @@
 <nav class="navbar" role="navigation" aria-label="Principal">
-    <div class="navbar__content" [ngClass]="currentPageClass">
-        <a class="navbar__content__logo" [routerLink]="'/Inicio'" aria-label="Inicio">
-            <img src="assets/pictures/Tecsisman.png" class="navbar__content__logo__img" alt="Tecsisman" width="120" height="40" loading="eager" />
-        </a>
+  <div class="navbar__content" [ngClass]="currentPageClass">
+    <a class="navbar__content__logo" [routerLink]="'/Inicio'" aria-label="Inicio">
+      <img src="assets/pictures/Tecsisman.png" class="navbar__content__logo__img" alt="Tecsisman" width="120" height="40" loading="eager" />
+    </a>
 
-        <button (click)="toggleMenu()" type="button" class="navbar__content__mobilebutton" aria-controls="navbar-default" [attr.aria-expanded]="isMenuOpen" aria-label="Abrir menú">
-            <span class="navbar__content__mobileicon">&#9776;</span>
-        </button>
+    <button (click)="toggleMenu()" type="button" class="navbar__content__mobilebutton" aria-controls="navbar-default" [attr.aria-expanded]="isMenuOpen" aria-label="Abrir menú">
+      <span class="navbar__content__mobileicon">&#9776;</span>
+    </button>
 
-        <div [ngClass]="{'navbar__content__menuhidden': !isMenuOpen, 'navbar__content__menublock': isMenuOpen}"
-                 class="navbar__content__custommenu" id="navbar-default">
-            <ul class="navbar__content__custommenu__list">
-                <li *ngFor="let element of menuElements">
-                    <a class="navbar__content__custommenu__list__item" [routerLink]="element.route" routerLinkActive="active" (click)="closeMenu()">{{element.title}}</a>
-                </li>
-            </ul>
-        </div>
+    <div [ngClass]="{'navbar__content__menuhidden': !isMenuOpen, 'navbar__content__menublock': isMenuOpen}"
+      class="navbar__content__custommenu" id="navbar-default">
+      <ul class="navbar__content__custommenu__list">
+        @for (element of menuElements; track element) {
+          <li>
+            <a class="navbar__content__custommenu__list__item" [routerLink]="element.route" routerLinkActive="active" (click)="closeMenu()">{{element.title}}</a>
+          </li>
+        }
+      </ul>
     </div>
+  </div>
 </nav>

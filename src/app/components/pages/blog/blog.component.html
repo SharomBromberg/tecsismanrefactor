@@ -7,12 +7,14 @@
 
 <section class="section">
   <div class="app-container blog-grid">
-    <article class="post-card" *ngFor="let post of posts">
-      <img [src]="post.image" [alt]="post.title" loading="lazy" />
-      <h3>{{ post.title }}</h3>
-      <p class="muted">{{ post.excerpt }}</p>
-      <a class="btn btn-outline-primary btn-sm" [routerLink]="['/Blog']">Leer más</a>
-    </article>
+    @for (post of posts; track post) {
+      <article class="post-card">
+        <img [src]="post.image" [alt]="post.title" loading="lazy" />
+        <h3>{{ post.title }}</h3>
+        <p class="muted">{{ post.excerpt }}</p>
+        <a class="btn btn-outline-primary btn-sm" [routerLink]="['/Blog']">Leer más</a>
+      </article>
+    }
   </div>
 </section>
 <section class="section app-container">

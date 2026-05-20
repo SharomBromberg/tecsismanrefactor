@@ -1,49 +1,54 @@
-<div class="admin-container" *ngIf="!adminLoggedIn">
-  <h2>Login de Administrador</h2>
-  <input type="text" placeholder="Usuario" [(ngModel)]="username">
-  <input type="password" placeholder="Contraseña" [(ngModel)]="password">
-  <button (click)="loginAdmin()">Ingresar</button>
-</div>
-
-<div class="admin-container" *ngIf="adminLoggedIn">
-  <h2>Panel de Administración</h2>
-
-  <h3>Agregar Producto</h3>
-  <input type="text" placeholder="Nombre" [(ngModel)]="newProduct.name">
-  <input type="number" placeholder="Precio" [(ngModel)]="newProduct.price">
-  <input type="text" placeholder="Categoría" [(ngModel)]="newProduct.category">
-  <input type="text" placeholder="URL Imagen" [(ngModel)]="newProduct.image">
-  <button (click)="addProduct()">Agregar Producto</button>
-
-  <h3>Lista de Productos</h3>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Precio</th>
-      <th>Categoría</th>
-      <th>Imagen</th>
-      <th>Acciones</th>
-    </tr>
-    <tr *ngFor="let product of products">
-      <td>{{ product.id }}</td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.price | currency }}</td>
-      <td>{{ product.category }}</td>
-      <td><img [src]="product.image" width="50"></td>
-      <td>
-        <button (click)="editProduct(product)">✏️ Editar</button>
-        <button (click)="deleteProduct(product.id)">🗑 Eliminar</button>
-      </td>
-    </tr>
-  </table>
-
-  <div *ngIf="editingProduct">
-    <h3>Editar Producto</h3>
-    <input type="text" [(ngModel)]="editingProduct.name">
-    <input type="number" [(ngModel)]="editingProduct.price">
-    <input type="text" [(ngModel)]="editingProduct.category">
-    <input type="text" [(ngModel)]="editingProduct.image">
-    <button (click)="saveEdit()">Guardar</button>
+@if (!adminLoggedIn) {
+  <div class="admin-container">
+    <h2>Login de Administrador</h2>
+    <input type="text" placeholder="Usuario" [(ngModel)]="username">
+    <input type="password" placeholder="Contraseña" [(ngModel)]="password">
+    <button (click)="loginAdmin()">Ingresar</button>
   </div>
-</div>
+}
+
+@if (adminLoggedIn) {
+  <div class="admin-container">
+    <h2>Panel de Administración</h2>
+    <h3>Agregar Producto</h3>
+    <input type="text" placeholder="Nombre" [(ngModel)]="newProduct.name">
+    <input type="number" placeholder="Precio" [(ngModel)]="newProduct.price">
+    <input type="text" placeholder="Categoría" [(ngModel)]="newProduct.category">
+    <input type="text" placeholder="URL Imagen" [(ngModel)]="newProduct.image">
+    <button (click)="addProduct()">Agregar Producto</button>
+    <h3>Lista de Productos</h3>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Categoría</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+      </tr>
+      @for (product of products; track product) {
+        <tr>
+          <td>{{ product.id }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price | currency }}</td>
+          <td>{{ product.category }}</td>
+          <td><img [src]="product.image" width="50"></td>
+          <td>
+            <button (click)="editProduct(product)">✏️ Editar</button>
+            <button (click)="deleteProduct(product.id)">🗑 Eliminar</button>
+          </td>
+        </tr>
+      }
+    </table>
+    @if (editingProduct) {
+      <div>
+        <h3>Editar Producto</h3>
+        <input type="text" [(ngModel)]="editingProduct.name">
+        <input type="number" [(ngModel)]="editingProduct.price">
+        <input type="text" [(ngModel)]="editingProduct.category">
+        <input type="text" [(ngModel)]="editingProduct.image">
+        <button (click)="saveEdit()">Guardar</button>
+      </div>
+    }
+  </div>
+}
