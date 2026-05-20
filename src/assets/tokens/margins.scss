@@ -1,0 +1,23 @@
+// Tokens de márgenes
+$margin-small: 1rem; // Márgenes pequeños
+$margin-medium: 2rem; // Márgenes medianos
+$margin-large: 3rem; // Márgenes grandes
+$margin-extra-large: 4rem; // Márgenes extra grandes
+
+// Margenes en las cuatro direcciones
+$margin-top-small: $margin-small 0 0 0; // Margen arriba pequeño
+$margin-bottom-small: 0 0 $margin-small 0; // Margen abajo pequeño
+$margin-left-small: 0 0 0 $margin-small; // Margen izquierdo pequeño
+$margin-right-small: 0 $margin-small 0 0; // Margen derecho pequeño
+
+$margin-top-medium: $margin-medium 0 0 0; // Margen arriba mediano
+$margin-bottom-medium: 0 0 $margin-medium 0; // Margen abajo mediano
+$margin-left-medium: 0 0 0 $margin-medium; // Margen izquierdo mediano
+$margin-right-medium: 0 $margin-medium 0 0; // Margen derecho mediano
+
+// Margenes horizontales y verticales
+$margin-horizontal-small: 0 $margin-small 0 $margin-small; // Margen horizontal pequeño
+$margin-vertical-small: $margin-small 0 $margin-small 0; // Margen vertical pequeño
+
+$margin-horizontal-medium: 0 $margin-medium 0 $margin-medium; // Margen horizontal mediano
+$margin-vertical-medium: $margin-medium 0 $margin-medium 0; // Margen vertical mediano

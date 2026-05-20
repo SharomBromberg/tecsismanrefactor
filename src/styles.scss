@@ -1,0 +1,80 @@
+/* Global styles and tokens */
+@import "./assets/tokens/colors.scss";
+@import "./assets/tokens/fonts.scss";
+@import "./assets/tokens/margins.scss";
+
+/* Bootstrap theming overrides (before importing Bootstrap) */
+$primary: $blue-00;
+$secondary: $blue-03;
+$success: $green-02;
+$danger: $red-01;
+$warning: $orange-00;
+$info: $blue-02;
+$light: $white-01;
+$dark: $black-00;
+$font-family-base: 'Inter', 'Fira Code', Arial, sans-serif;
+
+/* Base reset and typography */
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: $white-01;
+    color: $gray-00;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Expose colors as CSS variables for easy use in components */
+:root {
+    --color-primary: #{$blue-00};
+    --color-primary-dark: #{$blue-01};
+    --color-accent: #{$green-02};
+    --color-text: #{$gray-00};
+    --color-bg: #{$white-01};
+}
+
+/* Utility container */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Headings scale */
+h1 { font-weight: 700; letter-spacing: -0.01em; font-family: 'Inter', Arial, sans-serif; }
+h2 { font-weight: 700; letter-spacing: -0.005em; font-family: 'Inter', Arial, sans-serif; }
+h3, h4 { font-weight: 600; font-family: 'Inter', Arial, sans-serif; }
+p { line-height: 1.6; font-weight: 400; }
+
+/* Typography utilities */
+.title-main { font-weight: 700; font-family: 'Inter', Arial, sans-serif; }
+.subtitle { font-weight: 500; font-family: 'Inter', Arial, sans-serif; }
+.cta-title { font-weight: 700; font-family: 'Poppins', Arial, sans-serif; }
+.marketing-title { font-weight: 700; font-family: 'Poppins', Arial, sans-serif; }
+
+/* Buttons use 600 weight by spec */
+.btn { font-weight: 600; font-family: 'Inter', Arial, sans-serif; }
+
+/* Spacing utilities */
+.section { padding: 3rem 0; }
+.section-sm { padding: 1.5rem 0; }
+.muted { color: $gray-01; }
+
+/* Media defaults to avoid overflow */
+img, picture, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Prevent overflow for long words */
+* { word-break: break-word; }
+
+/* Import Bootstrap SCSS once (no duplicate CSS import) */
+@import 'bootstrap/scss/bootstrap';

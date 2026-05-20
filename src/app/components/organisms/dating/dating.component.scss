@@ -1,0 +1,82 @@
+@import '../../../../assets/tokens/breakpoints.scss';
+@import '../../../../assets/tokens/colors.scss';
+@import '../../../../assets/tokens/fonts.scss';
+@import '../../../../assets/tokens/margins.scss';
+@import '../../../../assets/tokens/shadows.scss';
+
+.dating {
+    background: $white-00;
+    padding: 4rem 0;
+
+    h2 {
+        @include poppins-cta(2rem);
+        color: $blue-01;
+        text-align: center;
+        margin: 0 0 2rem 0;
+    }
+
+    &__items {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        &__container {
+            background: $white-01;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            @include box-shadow($box-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            height: 100%;
+            text-align: center;
+            align-items: center;
+
+            &__image {
+                width: 100%;
+                border-radius: 0.5rem;
+                overflow: hidden;
+                height: clamp(10rem, 24vw, 16rem);
+                object-fit: cover;
+                display: block;
+            }
+
+            &__title {
+                @include inter-title(1.125rem);
+                margin: 0.25rem 0 0;
+                color: $blue-01;
+                min-height: 2.5rem;
+            }
+
+            &__button {
+                @include inter-button(0.95rem);
+            }
+        }
+    }
+}
+
+@media (min-width: $breakpoint-480p) {
+    .dating {
+        padding: 6rem 2rem;
+
+        h2 {
+            @include poppins-cta(2.25rem);
+        }
+
+        &__items {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 2rem;
+        }
+    }
+}
+
+@media (max-width: $breakpoint-tablet-portrait) {
+    .dating {
+        padding: 3rem 0;
+
+        &__items {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+    }
+}

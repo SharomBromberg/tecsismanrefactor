@@ -1,0 +1,59 @@
+@import '../../../../assets/tokens/breakpoints.scss';
+@import '../../../../assets/tokens/colors.scss';
+@import '../../../../assets/tokens/fonts.scss';
+@import '../../../../assets/tokens/margins.scss';
+@import '../../../../assets/tokens/shadows.scss';
+
+// Base atomic button styles
+.app-btn {
+    @include inter-button(1rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    padding: 0.625rem 1rem;
+    border: 1px solid transparent;
+    text-align: center;
+    cursor: pointer;
+    @include box-shadow($box-shadow);
+    transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+
+    &--lg { padding: 0.75rem 1.25rem; @include inter-button(1.05rem); }
+    &--sm { padding: 0.5rem 0.75rem; @include inter-button(0.95rem); }
+    &--block { width: 100%; }
+
+    &--primary {
+        background-color: $blue-01;
+        color: $white-00;
+        border-color: $blue-01;
+        &:hover { background-color: lighten($blue-01, 6%); }
+        &:active { transform: translateY(1px); }
+        &:disabled { opacity: .6; cursor: not-allowed; }
+    }
+
+    &--outline {
+        background-color: transparent;
+        color: $blue-01;
+        border-color: $blue-01;
+        &:hover { background-color: rgba($blue-01, 0.08); }
+        &:active { transform: translateY(1px); }
+        &:disabled { opacity: .6; cursor: not-allowed; }
+    }
+
+    &--light {
+        background-color: $white-00;
+        color: $blue-01;
+        border-color: $gray-01;
+        &:hover { background-color: $white-01; }
+    }
+
+    &--dark {
+        background-color: $black-00;
+        color: $white-00;
+        border-color: $black-00;
+        &:hover { background-color: lighten($black-00, 6%); }
+    }
+}
+
+// Backward compatibility
+.button-black-00 { @include inter-button(1rem); background-color: $black-00; color: $white-00; border-radius: 1.25rem; padding: 0.625rem 1rem; display: inline-flex; align-items: center; justify-content: center; }

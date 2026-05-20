@@ -1,0 +1,87 @@
+@import '../../../../assets/tokens/breakpoints.scss';
+@import '../../../../assets/tokens/colors.scss';
+@import '../../../../assets/tokens/fonts.scss';
+@import '../../../../assets/tokens/margins.scss';
+@import '../../../../assets/tokens/shadows.scss';
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__categories {
+        @include fira-code-semibold;
+        display: flex;
+        justify-content: center;
+        gap: 5rem;
+        margin-top: 10rem;
+
+        &__select {
+            padding: 0 1rem;
+        }
+    }
+
+    &__products {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 8rem 0;
+
+        &__list {
+            display: grid;
+            grid-template-columns: 15rem repeat(auto-fill, 15rem);
+            margin: 0 auto;
+            justify-content: center;
+            align-items: center;
+
+            &__item {
+                width: 25rem;
+                display: flex;
+                flex-direction: column;
+
+                &__image {
+                    height: 25rem;
+                    margin: 0 auto;
+
+                    img {
+                        width: 20rem;
+                        height: auto;
+                        margin: auto;
+                    }
+                }
+
+                &__details {
+                    width: 100%;
+                    height: 30%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+        }
+
+    }
+
+
+
+
+
+    &__pages {
+        display: flex;
+        justify-content: center;
+        gap: 4rem;
+        width: 100%;
+
+        &__buttonpages {
+            border-radius: 1rem;
+            padding: 0.5rem;
+            color: $white-00;
+            background-color: $gray-00;
+        }
+
+
+    }
+
+
+}

@@ -1,0 +1,37 @@
+<section class="section app-container contact">
+  <h1>Contacto</h1>
+  <p class="muted">Cuéntanos sobre tu proyecto o solicita soporte.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="contact__form">
+    <div class="form-group">
+      <label for="name">Nombre</label>
+      <input id="name" type="text" class="form-control" formControlName="name" [class.is-invalid]="submitted && f.name.invalid" />
+      <div class="invalid-feedback" *ngIf="submitted && f.name.errors">
+        Ingresa un nombre válido (min. 2 caracteres).
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" class="form-control" formControlName="email" [class.is-invalid]="submitted && f.email.invalid" />
+      <div class="invalid-feedback" *ngIf="submitted && f.email.errors">
+        Ingresa un email válido.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Mensaje</label>
+      <textarea id="message" rows="5" class="form-control" formControlName="message" [class.is-invalid]="submitted && f.message.invalid"></textarea>
+      <div class="invalid-feedback" *ngIf="submitted && f.message.errors">
+        Describe tu necesidad (min. 10 caracteres).
+      </div>
+    </div>
+
+    <div class="contact__actions">
+      <button class="btn btn-primary" type="submit" [disabled]="submitting">
+        {{ submitting ? 'Enviando…' : 'Enviar mensaje' }}
+      </button>
+      <span class="text-danger" *ngIf="errorMsg">{{ errorMsg }}</span>
+    </div>
+  </form>
+</section>

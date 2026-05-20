@@ -1,0 +1,20 @@
+@import '../tokens/colors.scss';
+
+$shadow-gray-xxs: 0 4px 5px rgba($gray-01, 0.14);
+$shadow-gray-xs: 0 1px rgba($gray-01, 0.12);
+$shadow-gray-s: 0 2px 4px rgba($gray-01, 0.2); // Sombra pequeña
+
+$shadow-medium: 0 4px 8px rgba($black-00, 0.3); // Sombra mediana
+$shadow-large: 0 6px 12px rgba($black-00, 0.4); // Sombra grande
+
+$box-shadow: 0 0.2rem 0.4rem rgba($gray-01, 0.2),
+    0 0.1rem 1rem rgba($gray-01, 0.12), 0 0.4rem 0.5rem rgba($gray-01, 0.14);
+
+$shadow-primary: 0 4px 8px rgba($blue-00, 0.3); // Sombra con color primario
+$shadow-secondary: 0 4px 8px rgba($green-00, 0.3); // Sombra con color secundario
+$shadow-accent: 0 4px 8px rgba($red-00, 0.3); // Sombra con color de acento
+
+// Mixin para aplicar sombras a elementos
+@mixin box-shadow($shadow) {
+    box-shadow: $shadow;
+}

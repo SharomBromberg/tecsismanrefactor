@@ -1,0 +1,70 @@
+@import '../../../../assets/tokens/breakpoints.scss';
+@import '../../../../assets/tokens/colors.scss';
+@import '../../../../assets/tokens/fonts.scss';
+@import '../../../../assets/tokens/margins.scss';
+@import '../../../../assets/tokens/shadows.scss';
+
+* {
+    h1 {
+        @include code-bolder;
+        margin: 4rem 0;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    h2 {
+        @include code-normal-large;
+        margin: 1rem auto;
+        text-align: center
+    }
+
+    p {
+        @include fira-code-semibold;
+
+    }
+}
+
+
+.networks {
+    display: flex;
+    flex-direction: column;
+
+    p {
+        text-align: center;
+    }
+
+    &__container {
+
+
+        place-content: center;
+        align-items: center;
+
+
+
+        &__item {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+            margin: 2rem 0;
+
+
+
+            &__box {
+
+                display: flex;
+                gap: 10rem;
+
+                p {
+                    text-align: justify;
+                }
+
+                img {
+                    width: 30%;
+                    margin: 0 auto;
+                }
+            }
+
+
+        }
+    }
+}

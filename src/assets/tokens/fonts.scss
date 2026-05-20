@@ -1,0 +1,82 @@
+// Tipografías base (cargadas desde index.html via Google Fonts)
+$inter-font: 'Inter', Arial, sans-serif;
+$poppins-font: 'Poppins', Arial, sans-serif;
+
+
+// Pesos (alineado a la guía)
+$font-weight-lighter: 100; // compat
+$font-weight-ligth: 200;  // compat (mantener para no romper includes existentes)
+$font-weight-light: 300;
+$font-weight-regular: 400; // texto general
+$font-weight-400: 400;     // alias
+$font-weight-medium: 500;  // subtítulos
+$font-weight-500: 500;     // alias
+$font-weight-semibold: 600; // botones
+$font-weight-600: 600;      // alias
+$font-weight-bold: 700;     // títulos principales
+$font-weight-700: 700;      // alias
+$font-weight-bolder: 900;
+
+// Fuentes (compat + nuevas)
+$georgia-font: "Georgia";
+$palatino-linotype-font: "Palatino Linotype";
+$trebuchet-ms-font: "Trebuchet MS";
+// Mapear antiguas a Inter para no romper estilos existentes
+$code-font: $inter-font;
+$fira-code-font: $inter-font;
+
+
+@mixin font-settings($font-family, $font-weight, $font-size, $letter-spacing) {
+        font-family: $font-family;
+        font-weight: $font-weight;
+        font-size: $font-size;
+        letter-spacing: $letter-spacing;
+}
+
+// Mixins modernos
+@mixin inter-body($size: 1rem) {
+    @include font-settings($inter-font, $font-weight-regular, $size, normal);
+}
+
+@mixin inter-subtitle($size: 1.125rem) {
+    @include font-settings($inter-font, $font-weight-medium, $size, normal);
+}
+
+@mixin inter-button($size: 1rem) {
+    @include font-settings($inter-font, $font-weight-semibold, $size, 0.01em);
+}
+
+@mixin inter-title($size: 1.5rem) {
+    @include font-settings($inter-font, $font-weight-bold, $size, -0.005em);
+}
+
+@mixin poppins-cta($size: 1.75rem) {
+    @include font-settings($poppins-font, $font-weight-bold, $size, -0.01em);
+}
+
+// Compatibilidad: redirigir antiguos mixins "code-*" a Inter
+@mixin code-light { @include inter-body(0.75rem); }
+@mixin code-light-1 { @include inter-body(0.875rem); }
+@mixin code-light-2 { @include inter-body(1rem); }
+@mixin code-normal { @include inter-body(1.125rem); }
+@mixin code-normal-medium { @include inter-subtitle(1.5rem); }
+@mixin code-normal-large { @include inter-subtitle(1.5rem); }
+@mixin code-semibold { @include inter-subtitle(1.5rem); }
+@mixin code-bold { @include inter-button(1.125rem); }
+@mixin code-bolder { @include inter-title(2.5rem); }
+@mixin code-bolder-large { @include inter-title(2.5rem); }
+
+// Compatibilidad: redirigir "fira-code-*" a Inter según pesos nuevos
+@mixin fira-code-small { @include inter-body(0.75rem); }
+@mixin fira-code-normal { @include inter-body(0.875rem); }
+@mixin fira-code-medium { @include inter-body(1.125rem); }
+@mixin fira-code-large { @include inter-body(1.25rem); }
+@mixin fira-code-semibold { @include inter-subtitle(1.5rem); }
+@mixin fira-code-bold { @include inter-button(1.15rem); }
+@mixin fira-code-bold-medium { @include inter-button(1.25rem); }
+@mixin fira-code-bold-large { @include inter-button(1.5rem); }
+@mixin fira-code-bold-l { @include inter-title(2.5rem); }
+@mixin fira-code-bolder { @include inter-title(1.15rem); }
+@mixin fira-code-bolder-medium { @include inter-title(1.25rem); }
+@mixin fira-code-bolder-l { @include inter-title(2.5rem); }
+@mixin fira-code-bolder-xl { @include inter-title(4rem); }

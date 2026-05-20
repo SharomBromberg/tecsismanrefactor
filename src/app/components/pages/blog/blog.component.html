@@ -1,0 +1,21 @@
+<section class="blog-hero">
+  <div class="app-container">
+    <h1 class="marketing-title">Blog Tecnológico</h1>
+    <p class="muted">Novedades, guías y mejores prácticas relacionadas con nuestros servicios.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="app-container blog-grid">
+    <article class="post-card" *ngFor="let post of posts">
+      <img [src]="post.image" [alt]="post.title" loading="lazy" />
+      <h3>{{ post.title }}</h3>
+      <p class="muted">{{ post.excerpt }}</p>
+      <a class="btn btn-outline-primary btn-sm" [routerLink]="['/Blog']">Leer más</a>
+    </article>
+  </div>
+</section>
+<section class="section app-container">
+  <h1>Blog Tecnológico</h1>
+  <p class="muted">Noticias, guías y mejores prácticas relacionadas con nuestros servicios.</p>
+</section>

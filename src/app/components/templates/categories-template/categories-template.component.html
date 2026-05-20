@@ -1,0 +1,20 @@
+<div class="categories">
+    <h2>Categorías</h2>
+    <ul class="categories__container">
+        <li class="categories__container__list" *ngFor="let category of categories">
+            <div class="categories__container__list__names"> {{ category.name }}</div>
+            <div class="categories__container__list__buttons">
+                <button (click)="updateCategory(category)">Actualizar</button>
+                <button *ngIf="category._id" (click)="deleteCategory(category._id)">Borrar</button>
+            </div>
+        </li>
+    </ul>
+
+    <div class="categories__create">
+        <h3>Nueva Categoría</h3>
+        <form (ngSubmit)="createCategory(newCategory)">
+            <input type="text" name="nombre" placeholder="Nombre de categoria" [(ngModel)]="newCategory.name" required>
+            <button type="submit">Crear</button>
+        </form>
+    </div>
+</div>
