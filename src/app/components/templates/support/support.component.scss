@@ -1,25 +1,21 @@
-@import '../../../../assets/tokens/breakpoints.scss';
-@import '../../../../assets/tokens/colors.scss';
-@import '../../../../assets/tokens/fonts.scss';
-@import '../../../../assets/tokens/margins.scss';
-@import '../../../../assets/tokens/shadows.scss';
+@use "../../../../assets/tokens/index.scss" as *;
 
 * {
     h1 {
-        @include code-bolder;
+        @include fonts.inter-title(2.5rem);
         margin: 4rem 0;
         font-weight: 700;
         text-align: center;
     }
 
     h2 {
-        @include code-normal-large;
+        @include fonts.inter-subtitle(1.5rem);
         margin: 1rem auto;
         text-align: center
     }
 
     p {
-        @include fira-code-semibold;
+        @include fonts.inter-subtitle(1.5rem);
 
     }
 }

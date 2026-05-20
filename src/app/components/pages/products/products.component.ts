@@ -3,11 +3,14 @@ import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../interfaces/product';
 import { Category } from '../../../interfaces/categories';
 import { Router } from '@angular/router';
-
-
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../../atoms/button/button.component';
 
 @Component({
   selector: 'app-products',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ButtonComponent],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
@@ -108,4 +111,3 @@ export class ProductsComponent implements OnInit {
       );
   }
 }
-

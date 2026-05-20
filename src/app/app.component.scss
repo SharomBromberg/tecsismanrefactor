@@ -1,7 +1,30 @@
-.container {
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-    top: 0;
-    overflow: hidden;
+@use 'src/assets/tokens' as *;
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  gap: $margin-large;
+  padding: $margin-large;
+  background-color: $white-01;
+}
+
+.product-form-section,
+.product-list-section {
+  width: 100%;
+}
+
+@media (min-width: 768px) { // Usando un breakpoint de ejemplo
+  .main-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .product-form-section {
+    width: 40%;
+    max-width: 500px;
+  }
+
+  .product-list-section {
+    width: 60%;
+  }
 }

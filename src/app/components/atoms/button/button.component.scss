@@ -1,8 +1,5 @@
-@import '../../../../assets/tokens/breakpoints.scss';
-@import '../../../../assets/tokens/colors.scss';
-@import '../../../../assets/tokens/fonts.scss';
-@import '../../../../assets/tokens/margins.scss';
-@import '../../../../assets/tokens/shadows.scss';
+@use "sass:color";
+@use '../../../../assets/tokens' as *;
 
 // Base atomic button styles
 .app-btn {
@@ -26,7 +23,7 @@
         background-color: $blue-01;
         color: $white-00;
         border-color: $blue-01;
-        &:hover { background-color: lighten($blue-01, 6%); }
+        &:hover { background-color: color.adjust($blue-01, $lightness: 6%); }
         &:active { transform: translateY(1px); }
         &:disabled { opacity: .6; cursor: not-allowed; }
     }
@@ -51,7 +48,7 @@
         background-color: $black-00;
         color: $white-00;
         border-color: $black-00;
-        &:hover { background-color: lighten($black-00, 6%); }
+        &:hover { background-color: color.adjust($black-00, $lightness: 6%); }
     }
 }
 

@@ -1,18 +1,5 @@
 /* Global styles and tokens */
-@import "./assets/tokens/colors.scss";
-@import "./assets/tokens/fonts.scss";
-@import "./assets/tokens/margins.scss";
-
-/* Bootstrap theming overrides (before importing Bootstrap) */
-$primary: $blue-00;
-$secondary: $blue-03;
-$success: $green-02;
-$danger: $red-01;
-$warning: $orange-00;
-$info: $blue-02;
-$light: $white-01;
-$dark: $black-00;
-$font-family-base: 'Inter', 'Fira Code', Arial, sans-serif;
+@use "./assets/tokens" as *;
 
 /* Base reset and typography */
 html, body {
@@ -27,7 +14,7 @@ body {
     color: $gray-00;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Inter', Arial, sans-serif;
+    font-family: $inter-font;
 }
 
 /* Expose colors as CSS variables for easy use in components */
@@ -43,28 +30,24 @@ body {
 .app-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 $margin-small;
 }
 
-/* Headings scale */
-h1 { font-weight: 700; letter-spacing: -0.01em; font-family: 'Inter', Arial, sans-serif; }
-h2 { font-weight: 700; letter-spacing: -0.005em; font-family: 'Inter', Arial, sans-serif; }
-h3, h4 { font-weight: 600; font-family: 'Inter', Arial, sans-serif; }
-p { line-height: 1.6; font-weight: 400; }
+/* Headings scale using mixins from tokens */
+h1 { @include inter-title(2.5rem); }
+h2 { @include inter-title(2rem); }
+h3 { @include inter-subtitle(1.75rem); }
+h4 { @include inter-subtitle(1.5rem); }
+p { @include inter-body(1rem); line-height: 1.6; }
 
-/* Typography utilities */
-.title-main { font-weight: 700; font-family: 'Inter', Arial, sans-serif; }
-.subtitle { font-weight: 500; font-family: 'Inter', Arial, sans-serif; }
-.cta-title { font-weight: 700; font-family: 'Poppins', Arial, sans-serif; }
-.marketing-title { font-weight: 700; font-family: 'Poppins', Arial, sans-serif; }
 
-/* Buttons use 600 weight by spec */
-.btn { font-weight: 600; font-family: 'Inter', Arial, sans-serif; }
-
-/* Spacing utilities */
-.section { padding: 3rem 0; }
-.section-sm { padding: 1.5rem 0; }
-.muted { color: $gray-01; }
+/* Generic Section Spacing */
+.section {
+    padding: $margin-large 0;
+}
+.section-sm {
+    padding: $margin-medium 0;
+}
 
 /* Media defaults to avoid overflow */
 img, picture, video, canvas, svg {
@@ -74,7 +57,6 @@ img, picture, video, canvas, svg {
 }
 
 /* Prevent overflow for long words */
-* { word-break: break-word; }
-
-/* Import Bootstrap SCSS once (no duplicate CSS import) */
-@import 'bootstrap/scss/bootstrap';
+* {
+    word-break: break-word;
+}

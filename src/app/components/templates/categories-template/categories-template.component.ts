@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Category } from 'src/app/interfaces/categories';
 import { CategoriesService } from 'src/app/services/categories.service';
 
 @Component({
   selector: 'app-categories-template',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './categories-template.component.html',
   styleUrls: ['./categories-template.component.scss']
 })

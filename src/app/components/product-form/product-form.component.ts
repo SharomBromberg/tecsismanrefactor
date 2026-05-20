@@ -3,10 +3,14 @@ import { Product } from '../../interfaces/product';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../interfaces/categories';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ImageFile } from '../../interfaces/files';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-product-form',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss'],
 })

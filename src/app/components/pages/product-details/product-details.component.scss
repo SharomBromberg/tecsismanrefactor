@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  margin: 2rem;
+}
+
+.container__image {
+  margin-right: 2rem;
+}
+
+.container__image img {
+  max-width: 300px;
+}

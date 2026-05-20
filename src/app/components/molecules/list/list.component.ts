@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Importado
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../interfaces/product';
 import { Category } from '../../../interfaces/categories';
 
 @Component({
   selector: 'app-list',
+  standalone: true,
+  imports: [CommonModule, FormsModule], // Añadido
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent {
   constructor(private productService: ProductService) { }
-
 
   products: Product[] = [];
   categories: Category[] = [];

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/interfaces/categories';
 import { ImageFile } from 'src/app/interfaces/files';
@@ -7,6 +8,8 @@ import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-product-form-template',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './product-form-template.component.html',
   styleUrls: ['./product-form-template.component.scss']
 })

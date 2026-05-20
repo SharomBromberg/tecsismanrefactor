@@ -1,1 +1,5 @@
-@import "../node_modules/bootstrap/scss/bootstrap"
+@forward 'colors';
+@forward 'fonts';
+@forward 'margins';
+@forward 'shadows';
+@forward 'breakpoints';

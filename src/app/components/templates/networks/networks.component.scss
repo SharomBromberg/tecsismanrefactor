@@ -1,8 +1,4 @@
-@import '../../../../assets/tokens/breakpoints.scss';
-@import '../../../../assets/tokens/colors.scss';
-@import '../../../../assets/tokens/fonts.scss';
-@import '../../../../assets/tokens/margins.scss';
-@import '../../../../assets/tokens/shadows.scss';
+@use "../../../../assets/tokens" as *;
 
 * {
     h1 {

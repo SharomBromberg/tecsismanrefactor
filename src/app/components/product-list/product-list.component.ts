@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../interfaces/product';
 import { ProductService } from '../../services/product.service';
 import { Category } from '../../interfaces/categories';
-
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
+  standalone: true,
+  imports: [FormsModule, CommonModule],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })

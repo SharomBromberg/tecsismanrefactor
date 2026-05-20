@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from '../../../environment/environment';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-contact',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, HttpClientModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })

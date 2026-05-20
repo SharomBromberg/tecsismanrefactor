@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Product {
   id: number;
@@ -10,6 +12,8 @@ interface Product {
 
 @Component({
   selector: 'app-admin',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })

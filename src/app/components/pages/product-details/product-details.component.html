@@ -1,0 +1,11 @@
+<div class="container" *ngIf="product">
+  <div class="container__image">
+    <img [src]="'http://localhost:3000/products/uploads/' + product.filenames[0]" alt="Product Image">
+  </div>
+  <div class="container__details">
+    <h2>{{ product.name }}</h2>
+    <p>{{ product.description }}</p>
+    <h4>Precio: {{ product.price }}</h4>
+    <app-button (click)="goBack()">Volver al listado</app-button>
+  </div>
+</div>

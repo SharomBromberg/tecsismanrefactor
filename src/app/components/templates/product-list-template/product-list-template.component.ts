@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Category } from 'src/app/interfaces/categories';
 import { Product } from 'src/app/interfaces/product';
 import { ProductService } from 'src/app/services/product.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-list-template',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './product-list-template.component.html',
   styleUrls: ['./product-list-template.component.scss']
 })
