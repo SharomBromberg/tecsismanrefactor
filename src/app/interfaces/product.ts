@@ -7,7 +7,7 @@ export interface ProductComment {
 }
 
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   technicalDescription?: string;
@@ -19,6 +19,7 @@ export interface Product {
   comments: ProductComment[];
   featured?: boolean;
   tags?: string[];
+  filenames?: string[];
 }
 
 

@@ -14,22 +14,24 @@
 
   <div class="product-list">
     @for (product of products; track product) {
-      <div class="product-item">
-        <div class="product-details">
-          <ul>
-            <li> name: {{product.name}} </li>
-            <li> description: {{product.description}} </li>
-            <li> price: {{product.price}} </li>
-          </ul>
+      <a [routerLink]="['/Productos', product._id]" class="product-item-link">
+        <div class="product-item">
+          <div class="product-details">
+            <ul>
+              <li> name: {{product.name}} </li>
+              <li> description: {{product.description}} </li>
+              <li> price: {{product.price}} </li>
+            </ul>
+          </div>
+          <div class="product-images">
+            @for (filename of product.filenames; track filename) {
+              <div class="picture">
+                <img [src]="'http://localhost:3000/products/uploads/' + filename" alt="Imagen de producto" loading="lazy" decoding="async">
+              </div>
+            }
+          </div>
         </div>
-        <div class="product-images">
-          @for (filename of product.filenames; track filename) {
-            <div class="picture">
-              <img [src]="'http://localhost:3000/products/uploads/' + filename" alt="Imagen de producto" loading="lazy" decoding="async">
-            </div>
-          }
-        </div>
-      </div>
+      </a>
     }
   </div>
 </div>

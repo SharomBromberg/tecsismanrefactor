@@ -3,10 +3,10 @@ import { Product, ProductComment } from "src/app/interfaces/product";
 
 
 export const MOCK_CATEGORIES: Category[] = [
-  { id: 'c1', name: 'Cloud Computing' },
-  { id: 'c2', name: 'Seguridad Informática' },
-  { id: 'c3', name: 'Redes y Telecomunicaciones' },
-  { id: 'c4', name: 'Periféricos y Accesorios' }
+  { _id: 'c1', name: 'Cloud Computing' },
+  { _id: 'c2', name: 'Seguridad Informática' },
+  { _id: 'c3', name: 'Redes y Telecomunicaciones' },
+  { _id: 'c4', name: 'Periféricos y Accesorios' }
 ];
 
 const defaultComments: ProductComment[] = [
@@ -17,7 +17,7 @@ const defaultComments: ProductComment[] = [
 export const MOCK_PRODUCTS: Product[] = [
   // --- CATEGORÍA 1: Cloud Computing ---
   {
-    id: 'p1',
+    _id: 'p1',
     name: 'Servidor VPS Linux Pro',
     description: 'Instancia virtual de alto rendimiento ideal para aplicaciones críticas.',
     technicalDescription: '4 vCPU, 8GB RAM, 100GB NVMe, Ancho de banda 1Gbps.',
@@ -36,7 +36,7 @@ export const MOCK_PRODUCTS: Product[] = [
     tags: ['vps', 'linux', 'cloud']
   },
   {
-    id: 'p2',
+    _id: 'p2',
     name: 'Hosting Web Empresarial',
     description: 'Alojamiento para webs de alto tráfico con panel de control incluido.',
     technicalDescription: 'Ancho de banda ilimitado, cPanel, Certificado SSL gratis.',
@@ -53,7 +53,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p3',
+    _id: 'p3',
     name: 'Almacenamiento Cloud S3 1TB',
     description: 'Almacenamiento seguro y redundante para respaldos corporativos.',
     technicalDescription: '1TB de espacio, Encriptación AES-256 en reposo, 99.9% uptime.',
@@ -70,7 +70,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p4',
+    _id: 'p4',
     name: 'Base de Datos MySQL Gestionada',
     description: 'Cluster de DB con backups diarios automatizados.',
     technicalDescription: 'MySQL 8, 50GB storage, 2 vCPU dedicados.',
@@ -87,7 +87,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p5',
+    _id: 'p5',
     name: 'Dominio .COM.MX',
     description: 'Registro de dominio anual para empresas en México.',
     technicalDescription: 'Gestión DNS avanzada incluida, Protección WHOIS opcional.',
@@ -106,7 +106,7 @@ export const MOCK_PRODUCTS: Product[] = [
 
   // --- CATEGORÍA 2: Seguridad Informática ---
   {
-    id: 'p6',
+    _id: 'p6',
     name: 'Firewall Perimetral Fortinet',
     description: 'Protección avanzada contra amenazas de red.',
     technicalDescription: 'Throughput 5 Gbps, Filtrado Web, Control de aplicaciones.',
@@ -125,7 +125,7 @@ export const MOCK_PRODUCTS: Product[] = [
     tags: ['seguridad', 'firewall', 'fortinet']
   },
   {
-    id: 'p7',
+    _id: 'p7',
     name: 'Antivirus Corporativo (50 Licencias)',
     description: 'Seguridad endpoint gestionada desde la nube.',
     technicalDescription: 'Motor heurístico AI, protección anti-ransomware.',
@@ -142,7 +142,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p8',
+    _id: 'p8',
     name: 'Cámara IP Domo 4K',
     description: 'Vigilancia de ultra alta definición para interiores.',
     technicalDescription: 'Lente varifocal motorizado, visión nocturna 30m, PoE.',
@@ -159,7 +159,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p9',
+    _id: 'p9',
     name: 'Control de Acceso Biométrico',
     description: 'Terminal de lectura de huella, rostro y tarjeta RFID.',
     technicalDescription: 'Conexión TCP/IP, capacidad para 3000 usuarios, salida de relé.',
@@ -176,7 +176,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p10',
+    _id: 'p10',
     name: 'Auditoría de Seguridad (Pentest)',
     description: 'Servicio integral de hacking ético para infraestructura web.',
     technicalDescription: 'Análisis de caja negra y blanca, reporte de vulnerabilidades OWASP.',
@@ -195,7 +195,7 @@ export const MOCK_PRODUCTS: Product[] = [
 
   // --- CATEGORÍA 3: Redes y Telecomunicaciones ---
   {
-    id: 'p11',
+    _id: 'p11',
     name: 'Switch Gestionable 24 Puertos Gigabit',
     description: 'Switch capa 2/3 ideal para montajes en rack.',
     technicalDescription: '24 x 10/100/1000 Mbps, 4 puertos SFP 1G.',
@@ -214,7 +214,7 @@ export const MOCK_PRODUCTS: Product[] = [
     tags: ['switch', 'redes', 'cisco']
   },
   {
-    id: 'p12',
+    _id: 'p12',
     name: 'Router WiFi 6 Enterprise',
     description: 'Router inalámbrico de alto rendimiento AX3000.',
     technicalDescription: 'MU-MIMO, OFDMA, Seguridad WPA3.',
@@ -231,7 +231,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p13',
+    _id: 'p13',
     name: 'Bobina de Cable UTP Cat 6 (305m)',
     description: 'Cableado estructurado de cobre puro para redes gigabit.',
     technicalDescription: '100% Cobre, chaqueta LSZH ignífuga.',
@@ -248,7 +248,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p14',
+    _id: 'p14',
     name: 'Access Point Exterior Largo Alcance',
     description: 'Cobertura WiFi para espacios abiertos y campus.',
     technicalDescription: 'Certificación IP67, soporte PoE, Antenas Direccionales.',
@@ -265,7 +265,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p15',
+    _id: 'p15',
     name: 'Gabinete Rack de Piso 42U',
     description: 'Gabinete cerrado para servidores y equipos de telecomunicaciones.',
     technicalDescription: 'Acero SPCC, Puerta frontal de vidrio templado, Ruedas integradas.',
@@ -284,7 +284,7 @@ export const MOCK_PRODUCTS: Product[] = [
 
   // --- CATEGORÍA 4: Periféricos y Accesorios ---
   {
-    id: 'p16',
+    _id: 'p16',
     name: 'Monitor UltraWide 34" Curvo',
     description: 'Monitor curvo ideal para programación y productividad extrema.',
     technicalDescription: 'Panel IPS, Resolución WQHD, sRGB 99%, 144Hz.',
@@ -303,7 +303,7 @@ export const MOCK_PRODUCTS: Product[] = [
     tags: ['monitor', 'perifericos', 'display']
   },
   {
-    id: 'p17',
+    _id: 'p17',
     name: 'Teclado Mecánico Inalámbrico Pro',
     description: 'Teclado táctil para desarrolladores con switches premium.',
     technicalDescription: 'Switches Brown, Conexión Bluetooth/2.4Ghz, Batería 4000mAh.',
@@ -320,7 +320,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p18',
+    _id: 'p18',
     name: 'Mouse Ergonómico Vertical',
     description: 'Ratón diseñado para reducir la tensión en la muñeca.',
     technicalDescription: 'Sensor óptico 4000 DPI, Batería recargable USB-C.',
@@ -337,7 +337,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p19',
+    _id: 'p19',
     name: 'Auriculares con Cancelación de Ruido',
     description: 'Auriculares de diadema perfectos para oficina y videollamadas.',
     technicalDescription: 'ANC Activo, Micrófono direccional, Bluetooth 5.2.',
@@ -354,7 +354,7 @@ export const MOCK_PRODUCTS: Product[] = [
     comments: defaultComments
   },
   {
-    id: 'p20',
+    _id: 'p20',
     name: 'Webcam Profesional 4K',
     description: 'Cámara web de alta fidelidad para streaming y conferencias.',
     technicalDescription: 'Sensor Sony 4K, Autoenfoque, Micrófonos duales estéreo.',

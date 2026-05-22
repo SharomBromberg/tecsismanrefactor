@@ -49,13 +49,13 @@ export class ProductService {
 
   getProductById(id: string): Observable<Product | undefined> {
     return this.productsSubject.pipe(
-      map(products => products.find(p => p.id === id))
+      map(products => products.find(p => p._id === id))
     );
   }
 
   addCategory(name: string): Observable<void> {
     const newCategory: Category = {
-      id: `c${new Date().getTime()}`,
+      _id: `c${new Date().getTime()}`,
       name
     };
     this.categoriesSubject.next([...this.categoriesSubject.value, newCategory]);
@@ -63,14 +63,14 @@ export class ProductService {
   }
 
   deleteCategory(id: string): Observable<void> {
-    const filtered = this.categoriesSubject.value.filter(c => c.id !== id);
+    const filtered = this.categoriesSubject.value.filter(c => c._id !== id);
     this.categoriesSubject.next(filtered);
     return of(undefined);
   }
 
   addProduct(product: Partial<Product>): Observable<void> {
     const newProduct: Product = {
-      id: `p${new Date().getTime()}`,
+      _id: `p${new Date().getTime()}`,
       name: product.name || '',
       description: product.description || '',
       technicalDescription: product.technicalDescription || '',
@@ -88,14 +88,14 @@ export class ProductService {
   }
 
   deleteProduct(id: string): Observable<void> {
-    const filtered = this.productsSubject.value.filter(p => p.id !== id);
+    const filtered = this.productsSubject.value.filter(p => p._id !== id);
     this.productsSubject.next(filtered);
     return of(undefined);
   }
 
   addComment(productId: string, comment: any): Observable<void> {
     const updated = this.productsSubject.value.map(p => {
-      if (p.id === productId) {
+      if (p._id === productId) {
         const newComment: ProductComment = {
           author: comment.author,
           text: comment.message || comment.text, // Adaptado para retrocompatibilidad

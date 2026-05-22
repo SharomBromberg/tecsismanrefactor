@@ -67,8 +67,8 @@
       <li class="pill" [class.active]="(selectedCategory$ | async) === ''" (click)="selectCategory('')">Todos</li>
       <!-- Iteración sobre tu observable real de categorías -->
       <li class="pill" *ngFor="let category of categories$ | async; trackBy: trackByCategoryId"
-          [class.active]="(selectedCategory$ | async) === category.id"
-          (click)="selectCategory(category.id)">
+          [class.active]="(selectedCategory$ | async) === category._id"
+          (click)="selectCategory(category._id)">
         {{ category.name }}
       </li>
     </ul>
@@ -104,7 +104,7 @@
       <!-- Iteración sobre tu observable real de productos (cards$) -->
       <a *ngFor="let item of cards$ | async; trackBy: trackByProductId"
         class="product-card"
-        [routerLink]="['/Productos', item.product.id]"
+        [routerLink]="['/Productos', item.product._id]"
         [attr.aria-label]="'Ver detalle de ' + item.product.name">
         
         <div class="product-card__image-wrapper">

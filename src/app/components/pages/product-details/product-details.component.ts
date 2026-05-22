@@ -52,7 +52,7 @@ export class ProductDetailsComponent implements OnInit {
       this.categories$.pipe(
         map((categories) => ({
           product,
-          categoryName: categories.find((category) => category.id === product.categoryId)?.name ?? 'Sin categoria',
+          categoryName: categories.find((category) => category._id === product.categoryId)?.name ?? 'Sin categoria',
         })),
       ),
     ),
@@ -119,7 +119,7 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     this.productService
-      .addComment(product.id, this.commentForm.getRawValue())
+      .addComment(product._id, this.commentForm.getRawValue())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

@@ -104,17 +104,17 @@ export class ProductsComponent {
   }
 
   trackByCategoryId(index: number, category: Category): string {
-    return category.id ?? `${index}`;
+    return category._id ?? `${index}`;
   }
 
   trackByProductId(index: number, item: CatalogCardVm): string {
-    return item.product.id ?? `${index}`;
+    return item.product._id ?? `${index}`;
   }
 
   private toCardViewModel(products: Product[], categories: Category[]): CatalogCardVm[] {
     return products.map((product) => ({
       product,
-      categoryName: categories.find((category) => category.id === product.categoryId)?.name ?? 'Sin categoria',
+      categoryName: categories.find((category) => category._id === product.categoryId)?.name ?? 'Sin categoria',
     }));
   }
 }
