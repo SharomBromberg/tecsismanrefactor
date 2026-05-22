@@ -1,0 +1,47 @@
+// ============================================================================
+// SPACING TOKENS
+// ============================================================================
+// Standardized spacing scale for consistent layout across the application
+// Based on 0.25rem (4px) base unit for flexibility and precision
+// ============================================================================
+
+// Spacing Scale - Linear progression for margins and padding
+$spacing-2xs: 0.25rem;    // 4px   - Minimal space
+$spacing-xs: 0.5rem;      // 8px   - Extra small
+$spacing-sm: 0.75rem;     // 12px  - Small
+$spacing-md: 1rem;        // 16px  - Medium (default)
+$spacing-lg: 1.5rem;      // 24px  - Large
+$spacing-xl: 2rem;        // 32px  - Extra large
+$spacing-2xl: 3rem;       // 48px  - 2X large
+$spacing-3xl: 4rem;       // 64px  - 3X large
+$spacing-4xl: 6rem;       // 96px  - 4X large
+$spacing-5xl: 8rem;       // 128px - 5X large
+
+// Dimension Scale - For width/height of specific UI elements
+$size-xs: 1.1rem;         // 17.6px  - Extra small element
+$size-sm: 1.25rem;        // 20px    - Small element
+$size-md: 1.75rem;        // 28px    - Medium element (common icon size)
+$size-lg: 2.25rem;        // 36px    - Large element
+$size-xl: 3rem;           // 48px    - Extra large element
+
+// Border Radius Scale - For rounded corners
+$radius-sm: 0.5rem;       // 8px   - Subtle rounding
+$radius-md: 0.75rem;      // 12px  - Default rounding
+$radius-lg: 1rem;         // 16px  - More rounded
+$radius-xl: 1.5rem;       // 24px  - Very rounded
+$radius-pill: 999px;      // Pill-shaped (fully rounded)
+
+// Gap Scale - For grid and flexbox gaps
+$gap-2xs: $spacing-2xs;
+$gap-xs: $spacing-xs;
+$gap-sm: $spacing-sm;
+$gap-md: $spacing-md;
+$gap-lg: $spacing-lg;
+$gap-xl: $spacing-xl;
+$gap-2xl: $spacing-2xl;
+
+// Line Height Scale - For text readability
+$line-height-tight: 1.2;      // Compact spacing
+$line-height-normal: 1.5;     // Default spacing
+$line-height-loose: 1.8;      // Generous spacing
+$line-height-relaxed: 2;      // Very relaxed spacing

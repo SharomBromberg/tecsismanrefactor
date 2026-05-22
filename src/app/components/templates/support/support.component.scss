@@ -2,20 +2,20 @@
 
 * {
     h1 {
-        @include fonts.inter-title(2.5rem);
+        @include inter-title(2.5rem);
         margin: 4rem 0;
         font-weight: 700;
         text-align: center;
     }
 
     h2 {
-        @include fonts.inter-subtitle(1.5rem);
+        @include inter-subtitle(1.5rem);
         margin: 1rem auto;
         text-align: center
     }
 
     p {
-        @include fonts.inter-subtitle(1.5rem);
+        @include inter-subtitle(1.5rem);
 
     }
 }

@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="container__categories">
     <label class="container__categories__label">Filtrar por Categoría:</label>
     <select class="container__categories__select" [(ngModel)]="selectedCategoryId"
@@ -47,4 +47,78 @@
     <button class="container__pages__buttonpages" (click)="currentPage = currentPage + 1"
     [disabled]="currentPage === totalPages">Siguiente</button>
   </div>
-</div>
+</div> -->
+
+
+<section class="catalog-page app-container" aria-labelledby="catalog-title">
+  <!-- Top Bar: Buscador + Categorías -->
+  <header class="catalog-header">
+    <div class="catalog-header__search">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="search" [formControl]="searchControl" class="search-input" placeholder="Buscar productos, marcas y más..."
+          aria-label="Buscar productos" />
+    </div>
+
+    <ul class="catalog-header__pills">
+      <li class="pill" [class.active]="(selectedCategory$ | async) === ''" (click)="selectCategory('')">Todos</li>
+      <!-- Iteración sobre tu observable real de categorías -->
+      <li class="pill" *ngFor="let category of categories$ | async; trackBy: trackByCategoryId"
+          [class.active]="(selectedCategory$ | async) === category.id"
+          (click)="selectCategory(category.id)">
+        {{ category.name }}
+      </li>
+    </ul>
+  </header>
+
+  <!-- Layout Principal de E-commerce -->
+  <div class="catalog-layout">
+    <!-- Columna Izquierda (Sidebar de Filtros) -->
+    <aside class="catalog-sidebar">
+      <h2 class="catalog-sidebar__title">Filtros</h2>
+      
+      <div class="filter-group">
+        <h3>Precio</h3>
+        <label class="filter-checkbox"><input type="checkbox"> <span>Hasta $500</span></label>
+        <label class="filter-checkbox"><input type="checkbox"> <span>$500 - $1500</span></label>
+        <label class="filter-checkbox"><input type="checkbox"> <span>Más de $1500</span></label>
+      </div>
+
+      <div class="filter-group">
+        <h3>Marcas</h3>
+        <label class="filter-checkbox"><input type="checkbox"> <span>Cisco</span></label>
+        <label class="filter-checkbox"><input type="checkbox"> <span>Dell</span></label>
+        <label class="filter-checkbox"><input type="checkbox"> <span>Hikvision</span></label>
+      </div>
+    </aside>
+
+    <!-- Columna Derecha (Grilla de Productos) -->
+    <main class="catalog-main-grid" aria-labelledby="catalog-title">
+      <p class="app-feedback" *ngIf="emptyMessage$ | async as emptyMessage" aria-live="polite">
+        {{ emptyMessage }}
+      </p>
+
+      <!-- Iteración sobre tu observable real de productos (cards$) -->
+      <a *ngFor="let item of cards$ | async; trackBy: trackByProductId"
+        class="product-card"
+        [routerLink]="['/Productos', item.product.id]"
+        [attr.aria-label]="'Ver detalle de ' + item.product.name">
+        
+        <div class="product-card__image-wrapper">
+          <img *ngIf="item.product.images.length; else noImage" [src]="item.product.images[0]" [alt]="item.product.name" loading="lazy">
+          <ng-template #noImage><div class="product-card__image-placeholder"></div></ng-template>
+        </div>
+        
+        <div class="product-card__info">
+          <h3 class="product-name">{{ item.product.name }}</h3>
+          <p class="product-desc">{{ item.product.description }}</p>
+          <span class="product-price">{{ item.product.price | currency:'USD':'symbol':'1.0-0' }}</span>
+          <button class="btn-details">Ver detalles</button>
+        </div>
+      </a>
+    </main>
+  </div>
+</section>

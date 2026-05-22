@@ -1,64 +1,113 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Product } from '../interfaces/product';
+import { BehaviorSubject, Observable, map, of } from 'rxjs';
 import { environment } from '../environment/environment';
 import { Category } from '../interfaces/categories';
-
+import { Product, ProductComment } from '../interfaces/product';
+import { MOCK_CATEGORIES, MOCK_PRODUCTS } from '../core/mocks/product.mocks';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ProductService {
-
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  // Estado Reactivo Pura Vida (Patrón Observable Data Service)
+  private readonly categoriesSubject = new BehaviorSubject<Category[]>(MOCK_CATEGORIES);
+  private readonly productsSubject = new BehaviorSubject<Product[]>(MOCK_PRODUCTS);
 
-
-  getAllProducts(category?: string): Observable<Product[]> {
-    const url = category ? `${this.apiUrl}/products/category/${category}` : `${this.apiUrl}/products`;
-    return this.http.get<Product[]>(url);
+  getCategories(): Observable<Category[]> {
+    return this.categoriesSubject.asObservable();
   }
 
-  getProductById(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
+  getProducts(): Observable<Product[]> {
+    return this.productsSubject.asObservable();
   }
 
-  // createProduct(product: Product): Observable<Product> {
-  //   return this.http.post<Product>(`${this.apiUrl}/products/create`, product);
-  // }
-
-  createProduct(formData: FormData): Observable<Product> {
-    return this.http.post<Product>(`${this.apiUrl}/products/create`, formData);
-  }
-
-
-  updateProduct(id: string, product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/products/update/${id}`, product);
-  }
-
-  deleteProduct(id: string): Observable<Product> {
-    return this.http.delete<Product>(`${this.apiUrl}/products/${id}`);
-  }
   getProductsByCategory(categoryId: string): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/products/byCategory/${categoryId}`);
+    if (!categoryId || categoryId === 'todos') return this.getProducts();
+    return this.productsSubject.pipe(
+      map(products => products.filter(p => p.categoryId === categoryId))
+    );
   }
 
-  getAllCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiUrl}/categories`);
+  getFeaturedProducts(): Observable<Product[]> {
+    return this.productsSubject.pipe(
+      map(products => products.filter(p => p.featured))
+    );
   }
 
-  createCategory(category: Category): Observable<Category> {
-    return this.http.post<Category>(`${this.apiUrl}/categories/create`, category);
+  searchProducts(query: string): Observable<Product[]> {
+    const lowerQuery = query.toLowerCase();
+    return this.productsSubject.pipe(
+      map(products => products.filter(p => 
+        p.name.toLowerCase().includes(lowerQuery) || 
+        p.description.toLowerCase().includes(lowerQuery) ||
+        (!!p.tags && p.tags.some(t => t.toLowerCase().includes(lowerQuery)))
+      ))
+    );
   }
 
-  updateCategory(categoryId: string, category: Category): Observable<Category> {
-    return this.http.put<Category>(`${this.apiUrl}/categories/${categoryId}`, category);
+  getProductById(id: string): Observable<Product | undefined> {
+    return this.productsSubject.pipe(
+      map(products => products.find(p => p.id === id))
+    );
   }
 
-  deleteCategory(categoryId: string): Observable<Category> {
-    return this.http.delete<Category>(`${this.apiUrl}/categories/${categoryId}`);
+  addCategory(name: string): Observable<void> {
+    const newCategory: Category = {
+      id: `c${new Date().getTime()}`,
+      name
+    };
+    this.categoriesSubject.next([...this.categoriesSubject.value, newCategory]);
+    return of(undefined);
   }
 
+  deleteCategory(id: string): Observable<void> {
+    const filtered = this.categoriesSubject.value.filter(c => c.id !== id);
+    this.categoriesSubject.next(filtered);
+    return of(undefined);
+  }
+
+  addProduct(product: Partial<Product>): Observable<void> {
+    const newProduct: Product = {
+      id: `p${new Date().getTime()}`,
+      name: product.name || '',
+      description: product.description || '',
+      technicalDescription: product.technicalDescription || '',
+      price: product.price || 0,
+      stock: product.stock || 0,
+      categoryId: product.categoryId || '',
+      images: product.images || [],
+      rating: product.rating || 0,
+      comments: [],
+      featured: product.featured || false,
+      tags: product.tags || []
+    };
+    this.productsSubject.next([...this.productsSubject.value, newProduct]);
+    return of(undefined);
+  }
+
+  deleteProduct(id: string): Observable<void> {
+    const filtered = this.productsSubject.value.filter(p => p.id !== id);
+    this.productsSubject.next(filtered);
+    return of(undefined);
+  }
+
+  addComment(productId: string, comment: any): Observable<void> {
+    const updated = this.productsSubject.value.map(p => {
+      if (p.id === productId) {
+        const newComment: ProductComment = {
+          author: comment.author,
+          text: comment.message || comment.text, // Adaptado para retrocompatibilidad
+          message: comment.message || comment.text,
+          rating: comment.rating,
+          createdAt: new Date().toISOString()
+        };
+        return { ...p, comments: [...p.comments, newComment] };
+      }
+      return p;
+    });
+    this.productsSubject.next(updated);
+    return of(undefined);
+  }
 }

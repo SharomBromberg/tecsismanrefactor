@@ -1,113 +1,120 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ProductService } from '../../../services/product.service';
-import { Product } from '../../../interfaces/product';
-import { Category } from '../../../interfaces/categories';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs';
+
+import { NgFor, NgIf, AsyncPipe, CurrencyPipe, CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../atoms/button/button.component';
+import { ProductService } from 'src/app/services/product.service';
+import { CatalogCardVm, Product } from 'src/app/interfaces/product';
+import { Category } from 'src/app/interfaces/categories';
+
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent],
+  imports: [    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    RouterLink,
+    NgIf,
+    AsyncPipe,
+    CurrencyPipe,],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent {
+  private readonly productService = inject(ProductService);
 
-  @Input() buttonText: string = '';
-  @Input() customStyle: string = '';
-  @Output() buttonClick = new EventEmitter<void>();
+  readonly categoryControl = new FormControl<string>('', { nonNullable: true });
+  readonly searchControl = new FormControl<string>('', { nonNullable: true });
+  readonly activeSubcategory = new BehaviorSubject<string>('');
 
-  constructor(private productService: ProductService, private router: Router) { }
+  readonly categories$ = this.productService.getCategories().pipe(
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
 
+  readonly selectedCategory$ = this.categoryControl.valueChanges.pipe(
+    startWith(this.categoryControl.value),
+    distinctUntilChanged(),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
 
-  products: Product[] = [];
-  categories: Category[] = [];
-  selectedCategoryId: string = '';
-  noProductsMessage: string = '';
-  itemsPerPage: number = 5; // Número de productos por página
-  currentPage: number = 1; // Página actual
-  totalPages: number = 0; // Número total de páginas
-  selectedProduct: Product | null = null;
-
-
-  ngOnInit() {
-    this.getProducts();
-    this.getCategories();
-  }
-
-
-  getProducts(): void {
-    this.productService.getAllProducts(this.selectedCategoryId)
-      .subscribe(
-        res => {
-          this.products = res || [];
-          this.noProductsMessage = (this.products.length === 0) ? 'Pronto tendremos listos los productos, ¡espéralos!' : '';
-          this.calculateTotalPages();
-        },
-        err => console.log('Error loading products', err)
-      );
-  }
-  getCategories() {
-    this.productService.getAllCategories()
-      .subscribe(
-        res => {
-
-          this.categories = res || [];
-        },
-        err => console.log('Error loading categories', err)
-      );
-  }
-  filterProductsByCategory() {
-    if (this.selectedCategoryId) {
-      this.productService.getProductsByCategory(this.selectedCategoryId).subscribe(
-        (data: Product[]) => {
-          if (Array.isArray(data)) {
-            this.products = data;
-            this.noProductsMessage = (this.products.length === 0) ? 'No hay productos disponibles en esta categoría.' : '';
-            this.calculateTotalPages();
-          } else {
-            console.error('La respuesta del servicio no es un array de productos:', data);
-            this.noProductsMessage = 'Hubo un problema al cargar los productos. Inténtalo de nuevo más tarde.';
+  readonly filteredProducts$ = combineLatest([
+    this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300)),
+    this.selectedCategory$,
+    this.activeSubcategory
+  ]).pipe(
+    switchMap(([query, categoryId, subcategory]) => {
+      const base$ = query ? this.productService.searchProducts(query) : this.productService.getProducts();
+      return base$.pipe(
+        map((products: Product[]) => products.filter((product: Product) => {
+          if (categoryId && product.categoryId !== categoryId) return false;
+          if (subcategory) {
+            const hasTag = product.tags?.some(t => t.toLowerCase() === subcategory.toLowerCase());
+            const inName = product.name.toLowerCase().includes(subcategory.toLowerCase());
+            return hasTag || inName;
           }
-        },
-        (error) => {
-          console.error('Error filtering products by category', error);
-          this.noProductsMessage = 'Hubo un problema al cargar los productos. Inténtalo de nuevo más tarde.';
-        }
+          return true;
+        }))
       );
+    }),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
+
+  readonly featuredProducts$ = this.productService.getFeaturedProducts().pipe(
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
+
+  readonly cards$ = combineLatest([this.filteredProducts$, this.categories$]).pipe(
+    map(([products, categories]) => this.toCardViewModel(products, categories)),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
+
+  readonly featuredCards$ = combineLatest([this.featuredProducts$, this.categories$]).pipe(
+    map(([products, categories]) => this.toCardViewModel(products, categories)),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
+
+  readonly emptyMessage$ = combineLatest([this.filteredProducts$, this.selectedCategory$]).pipe(
+    map(([products, categoryId]) => {
+      if (products.length > 0) {
+        return '';
+      }
+
+      return categoryId
+        ? 'No hay productos en esta categoría.'
+        : 'Aun no hay productos disponibles.';
+    }),
+  );
+
+  selectCategory(categoryId: string): void {
+    if (this.categoryControl.value === categoryId && !this.activeSubcategory.value) {
+      this.categoryControl.setValue('');
     } else {
-      // Si no hay categoría seleccionada, cargar todos los productos
-      this.getProducts();
-    }
-  }
-  calculateTotalPages() {
-    this.totalPages = Math.ceil(this.products.length / this.itemsPerPage);
-  }
-  changePage(pageNumber: number) {
-    this.currentPage = pageNumber;
-  }
-  goToPreviousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-  goToNextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+      this.categoryControl.setValue(categoryId);
+      this.activeSubcategory.next('');
     }
   }
 
-  getProductById(id: string): void {
-    this.productService.getProductById(id)
-      .subscribe(
-        res => {
-          this.selectedProduct = res;
-          this.router.navigate(['/product-details', this.selectedProduct._id]);
-        },
-        err => console.error('Error loading product', err)
-      );
+  selectSubcategory(categoryId: string, subcategory: string, event: Event): void {
+    event.stopPropagation();
+    this.categoryControl.setValue(categoryId);
+    this.activeSubcategory.next(subcategory);
+  }
+
+  trackByCategoryId(index: number, category: Category): string {
+    return category.id ?? `${index}`;
+  }
+
+  trackByProductId(index: number, item: CatalogCardVm): string {
+    return item.product.id ?? `${index}`;
+  }
+
+  private toCardViewModel(products: Product[], categories: Category[]): CatalogCardVm[] {
+    return products.map((product) => ({
+      product,
+      categoryName: categories.find((category) => category.id === product.categoryId)?.name ?? 'Sin categoria',
+    }));
   }
 }
