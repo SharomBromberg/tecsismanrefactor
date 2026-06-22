@@ -1,30 +1,35 @@
 @use 'src/assets/tokens' as *;
 
-.main-container {
-  display: flex;
-  flex-direction: column;
-  gap: $margin-large;
-  padding: $margin-large;
-  background-color: $white-01;
-}
+// .main-container {
+//   display: flex;
+//   flex-direction: column;
+//   gap: $margin-large;
+//   padding: $margin-large;
+//   background-color: $white-01;
+// }
 
-.product-form-section,
-.product-list-section {
-  width: 100%;
-}
+// .product-form-section,
+// .product-list-section {
+//   width: 100%;
+// }
 
-@media (min-width: 768px) { // Usando un breakpoint de ejemplo
-  .main-container {
-    flex-direction: row;
-    align-items: flex-start;
-  }
+// @media (min-width: 768px) { // Usando un breakpoint de ejemplo
+//   .main-container {
+//     flex-direction: row;
+//     align-items: flex-start;
+//   }
 
-  .product-form-section {
-    width: 40%;
-    max-width: 500px;
-  }
+//   .product-form-section {
+//     width: 40%;
+//     max-width: 500px;
+//   }
 
-  .product-list-section {
-    width: 60%;
-  }
+//   .product-list-section {
+//     width: 60%;
+//   }
+// }
+
+router-outlet {
+  display: block;
+  margin-top: $margin-small;
 }

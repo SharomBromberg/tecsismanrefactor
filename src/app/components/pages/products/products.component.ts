@@ -2,24 +2,25 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs';
 
-import { NgFor, NgIf, AsyncPipe, CurrencyPipe, CommonModule } from '@angular/common';
+import { NgFor, NgIf, AsyncPipe, CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ButtonComponent } from '../../atoms/button/button.component';
 import { ProductService } from 'src/app/services/product.service';
 import { CatalogCardVm, Product } from 'src/app/interfaces/product';
 import { Category } from 'src/app/interfaces/categories';
 
-
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [    FormsModule,
+  imports: [
+    FormsModule,
     ReactiveFormsModule,
     NgFor,
     RouterLink,
     NgIf,
     AsyncPipe,
-    CurrencyPipe,],
+    CurrencyPipe,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
@@ -29,6 +30,12 @@ export class ProductsComponent {
   readonly categoryControl = new FormControl<string>('', { nonNullable: true });
   readonly searchControl = new FormControl<string>('', { nonNullable: true });
   readonly activeSubcategory = new BehaviorSubject<string>('');
+  readonly selectedBrands = new BehaviorSubject<string[]>([]);
+  readonly selectedPriceRange = new BehaviorSubject<string>('');
+  filtersVisible = false;
+  mobileFilterOpen = false;
+
+  readonly brandFilters = ['Cisco', 'Fortinet', 'Hikvision', 'Dell', 'TP-Link'];
 
   readonly categories$ = this.productService.getCategories().pipe(
     shareReplay({ bufferSize: 1, refCount: true }),
@@ -40,21 +47,45 @@ export class ProductsComponent {
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
+  readonly selectedBrands$ = this.selectedBrands.asObservable();
+  readonly selectedPriceRange$ = this.selectedPriceRange.asObservable();
+
   readonly filteredProducts$ = combineLatest([
     this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300)),
     this.selectedCategory$,
-    this.activeSubcategory
+    this.activeSubcategory,
+    this.selectedPriceRange$,
+    this.selectedBrands$
   ]).pipe(
-    switchMap(([query, categoryId, subcategory]) => {
+    switchMap(([query, categoryId, subcategory, priceRange, brands]) => {
       const base$ = query ? this.productService.searchProducts(query) : this.productService.getProducts();
       return base$.pipe(
         map((products: Product[]) => products.filter((product: Product) => {
+          const normalizedName = product.name.toLowerCase();
+          const normalizedTags = (product.tags ?? []).map(tag => tag.toLowerCase());
+
           if (categoryId && product.categoryId !== categoryId) return false;
+
           if (subcategory) {
-            const hasTag = product.tags?.some(t => t.toLowerCase() === subcategory.toLowerCase());
-            const inName = product.name.toLowerCase().includes(subcategory.toLowerCase());
-            return hasTag || inName;
+            const hasTag = normalizedTags.some(t => t === subcategory.toLowerCase());
+            const inName = normalizedName.includes(subcategory.toLowerCase());
+            if (!hasTag && !inName) return false;
           }
+
+          if (brands.length > 0) {
+            const brandMatch = brands.some((brand) => {
+              const normalizedBrand = brand.toLowerCase();
+              return normalizedName.includes(normalizedBrand) || normalizedTags.some(tag => tag.includes(normalizedBrand));
+            });
+            if (!brandMatch) return false;
+          }
+
+          if (priceRange) {
+            if (priceRange === 'below-500' && product.price > 500) return false;
+            if (priceRange === 'mid-500-1500' && (product.price < 500 || product.price > 1500)) return false;
+            if (priceRange === 'above-1500' && product.price <= 1500) return false;
+          }
+
           return true;
         }))
       );
@@ -76,15 +107,20 @@ export class ProductsComponent {
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
-  readonly emptyMessage$ = combineLatest([this.filteredProducts$, this.selectedCategory$]).pipe(
-    map(([products, categoryId]) => {
+  readonly emptyMessage$ = combineLatest([
+    this.filteredProducts$,
+    this.selectedCategory$,
+    this.selectedPriceRange$,
+    this.selectedBrands$
+  ]).pipe(
+    map(([products, categoryId, priceRange, brands]) => {
       if (products.length > 0) {
         return '';
       }
 
-      return categoryId
-        ? 'No hay productos en esta categoría.'
-        : 'Aun no hay productos disponibles.';
+      return categoryId || priceRange || brands.length
+        ? 'No se encontraron productos que coincidan con los filtros seleccionados.'
+        : 'Aún no hay productos disponibles.';
     }),
   );
 
@@ -97,10 +133,25 @@ export class ProductsComponent {
     }
   }
 
-  selectSubcategory(categoryId: string, subcategory: string, event: Event): void {
-    event.stopPropagation();
-    this.categoryControl.setValue(categoryId);
-    this.activeSubcategory.next(subcategory);
+  selectPriceRange(range: string): void {
+    this.selectedPriceRange.next(this.selectedPriceRange.value === range ? '' : range);
+  }
+
+  toggleBrand(brand: string): void {
+    const current = this.selectedBrands.value;
+    const updated = current.includes(brand)
+      ? current.filter((item) => item !== brand)
+      : [...current, brand];
+    this.selectedBrands.next(updated);
+  }
+
+  clearFilters(): void {
+    this.categoryControl.setValue('');
+    this.activeSubcategory.next('');
+    this.selectedPriceRange.next('');
+    this.selectedBrands.next([]);
+    this.mobileFilterOpen = false;
+    this.filtersVisible = false;
   }
 
   trackByCategoryId(index: number, category: Category): string {
@@ -114,7 +165,7 @@ export class ProductsComponent {
   private toCardViewModel(products: Product[], categories: Category[]): CatalogCardVm[] {
     return products.map((product) => ({
       product,
-      categoryName: categories.find((category) => category._id === product.categoryId)?.name ?? 'Sin categoria',
+      categoryName: categories.find((category) => category._id === product.categoryId)?.name ?? 'Sin categoría',
     }));
   }
 }

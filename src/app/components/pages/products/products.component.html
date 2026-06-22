@@ -1,111 +1,142 @@
-<!-- <div class="container">
-  <div class="container__categories">
-    <label class="container__categories__label">Filtrar por Categoría:</label>
-    <select class="container__categories__select" [(ngModel)]="selectedCategoryId"
-      (change)="filterProductsByCategory()">
-      <option value="" selected>Todas las Categorías</option>
-      @for (category of categories; track category) {
-        <option [value]="category._id">{{ category.name }}</option>
-      }
-    </select>
-  </div>
-
-
-  <div class="container__products">
-
-    @if (noProductsMessage) {
-      <div class="container__products__noproductsMessage">
-        <p>{{ noProductsMessage }}</p>
-      </div>
-    }
-
-    @for (product of products; track product) {
-      <div class="container__products__list">
-        <div class="container__products__list__item">
-          <div class="container__products__list__item__image">
-            <img [src]="'http://localhost:3000/products/uploads/' + product.filenames[0]" alt="Product Image">
-          </div>
-          <div class="container__products__list__item__details">
-            <h4>{{ product.name }}</h4>
-            <h4>Precio: {{ product.price }}</h4>
-            @if (product._id !== undefined) {
-              <app-button class="container__products__list__item__details__button"
-                (click)="product._id && getProductById(product._id)"
-                [customStyle]="'button-black-00' ">Ver
-              detalles</app-button>
-            }
-          </div>
-        </div>
-      </div>
-    }
-
-  </div>
-  <div class="container__pages">
-    <button class="container__pages__buttonpages" (click)="currentPage = currentPage - 1"
-    [disabled]="currentPage === 1">Anterior</button>
-    <span>Página {{ currentPage }} de {{ totalPages }}</span>
-    <button class="container__pages__buttonpages" (click)="currentPage = currentPage + 1"
-    [disabled]="currentPage === totalPages">Siguiente</button>
-  </div>
-</div> -->
-
-
 <section class="catalog-page app-container" aria-labelledby="catalog-title">
-  <!-- Top Bar: Buscador + Categorías -->
-  <header class="catalog-header">
-    <div class="catalog-header__search">
-      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-      <input type="search" [formControl]="searchControl" class="search-input" placeholder="Buscar productos, marcas y más..."
-          aria-label="Buscar productos" />
+  <div class="catalog-topbar">
+    <div class="catalog-topbar__meta">
+      <span class="catalog-eyebrow">Marketplace Tecsisman</span>
+      <h1 id="catalog-title" class="catalog-title">Catalogo</h1>
+      <p class="catalog-subtitle">Filtra y encuentra productos especializados para infraestructura, seguridad y servicios en la nube.</p>
+    </div>
+
+    <div class="catalog-topbar__actions">
+      <div class="catalog-header__search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search" [formControl]="searchControl" class="search-input" placeholder="Buscar productos, marcas y más..." aria-label="Buscar productos" />
+      </div>
+
+      <button type="button" class="catalog-filters-toggle catalog-filters-toggle--desktop" (click)="filtersVisible = !filtersVisible" [attr.aria-expanded]="filtersVisible">
+        Filtros
+      </button>
+    </div>
+  </div>
+
+  <div class="catalog-mobile-filters" *ngIf="categories$ | async as categories">
+    <div class="catalog-mobile-filters__row">
+      <div class="catalog-mobile-filters__group">
+        <label for="mobile-category-select" class="catalog-mobile-filters__label">Categoría</label>
+        <select id="mobile-category-select" class="catalog-mobile-filters__select" [formControl]="categoryControl" aria-label="Seleccionar categoría">
+          <option value="">Todas</option>
+          <option *ngFor="let category of categories; trackBy: trackByCategoryId" [value]="category._id">{{ category.name }}</option>
+        </select>
+      </div>
+      <button type="button" class="catalog-filters-toggle catalog-filters-toggle--mobile" (click)="mobileFilterOpen = !mobileFilterOpen" [attr.aria-expanded]="mobileFilterOpen">
+        Filtros
+      </button>
+    </div>
+
+    <div class="catalog-mobile-filters__panel" *ngIf="mobileFilterOpen">
+      <section class="filter-group">
+        <h3>Precio</h3>
+        <div class="filter-chip-list">
+          <button type="button" class="filter-chip" [class.active]="(selectedPriceRange$ | async) === 'below-500'" (click)="selectPriceRange('below-500')">Hasta $500</button>
+          <button type="button" class="filter-chip" [class.active]="(selectedPriceRange$ | async) === 'mid-500-1500'" (click)="selectPriceRange('mid-500-1500')">$500 - $1500</button>
+          <button type="button" class="filter-chip" [class.active]="(selectedPriceRange$ | async) === 'above-1500'" (click)="selectPriceRange('above-1500')">Más de $1500</button>
+        </div>
+      </section>
+
+      <section class="filter-group">
+        <h3>Marcas</h3>
+        <div class="filter-chip-list">
+          <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Cisco')" (click)="toggleBrand('Cisco')">Cisco</button>
+          <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Fortinet')" (click)="toggleBrand('Fortinet')">Fortinet</button>
+          <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Hikvision')" (click)="toggleBrand('Hikvision')">Hikvision</button>
+          <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Dell')" (click)="toggleBrand('Dell')">Dell</button>
+          <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('TP-Link')" (click)="toggleBrand('TP-Link')">TP-Link</button>
+        </div>
+      </section>
+
+      <div class="catalog-sidebar__footer">
+        <button type="button" class="catalog-clear-btn" (click)="clearFilters()">Limpiar filtros</button>
+        <span class="catalog-sidebar__note">Los filtros se aplican al instante.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="catalog-header__pills-wrapper">
+    <div class="catalog-header__pills-header">
+      <p class="catalog-header__label">Categorías</p>
+      <p class="catalog-header__count" *ngIf="cards$ | async as cards">{{ cards.length }} resultados</p>
     </div>
 
     <ul class="catalog-header__pills">
       <li class="pill" [class.active]="(selectedCategory$ | async) === ''" (click)="selectCategory('')">Todos</li>
-      <!-- Iteración sobre tu observable real de categorías -->
       <li class="pill" *ngFor="let category of categories$ | async; trackBy: trackByCategoryId"
           [class.active]="(selectedCategory$ | async) === category._id"
           (click)="selectCategory(category._id)">
         {{ category.name }}
       </li>
     </ul>
-  </header>
+  </div>
 
-  <!-- Layout Principal de E-commerce -->
   <div class="catalog-layout">
-    <!-- Columna Izquierda (Sidebar de Filtros) -->
-    <aside class="catalog-sidebar">
-      <h2 class="catalog-sidebar__title">Filtros</h2>
-      
-      <div class="filter-group">
-        <h3>Precio</h3>
-        <label class="filter-checkbox"><input type="checkbox"> <span>Hasta $500</span></label>
-        <label class="filter-checkbox"><input type="checkbox"> <span>$500 - $1500</span></label>
-        <label class="filter-checkbox"><input type="checkbox"> <span>Más de $1500</span></label>
-      </div>
+    <aside class="catalog-sidebar" [class.open]="filtersVisible" aria-labelledby="filter-title">
+      <div class="catalog-sidebar__panel">
+        <div class="catalog-sidebar__head">
+          <div>
+            <h2 id="filter-title" class="catalog-sidebar__title">Refina tu búsqueda</h2>
+            <p class="catalog-sidebar__subtitle">Activa los filtros que necesites para encontrar el producto ideal.</p>
+          </div>
+          <button type="button" class="catalog-sidebar__close" (click)="filtersVisible = false" aria-label="Cerrar filtros">×</button>
+        </div>
 
-      <div class="filter-group">
-        <h3>Marcas</h3>
-        <label class="filter-checkbox"><input type="checkbox"> <span>Cisco</span></label>
-        <label class="filter-checkbox"><input type="checkbox"> <span>Dell</span></label>
-        <label class="filter-checkbox"><input type="checkbox"> <span>Hikvision</span></label>
+        <div class="catalog-sidebar__content">
+          <section class="filter-group">
+            <h3>Precio</h3>
+            <div class="filter-chip-list">
+              <button type="button" class="filter-chip" [class.active]="(selectedPriceRange$ | async) === 'below-500'" (click)="selectPriceRange('below-500')">Hasta $500</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedPriceRange$ | async) === 'mid-500-1500'" (click)="selectPriceRange('mid-500-1500')">$500 - $1500</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedPriceRange$ | async) === 'above-1500'" (click)="selectPriceRange('above-1500')">Más de $1500</button>
+            </div>
+          </section>
+
+          <section class="filter-group">
+            <h3>Marcas</h3>
+            <div class="filter-chip-list">
+              <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Cisco')" (click)="toggleBrand('Cisco')">Cisco</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Fortinet')" (click)="toggleBrand('Fortinet')">Fortinet</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Hikvision')" (click)="toggleBrand('Hikvision')">Hikvision</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('Dell')" (click)="toggleBrand('Dell')">Dell</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedBrands$ | async)?.includes('TP-Link')" (click)="toggleBrand('TP-Link')">TP-Link</button>
+            </div>
+          </section>
+
+          <section class="filter-group">
+            <h3>Categorías</h3>
+            <div class="filter-chip-list">
+              <button type="button" class="filter-chip" [class.active]="(selectedCategory$ | async) === 'c1'" (click)="selectCategory('c1')">Cloud Computing</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedCategory$ | async) === 'c2'" (click)="selectCategory('c2')">Seguridad</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedCategory$ | async) === 'c3'" (click)="selectCategory('c3')">Redes</button>
+              <button type="button" class="filter-chip" [class.active]="(selectedCategory$ | async) === 'c4'" (click)="selectCategory('c4')">Accesorios</button>
+            </div>
+          </section>
+
+          <div class="catalog-sidebar__footer">
+            <button type="button" class="catalog-clear-btn" (click)="clearFilters()">Limpiar filtros</button>
+            <span class="catalog-sidebar__note">Los filtros se aplican al instante.</span>
+          </div>
+        </div>
       </div>
     </aside>
 
-    <!-- Columna Derecha (Grilla de Productos) -->
     <main class="catalog-main-grid" aria-labelledby="catalog-title">
       <p class="app-feedback" *ngIf="emptyMessage$ | async as emptyMessage" aria-live="polite">
         {{ emptyMessage }}
       </p>
 
-      <!-- Iteración sobre tu observable real de productos (cards$) -->
       <a *ngFor="let item of cards$ | async; trackBy: trackByProductId"
-        class="product-card"
-        [routerLink]="['/Productos', item.product._id]"
-        [attr.aria-label]="'Ver detalle de ' + item.product.name">
+         class="product-card"
+         [routerLink]="['/Productos', item.product._id]">
         
         <div class="product-card__image-wrapper">
           <img *ngIf="item.product.images.length; else noImage" [src]="item.product.images[0]" [alt]="item.product.name" loading="lazy">
