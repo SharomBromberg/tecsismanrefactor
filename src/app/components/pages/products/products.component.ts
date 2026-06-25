@@ -1,12 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, shareReplay, startWith, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 
 import { NgFor, NgIf, AsyncPipe, CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ProductService } from 'src/app/services/product.service';
-import { CatalogCardVm, Product } from 'src/app/interfaces/product';
-import { Category } from 'src/app/interfaces/categories';
+import { ProductService } from 'src/app/core/services/product.service';
+import { CatalogCardVm, Product } from 'src/app/core/interfaces/product';
+import { Category } from 'src/app/core/interfaces/categories';
 
 @Component({
   selector: 'app-products',
@@ -22,7 +31,7 @@ import { Category } from 'src/app/interfaces/categories';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent {
   private readonly productService = inject(ProductService);
@@ -37,9 +46,9 @@ export class ProductsComponent {
 
   readonly brandFilters = ['Cisco', 'Fortinet', 'Hikvision', 'Dell', 'TP-Link'];
 
-  readonly categories$ = this.productService.getCategories().pipe(
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
+  readonly categories$ = this.productService
+    .getCategories()
+    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
   readonly selectedCategory$ = this.categoryControl.valueChanges.pipe(
     startWith(this.categoryControl.value),
@@ -55,54 +64,77 @@ export class ProductsComponent {
     this.selectedCategory$,
     this.activeSubcategory,
     this.selectedPriceRange$,
-    this.selectedBrands$
+    this.selectedBrands$,
   ]).pipe(
     switchMap(([query, categoryId, subcategory, priceRange, brands]) => {
-      const base$ = query ? this.productService.searchProducts(query) : this.productService.getProducts();
+      const base$ = query
+        ? this.productService.searchProducts(query)
+        : this.productService.getProducts();
       return base$.pipe(
-        map((products: Product[]) => products.filter((product: Product) => {
-          const normalizedName = product.name.toLowerCase();
-          const normalizedTags = (product.tags ?? []).map(tag => tag.toLowerCase());
+        map((products: Product[]) =>
+          products.filter((product: Product) => {
+            const normalizedName = product.name.toLowerCase();
+            const normalizedTags = (product.tags ?? []).map((tag) =>
+              tag.toLowerCase(),
+            );
 
-          if (categoryId && product.categoryId !== categoryId) return false;
+            if (categoryId && product.categoryId !== categoryId) return false;
 
-          if (subcategory) {
-            const hasTag = normalizedTags.some(t => t === subcategory.toLowerCase());
-            const inName = normalizedName.includes(subcategory.toLowerCase());
-            if (!hasTag && !inName) return false;
-          }
+            if (subcategory) {
+              const hasTag = normalizedTags.some(
+                (t) => t === subcategory.toLowerCase(),
+              );
+              const inName = normalizedName.includes(subcategory.toLowerCase());
+              if (!hasTag && !inName) return false;
+            }
 
-          if (brands.length > 0) {
-            const brandMatch = brands.some((brand) => {
-              const normalizedBrand = brand.toLowerCase();
-              return normalizedName.includes(normalizedBrand) || normalizedTags.some(tag => tag.includes(normalizedBrand));
-            });
-            if (!brandMatch) return false;
-          }
+            if (brands.length > 0) {
+              const brandMatch = brands.some((brand) => {
+                const normalizedBrand = brand.toLowerCase();
+                return (
+                  normalizedName.includes(normalizedBrand) ||
+                  normalizedTags.some((tag) => tag.includes(normalizedBrand))
+                );
+              });
+              if (!brandMatch) return false;
+            }
 
-          if (priceRange) {
-            if (priceRange === 'below-500' && product.price > 500) return false;
-            if (priceRange === 'mid-500-1500' && (product.price < 500 || product.price > 1500)) return false;
-            if (priceRange === 'above-1500' && product.price <= 1500) return false;
-          }
+            if (priceRange) {
+              if (priceRange === 'below-500' && product.price > 500)
+                return false;
+              if (
+                priceRange === 'mid-500-1500' &&
+                (product.price < 500 || product.price > 1500)
+              )
+                return false;
+              if (priceRange === 'above-1500' && product.price <= 1500)
+                return false;
+            }
 
-          return true;
-        }))
+            return true;
+          }),
+        ),
       );
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
-  readonly featuredProducts$ = this.productService.getFeaturedProducts().pipe(
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
+  readonly featuredProducts$ = this.productService
+    .getFeaturedProducts()
+    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
-  readonly cards$ = combineLatest([this.filteredProducts$, this.categories$]).pipe(
+  readonly cards$ = combineLatest([
+    this.filteredProducts$,
+    this.categories$,
+  ]).pipe(
     map(([products, categories]) => this.toCardViewModel(products, categories)),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
-  readonly featuredCards$ = combineLatest([this.featuredProducts$, this.categories$]).pipe(
+  readonly featuredCards$ = combineLatest([
+    this.featuredProducts$,
+    this.categories$,
+  ]).pipe(
     map(([products, categories]) => this.toCardViewModel(products, categories)),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -111,7 +143,7 @@ export class ProductsComponent {
     this.filteredProducts$,
     this.selectedCategory$,
     this.selectedPriceRange$,
-    this.selectedBrands$
+    this.selectedBrands$,
   ]).pipe(
     map(([products, categoryId, priceRange, brands]) => {
       if (products.length > 0) {
@@ -125,7 +157,10 @@ export class ProductsComponent {
   );
 
   selectCategory(categoryId: string): void {
-    if (this.categoryControl.value === categoryId && !this.activeSubcategory.value) {
+    if (
+      this.categoryControl.value === categoryId &&
+      !this.activeSubcategory.value
+    ) {
       this.categoryControl.setValue('');
     } else {
       this.categoryControl.setValue(categoryId);
@@ -134,7 +169,9 @@ export class ProductsComponent {
   }
 
   selectPriceRange(range: string): void {
-    this.selectedPriceRange.next(this.selectedPriceRange.value === range ? '' : range);
+    this.selectedPriceRange.next(
+      this.selectedPriceRange.value === range ? '' : range,
+    );
   }
 
   toggleBrand(brand: string): void {
@@ -162,10 +199,15 @@ export class ProductsComponent {
     return item.product._id ?? `${index}`;
   }
 
-  private toCardViewModel(products: Product[], categories: Category[]): CatalogCardVm[] {
+  private toCardViewModel(
+    products: Product[],
+    categories: Category[],
+  ): CatalogCardVm[] {
     return products.map((product) => ({
       product,
-      categoryName: categories.find((category) => category._id === product.categoryId)?.name ?? 'Sin categoría',
+      categoryName:
+        categories.find((category) => category._id === product.categoryId)
+          ?.name ?? 'Sin categoría',
     }));
   }
 }

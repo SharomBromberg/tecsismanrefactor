@@ -1,0 +1,13 @@
+<div class="search-box">
+  <div class="search-box__icon" aria-hidden="true">
+    <app-icon name="search"></app-icon>
+  </div>
+  
+  <app-input 
+    type="search" 
+    customStyle="input-dark-00 search-box__input" 
+    [formControl]="control()"
+    [placeholder]="placeholder()" 
+    aria-label="Buscar productos">
+  </app-input>
+</div>

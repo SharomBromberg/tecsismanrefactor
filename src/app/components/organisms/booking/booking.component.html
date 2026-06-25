@@ -1,0 +1,14 @@
+<section class="booking" aria-label="Agenda tu Cita">
+    <h2 class="booking__title">Agenda tu Cita</h2>
+    
+    <div class="booking__items" role="list">
+        @for (service of appointmentServices(); track service.id) {
+            <div role="listitem">
+                <app-card 
+                    [data]="service"
+                    (actionClick)="handleBookingClick(service.id)">
+                </app-card>
+            </div>
+        }
+    </div>
+</section>

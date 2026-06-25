@@ -1,0 +1,15 @@
+<div class="input-wrapper">
+  @if (label) {
+    <label [ngClass]="customLabelStyle">{{ label }}</label>
+  }
+  
+  <input
+    class="input"
+    [ngClass]="customStyle"
+    [type]="type"
+    [(ngModel)]="inputValue"
+    (input)="getTextInput($event)"
+    [placeholder]="placeholder"
+    [disabled]="isDisabled" 
+  />
+</div>

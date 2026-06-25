@@ -1,0 +1,41 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.search-box {
+  position: relative;
+  width: 100%;
+  max-width: 37.5rem; // Mantiene el límite visual que tenías en el header
+
+  &__icon {
+    position: absolute;
+    z-index: 1;
+    left: $spacing-md;
+    top: 50%;
+    transform: translateY(-50%);
+    width: $size-md;
+    height: $size-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $blue-00;
+    pointer-events: none; // Evita que el icono bloquee el clic hacia el input
+    transition: color 0.3s ease;
+  }
+
+  // Cuando el usuario hace focus en el input (dentro de tu app-input), 
+  // usamos :has para cambiar el color del icono y darle un toque interactivo premium
+  &:has(input:focus) {
+    .search-box__icon {
+      color: $green-02;
+    }
+  }
+
+  // Estilos que se inyectan dinámicamente en tu Átomo <app-input>
+  ::ng-deep .search-box__input {
+    width: 100%;
+    padding-left: 2.75rem !important; // Da espacio suficiente para el icono
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    
+    // Leve sombra al estar inactivo para integrarse mejor
+    @include box-shadow($shadow-gray-xs);
+  }
+}

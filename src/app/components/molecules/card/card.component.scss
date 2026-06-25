@@ -1,0 +1,115 @@
+// Ajusta esta ruta a donde tengas guardado tu index.scss de tokens
+@use "../../../../assets/tokens/index.scss" as *;
+
+.m-card {
+
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+  background-color: $white-00;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-gray-s;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-medium;
+  }
+
+  /* MODIFIER: Destacado (Ej: Servicio estrella) */
+  &--highlighted {
+    border: 2px solid $blue-00;
+    box-shadow: $shadow-primary;
+  }
+
+  &__image-container {
+    position: relative;
+    width: 100%;
+    height: 200px; // Altura fija para mantener consistencia
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+
+    // Efecto zoom sutil al hacer hover en toda la tarjeta
+    .m-card:hover & {
+      transform: scale(1.05);
+    }
+
+    &--contain {
+      object-fit: contain;
+      padding: $spacing-md; // Un poco de padding para que no toque los bordes
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    background-color: $green-00;
+    color: $blue-01;
+    padding: $spacing-2xs $spacing-sm;
+    border-radius: $radius-pill;
+    @include inter-body(0.75rem);
+    font-weight: $font-weight-bold;
+    z-index: 1;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: $spacing-lg;
+    gap: $gap-sm;
+  }
+
+  &__title {
+    margin: 0;
+    color: $blue-01;
+    @include inter-title(1.25rem);
+  }
+
+  &__description {
+    margin: 0;
+    color: $gray-00;
+    @include inter-body(1rem);
+    line-height: $line-height-normal;
+    flex-grow: 1; // Empuja el footer hacia abajo si el texto es corto
+  }
+
+  &__footer {
+    display: flex;
+    margin: 0 auto;
+    padding: 0 $spacing-lg $spacing-lg $spacing-lg;
+    margin-top: auto;
+  }
+
+  @media (max-width: $breakpoint-tablet-portrait) {
+    &__image-container {
+      height: 180px;
+    }
+    
+    &__content {
+      padding: $spacing-md;
+    }
+
+    &__footer {
+      padding: 0 $spacing-md $spacing-md $spacing-md;
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile-large) {
+    &__title {
+      @include inter-title(1.125rem);
+    }
+    
+    &__description {
+      @include inter-body(0.875rem);
+    }
+  }
+}

@@ -1,16 +1,14 @@
 import { Component } from '@angular/core';
 import { HeroComponent } from '../../organisms/hero/hero.component';
-import { LaunchComponent } from '../../organisms/launch/launch.component';
-import { DatingComponent } from '../../organisms/dating/dating.component';
-import { QuotateComponent } from '../../organisms/quotate/quotate.component';
+import { AboutComponent } from '../../organisms/about/about.component';
+import { BookingComponent } from '../../organisms/booking/booking.component';
+import { QuoteComponent } from '../../organisms/quote/quote.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeroComponent, LaunchComponent, DatingComponent, QuotateComponent],
+  imports: [HeroComponent, AboutComponent, BookingComponent, QuoteComponent],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
-
-}
+export class HomeComponent {}

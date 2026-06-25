@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="review-form" novalidate>
+  <h3 class="review-form__title">Dejar una opinión</h3>
+
+  <div class="review-form__field">
+    <app-input customStyle="input-light-00" formControlName="author" placeholder="Tu nombre">
+    </app-input>
+  </div>
+
+<div class="review-form__field">
+  <label class="label-default-00">Calificación</label>
+  <app-rating-stars
+    [rating]="form.controls.rating.value" 
+    (onRate)="form.controls.rating.setValue($event)">
+  </app-rating-stars>
+</div>
+
+  <div class="review-form__field">
+    <textarea formControlName="message" class="review-form__textarea" placeholder="¿Qué te pareció el producto?">
+    </textarea>
+  </div>
+
+  <button app-button type="submit" class="button-primary review-form__button">
+    Publicar opinión
+  </button>
+</form>

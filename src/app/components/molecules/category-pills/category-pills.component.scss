@@ -1,0 +1,58 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.category-pills {
+  display: flex;
+  gap: $spacing-sm;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: $spacing-xs;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $gray-01;
+    border-radius: $radius-pill;
+    
+    &:hover {
+      background: $blue-00;
+    }
+  }
+
+  &__item {
+    padding: $spacing-sm $spacing-md;
+    background: $white-01;
+    border: 1px solid $gray-01;
+    border-radius: $radius-pill;
+    @include inter-body(0.9rem);
+    font-weight: $font-weight-medium;
+    color: $gray-00;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0; // Evita que se aplasten si hay muchas
+
+    &:hover {
+      background: $blue-02;
+      color: $white-00;
+      border-color: $blue-00;
+      @include box-shadow($shadow-primary);
+    }
+
+    &--active {
+      background: $blue-00;
+      color: $white-00;
+      border-color: $blue-00;
+      font-weight: $font-weight-bold;
+      @include box-shadow($shadow-primary);
+    }
+  }
+}

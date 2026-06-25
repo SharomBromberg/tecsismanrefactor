@@ -1,0 +1,122 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+@mixin inputConfig($border, $outline, $background, $border-bottom, $border-radius, $height, $width, $padding) {
+ border: $border;
+ outline: $outline;
+ background: $background;
+ border-bottom: $border-bottom;
+ border-radius: $border-radius;
+ height: $height;
+ width: $width;
+ padding: $padding;
+}
+
+/* ==========================================
+ NUEVAS INPUTS - IDENTIDAD DE MARCA
+========================================== */
+
+.input-dark-00 {
+ @include inputConfig(1px solid rgba($white-00, 0.1), none, $blue-01, none, $radius-md, 44px, 100%, 0 $spacing-md);
+ @include inter-body(1rem);
+ color: $white-00;
+
+ &::placeholder {
+  color: $gray-01;
+ }
+ &:focus {
+  border: 1px solid $green-02;
+  background: $blue-05;
+ }
+}
+
+.input-dark-01 {
+ @include inputConfig(none, none, $blue-05, 1px solid rgba($white-00, 0.1), $radius-md, 44px, 100%, 0 $spacing-md);
+ @include inter-body(1rem);
+ color: $white-00;
+
+ &::placeholder {
+  color: $gray-01;
+ }
+ &:focus {
+  border-bottom: 1px solid $green-02;
+ }
+}
+
+.input-outline-00 {
+ @include inputConfig(1px solid $blue-03, none, transparent, none, $radius-md, 44px, 100%, 0 $spacing-md);
+ @include inter-body(1rem);
+ color: $white-00;
+
+ &::placeholder {
+  color: $gray-01;
+ }
+ &:focus {
+  border: 1px solid $green-02;
+  background: rgba($blue-01, 0.3);
+ }
+}
+
+.input-transparent-00 {
+ @include inputConfig(none, none, transparent, 1px solid $gray-01, 0, 40px, 100%, 0);
+ @include inter-body(1rem);
+ color: $white-00;
+
+ &::placeholder {
+  color: $gray-01;
+ }
+ &:focus {
+  border-bottom: 1px solid $green-02;
+ }
+}
+
+/* ==========================================
+ VARIANTES DE LABELS
+========================================== */
+
+.label-default-00 {
+ @include inter-body(1rem);
+ color: $white-00;
+ margin-bottom: $spacing-xs;
+ display: block;
+}
+
+.label-accent-00 {
+ @include inter-subtitle(1.125rem);
+ color: $green-02;
+ margin-bottom: $spacing-xs;
+ display: block;
+}
+
+/* ==========================================
+ CONTENEDOR GENERAL
+========================================== */
+
+.input-wrapper {
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+}
+/* ==========================================
+   VARIANTES LIGHT (Para fondos blancos)
+========================================== */
+
+.input-light-00 {
+  @include inputConfig(1px solid #e0e0e0, none, $white-00, none, $radius-md, 44px, 100%, 0 $spacing-md);
+  @include inter-body(1rem);
+  color: #333333; // Texto oscuro para alta legibilidad
+
+  &::placeholder {
+    color: #999999;
+  }
+  &:focus {
+    border: 1px solid $green-02;
+    background: #fcfcfc;
+  }
+}
+
+.label-light-00 {
+  @include inter-body(1rem);
+  color: #333333;
+  margin-bottom: $spacing-xs;
+  display: block;
+}

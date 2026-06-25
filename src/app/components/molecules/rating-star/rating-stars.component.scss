@@ -1,0 +1,23 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.rating-stars {
+  display: flex;
+  gap: $spacing-xs;
+  cursor: pointer;
+  
+  // Ajuste fino para los iconos que actúan como estrellas
+  app-icon {
+    font-size: 1.5rem;
+    color: #d1d1d1;
+    transition: color 0.2s ease;
+
+    &.active {
+      color: #ffd700; // Dorado
+    }
+
+    &:hover, 
+    &:hover ~ app-icon {
+      color: #ffd700;
+    }
+  }
+}

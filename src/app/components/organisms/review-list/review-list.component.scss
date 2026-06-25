@@ -1,0 +1,53 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  &__empty {
+    color: $gray-01;
+    font-style: italic;
+    padding: $spacing-md;
+  }
+}
+
+.review-card {
+  background: $white-00;
+  padding: $spacing-md;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: $radius-sm;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__author {
+    color: $blue-01;
+    font-weight: 600;
+  }
+
+  &__date {
+    color: $gray-01;
+    font-size: 0.85rem;
+  }
+
+  &__message {
+    color: $gray-00;
+    margin: $spacing-xs 0;
+    line-height: 1.5;
+  }
+
+  &__rating {
+    color: $green-02; // El color de tus estrellas
+    font-size: 0.9rem;
+  }
+}

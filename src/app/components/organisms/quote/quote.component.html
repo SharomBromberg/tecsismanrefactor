@@ -1,0 +1,12 @@
+<section class="quote">
+    <h2 class="quote__title">Cotiza tu sitio web</h2>
+    
+    <div class="quote__grid">
+        @for (service of servicesList(); track service.id) {
+            <app-card 
+                [data]="service"
+                (actionClick)="handleQuoteClick(service.id)">
+            </app-card>
+        }
+    </div>
+</section>

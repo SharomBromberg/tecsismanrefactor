@@ -1,0 +1,18 @@
+<div class="review-list">
+  @for (comment of comments(); track $index) {
+    <article class="review-card">
+      <header class="review-card__header">
+        <strong class="review-card__author">{{ comment.author }}</strong>
+        <small class="review-card__date">{{ comment.createdAt | date:'shortDate' }}</small>
+      </header>
+      
+      <p class="review-card__message">{{ comment.message }}</p>
+      
+      <footer class="review-card__footer">
+        <app-rating-stars [rating]="comment.rating"></app-rating-stars>
+      </footer>
+    </article>
+  } @empty {
+    <p class="review-list__empty">Aún no hay opiniones sobre este producto.</p>
+  }
+</div>

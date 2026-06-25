@@ -1,0 +1,18 @@
+<div class="product-gallery">
+  <div class="product-gallery__thumbnails">
+    @for (image of images(); track $index) {
+      <button 
+        type="button"
+        class="product-gallery__thumb" 
+        [class.is-active]="$index === selectedImageIndex"
+        (click)="selectImage($index)"
+        [attr.aria-label]="'Ver imagen ' + ($index + 1)">
+        <img [src]="image" [alt]="name() + ' miniatura ' + ($index + 1)">
+      </button>
+    }
+  </div>
+
+  <div class="product-gallery__main">
+    <img [src]="images()[selectedImageIndex]" [alt]="name()">
+  </div>
+</div>

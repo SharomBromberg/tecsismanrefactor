@@ -1,0 +1,48 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.booking {
+    background: $white-00; // Mantenemos el fondo original que tenías
+    padding: 4rem 0;
+
+    &__title {
+        @include poppins-cta(2rem);
+        color: $blue-01;
+        text-align: center;
+        margin: 0 0 2rem 0;
+    }
+
+    &__items {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+// ==========================================
+// RESPONSIVE
+// ==========================================
+@media (min-width: $breakpoint-480p) {
+    .booking {
+        padding: 6rem 2rem;
+
+        &__title {
+            @include poppins-cta(2.25rem);
+        }
+
+        &__items {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 2rem;
+        }
+    }
+}
+
+@media (max-width: $breakpoint-tablet-portrait) {
+    .booking {
+        padding: 3rem 0;
+
+        &__items {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+    }
+}

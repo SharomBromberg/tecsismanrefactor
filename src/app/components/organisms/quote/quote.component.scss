@@ -1,0 +1,56 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.quote {
+    background: $white-00;
+    padding: 4rem 0;
+
+    &__title {
+        @include poppins-cta(2rem);
+        color: $blue-01;
+        text-align: center;
+        margin: 0 0 2rem 0;
+    }
+
+    &__grid {
+        display: flex;
+        flex-wrap: wrap;
+        // grid-template-columns: 1fr;
+         gap: 1.5rem;
+    }
+}
+
+//estilos para el app-card dentro del quote
+.quote app-card {
+  width:30%;
+}
+
+
+// ==========================================
+// RESPONSIVE
+// ==========================================
+@media (min-width: $breakpoint-480p) {
+    .quote {
+        padding: 6rem 2rem;
+
+        &__title {
+            @include poppins-cta(2.25rem);
+        }
+
+        &__grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 2rem;
+            justify-content: center;
+        }
+    }
+}
+
+@media (max-width: $breakpoint-tablet-portrait) {
+    .quote {
+        padding: 3rem 0;
+
+        &__grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+    }
+}

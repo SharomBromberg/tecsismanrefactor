@@ -1,24 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
-import { MenuElement } from '../../../interfaces/menu';
+import { MenuElement } from '../../../core/interfaces/menu';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-
   menuElements: MenuElement[] = [
     { title: 'Inicio', route: '/Inicio' },
     { title: 'Servicios', route: '/Servicios' },
     { title: 'Productos', route: '/Productos' },
     { title: 'Contacto', route: '/Contacto' },
     { title: 'Blog', route: '/Blog' },
-
   ];
   isMenuOpen: boolean = false;
   currentPageClass: string = '';
@@ -31,14 +29,11 @@ export class NavbarComponent {
     });
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
   closeMenu(): void {
-
     this.isMenuOpen = false;
   }
   getPageClass(url: string): string {

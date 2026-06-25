@@ -1,0 +1,16 @@
+export type IconName = 
+  | 'whatsapp' 
+  | 'email' 
+  | 'instagram' 
+  | 'facebook' 
+  | 'phone' 
+  | 'location' 
+  | 'cart' 
+  | 'user' 
+  | 'edit' 
+  | 'delete' 
+  | 'empty-box' 
+  | 'search'
+  | 'star-filled'
+  | 'star-empty' 
+  | 'shopping-cart'; 

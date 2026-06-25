@@ -1,0 +1,23 @@
+<article class="m-card" [ngClass]="{'m-card--highlighted': data.isHighlighted}">
+
+    <div class="m-card__image-container">
+        @if (data.badgeText) {
+        <span class="m-card__badge">{{ data.badgeText }}</span>
+        }
+        <img [src]="data.imageUrl" [alt]="data.imageAlt || 'Imagen descriptiva'" class="m-card__image"
+            [class.m-card__image--contain]="data.imageFitContain" loading="lazy" />
+    </div>
+
+    <div class="m-card__content">
+        <h3 class="m-card__title">{{ data.title }}</h3>
+        <p class="m-card__description">{{ data.description }}</p>
+    </div>
+    @if (data.buttonText) {
+    <div class="m-card__footer">
+        <button app-button [ngClass]="data.buttonVariant || 'button-dark-blue'" (click)="onActionClick()">
+            {{ data.buttonText }}
+        </button>
+    </div>
+    }
+
+</article>
