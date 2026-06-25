@@ -12,22 +12,13 @@
     }
 
     &__grid {
-        display: flex;
-        flex-wrap: wrap;
-        // grid-template-columns: 1fr;
-         gap: 1.5rem;
+
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 }
 
-//estilos para el app-card dentro del quote
-.quote app-card {
-  width:30%;
-}
-
-
-// ==========================================
-// RESPONSIVE
-// ==========================================
 @media (min-width: $breakpoint-480p) {
     .quote {
         padding: 6rem 2rem;
@@ -37,20 +28,16 @@
         }
 
         &__grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+    
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; 
             gap: 2rem;
-            justify-content: center;
-        }
-    }
-}
 
-@media (max-width: $breakpoint-tablet-portrait) {
-    .quote {
-        padding: 3rem 0;
-
-        &__grid {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
+            > * {
+                flex: 0 1 calc(33.333% - 1.34rem);
+                min-width: 280px; 
+            }
         }
     }
 }
