@@ -1,4 +1,4 @@
-@use "../../../../../assets/tokens/index.scss" as *;
+@use "../../../../assets/tokens/index.scss" as *;
 
 @mixin inputConfig($border, $outline, $background, $border-bottom, $border-radius, $height, $width, $padding) {
  border: $border;
