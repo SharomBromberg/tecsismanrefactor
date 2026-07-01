@@ -191,13 +191,18 @@
 
 @media (max-width: $breakpoint-tablet-portrait) {
   .navbar {
+    width: 100%;
+    padding: $spacing-xs 0;
 
     &__content {
-      justify-content: space-between;
-      padding: $spacing-xs 0;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
+      padding: $spacing-xs $spacing-sm;
 
-      .navbar__logo__img {
-        width: 20%;
+      .navbar__logo_img {
+        width: auto;
       }
 
       .navbar__mobilebutton {
@@ -260,6 +265,7 @@
       }
 
       .navbar__mobile-actions {
+   
         gap: $spacing-2xs;
       }
 

@@ -1,4 +1,4 @@
-@use '../../../../../assets/tokens/index.scss' as *;
+@use '../../../../assets/tokens/index.scss' as *;
 
 :host {
     display: flex;
@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column;
     // flex-shrink: 0;
+    left:0;
     position: fixed;
     top: 8rem;
     bottom: $spacing-md;
@@ -32,6 +33,7 @@
     &.is-collapsed {
         justify-items: center;
         width: 6rem;
+        left: 0;
 
         .account-sidebar__profile,
         .account-sidebar__identity {

@@ -14,7 +14,7 @@ import {
 } from 'src/app/core/services/purchase-history.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { UserFavoritesService } from 'src/app/core/services/user-favorites.service';
-import { AccountSidebarComponent } from './account-sidebar.component';
+import { AccountSidebarComponent } from '../../../../shared/organisms/account-sidebar/account-sidebar.component';
 
 interface PurchaseHistoryItemVm {
   productId: string;
