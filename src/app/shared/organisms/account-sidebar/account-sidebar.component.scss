@@ -2,6 +2,7 @@
 
 :host {
     display: flex;
+    width: 100%;
     height: auto;
     min-height: 0;
 }
@@ -185,7 +186,41 @@
     }
 
     &.is-mobile {
+        position: static;
+        left: auto;
+        top: auto;
+        bottom: auto;
+        height: auto;
+        width: 100%;
+        max-width: 100%;
+        padding: $spacing-sm;
         border-radius: $radius-lg;
+        gap: $spacing-sm;
+        overflow: visible;
+
+        &.is-open,
+        &.is-collapsed {
+            width: 100%;
+            padding: $spacing-sm;
+        }
+
+        .account-sidebar__profile {
+            margin: 0;
+        }
+
+        .account-sidebar__nav {
+            height: auto;
+            place-content: flex-start;
+
+            button {
+                justify-content: flex-start;
+                text-align: left;
+            }
+        }
+
+        .account-sidebar__logout {
+            margin-top: auto;
+        }
     }
 }
 
@@ -231,28 +266,46 @@
 
 @media (max-width: $breakpoint-tablet-portrait) {
     .account-sidebar {
-        left: $spacing-sm;
-        top: calc(var(--navbar-height, 4.5rem) + #{$spacing-2xs});
-        bottom: $spacing-sm;
-        width: min(17rem, calc(100vw - #{$spacing-sm * 2}));
+        position: static;
+        left: auto;
+        top: auto;
+        bottom: auto;
+        height: auto;
+        width: 100%;
+        max-width: 100%;
         padding: $spacing-sm;
         gap: $spacing-sm;
+        overflow: visible;
 
         &.is-open {
             padding: $spacing-sm;
-            width: min(17rem, calc(100vw - #{$spacing-sm * 2}));
+            width: 100%;
         }
 
         &.is-collapsed {
-            width: 5.5rem;
+            width: 100%;
         }
 
         &__toggle {
             min-height: 2.75rem;
         }
 
+        &__profile {
+            margin: 0;
+        }
+
         &__nav {
-            gap: $spacing-2xs;
+            height: auto;
+            place-content: flex-start;
+
+            button {
+                justify-content: flex-start;
+                text-align: left;
+            }
+        }
+
+        &__logout {
+            margin-top: auto;
         }
     }
 }

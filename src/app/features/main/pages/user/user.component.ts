@@ -233,6 +233,11 @@ export class UserComponent {
 
   toggleAccountMenu(): void {
     if (this.isMobileViewport) {
+      // Mobile-first flow: keep menu visible until the user selects a section.
+      if (this.accountMenuOpen && !this.hasMobileSelection) {
+        return;
+      }
+
       const nextMenuState = !this.accountMenuOpen;
       this.accountMenuOpen = nextMenuState;
 
@@ -247,6 +252,18 @@ export class UserComponent {
     }
 
     this.accountMenuOpen = !this.accountMenuOpen;
+  }
+
+  showMobileMenu(): void {
+    if (!this.isMobileViewport) {
+      return;
+    }
+
+    this.accountMenuOpen = true;
+    this.hasMobileSelection = false;
+    this.profileEditMode = false;
+    this.addressEditMode = false;
+    this.securityEditMode = false;
   }
 
   setSection(section: AccountSection): void {

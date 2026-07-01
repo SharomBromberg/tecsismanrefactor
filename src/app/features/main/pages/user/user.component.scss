@@ -78,6 +78,10 @@
 	max-width: 100%;
 	padding-left: $spacing-md;
 	animation: user-content-in 0.24s ease;
+
+	&__menu-bar {
+		display: none;
+	}
 }
 
 .user-stat,
@@ -401,6 +405,12 @@
 		&.menu-open {
 			grid-template-columns: 17rem minmax(0, 1fr);
 		}
+
+		&.mobile-no-selection {
+			grid-template-columns: 1fr;
+			padding-left: 0;
+			padding-right: 0;
+		}
 	}
 
 	.user-content {
@@ -415,11 +425,30 @@
 		padding-bottom: $spacing-xl;
 	}
 
+	app-account-sidebar {
+		width: 100%;
+	}
+
 	.user-content {
 		padding-left: 0;
 		padding-top: $spacing-sm;
 		margin-left: 0;
 		max-width: 100%;
+
+		&__menu-bar {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			min-height: 2.8rem;
+			border: 1px solid rgba($blue-01, 0.2);
+			border-radius: $radius-sm;
+			background: rgba($white-00, 0.95);
+			color: $blue-01;
+			font-weight: 700;
+			padding: $spacing-sm;
+			cursor: pointer;
+		}
 	}
 
 	.user-panel.mobile-no-selection {

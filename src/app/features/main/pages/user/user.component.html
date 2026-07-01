@@ -4,19 +4,27 @@
   [class.mobile-no-selection]="isMobileViewport && !hasMobileSelection"
   aria-labelledby="user-panel-title"
 >
-  <app-account-sidebar
-    [open]="accountMenuOpen"
-    [mobile]="isMobileViewport"
-    [activeSection]="activeSection"
-    [displayName]="displayName"
-    [email]="profileForm.controls.email.value"
-    (toggleSidebar)="toggleAccountMenu()"
-    (sectionSelected)="onSectionSelected($event)"
-    (logoutRequested)="logoutUser()"
-  />
+  @if (!isMobileViewport || !hasMobileSelection) {
+    <app-account-sidebar
+      [open]="accountMenuOpen"
+      [mobile]="isMobileViewport"
+      [activeSection]="activeSection"
+      [displayName]="displayName"
+      [email]="profileForm.controls.email.value"
+      (toggleSidebar)="toggleAccountMenu()"
+      (sectionSelected)="onSectionSelected($event)"
+      (logoutRequested)="logoutUser()"
+    />
+  }
 
   <main class="user-content" [class.user-content--hidden-mobile]="!shouldShowContent">
     @if (panelVm$ | async; as vm) {
+      @if (isMobileViewport && hasMobileSelection) {
+        <button type="button" class="user-content__menu-bar" (click)="showMobileMenu()" aria-label="Volver al menu de cuenta">
+          Abrir menu de cuenta
+        </button>
+      }
+
       <header class="user-panel__header">
         <p class="user-panel__eyebrow">Mi cuenta</p>
         <h1 id="user-panel-title">{{ sectionTitle }}</h1>

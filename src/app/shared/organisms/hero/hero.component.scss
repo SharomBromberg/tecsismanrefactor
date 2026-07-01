@@ -2,66 +2,277 @@
 
 .hero {
   position: relative;
-  padding-top: 6rem; // evita solaparse con la navbar fija
+  padding-top: 6rem;
   background: $blue-01;
   color: $white-00;
   overflow: hidden;
+  isolation: isolate;
 
   &__bg {
     position: absolute;
     inset: 0;
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      transform: scale(1.03);
     }
   }
 
   &__overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(4,49,76,0.2) 0%, rgba(4,49,76,0.1) 100%);
+    background:
+      radial-gradient(circle at 12% 18%, rgba($green-02, 0.24), transparent 42%),
+      radial-gradient(circle at 88% 8%, rgba($blue-00, 0.28), transparent 36%),
+      linear-gradient(120deg, rgba($blue-01, 0.92) 0%, rgba($blue-01, 0.82) 52%, rgba(9, 74, 117, 0.9) 100%);
   }
 
   &__content {
     position: relative;
     z-index: 1;
-    padding: 4rem 0 3rem;
+    padding: $spacing-2xl 0 $spacing-xl;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
+    gap: $gap-lg;
+    align-items: stretch;
+  }
+
+  &__copy {
+    display: grid;
+    gap: $spacing-md;
+    align-content: center;
+    min-width: 0;
+    animation: hero-fade-up 520ms ease-out both;
+  }
+
+  &__eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 700;
+    color: rgba($white-00, 0.88);
+    @include inter-subtitle(0.82rem);
   }
 
   &__title {
-    @include poppins-cta(2.25rem);
-    margin: 0 0 0.5rem 0;
+    margin: 0;
+    @include poppins-cta(2.9rem);
+    line-height: 1.08;
+    max-width: 16ch;
+    text-wrap: balance;
   }
 
   &__subtitle {
-    @include inter-subtitle(1.125rem);
-    margin: 0 0 1rem 0;
-    color: $white-01;
+    margin: 0;
+    color: rgba($white-00, 0.9);
+    max-width: 58ch;
+    @include inter-subtitle(1.05rem);
+    line-height: 1.5;
+  }
+
+  &__highlights {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+
+    li {
+      padding: $spacing-2xs $spacing-sm;
+      border-radius: 999px;
+      border: 1px solid rgba($white-00, 0.3);
+      background: rgba($white-00, 0.11);
+      @include inter-body(0.82rem);
+      font-weight: 700;
+      color: rgba($white-00, 0.95);
+      white-space: nowrap;
+    }
   }
 
   &__actions {
     display: flex;
-    gap: 0.75rem;
+    gap: $spacing-sm;
     flex-wrap: wrap;
+    animation: hero-fade-up 620ms ease-out both;
+
+    a[app-button] {
+      min-height: 2.75rem;
+      font-weight: 700;
+      padding-inline: $spacing-md;
+    }
+  }
+
+  &__panel {
+    align-self: end;
+    display: grid;
+    gap: $spacing-sm;
+    padding: $spacing-md;
+    border-radius: $radius-lg;
+    background: linear-gradient(165deg, rgba($white-00, 0.2) 0%, rgba($white-00, 0.1) 100%);
+    border: 1px solid rgba($white-00, 0.26);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 18px 36px rgba($blue-01, 0.22);
+    animation: hero-fade-up 720ms ease-out both;
+  }
+
+  &__metric {
+    border-radius: $radius-sm;
+    padding: $spacing-sm;
+    background: rgba($blue-01, 0.28);
+    border: 1px solid rgba($white-00, 0.18);
+  }
+
+  &__metric-value {
+    margin: 0;
+    font-weight: 800;
+    color: $white-00;
+    @include poppins-cta(1.8rem);
+    line-height: 1;
+  }
+
+  &__metric-label {
+    margin: $spacing-2xs 0 0;
+    color: rgba($white-00, 0.88);
+    @include inter-body(0.86rem);
+  }
+
+  &__bottom {
+    position: relative;
+    z-index: 1;
+    padding-bottom: $spacing-md;
+    animation: hero-fade-up 820ms ease-out both;
+  }
+
+  &__ribbon {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+
+    span {
+      padding: $spacing-2xs $spacing-sm;
+      border-radius: 999px;
+      background: rgba($white-00, 0.14);
+      border: 1px solid rgba($white-00, 0.28);
+      color: rgba($white-00, 0.92);
+      @include inter-body(0.78rem);
+      font-weight: 700;
+    }
   }
 }
 
-@media (min-width: $breakpoint-480p) {
+@media (max-width: $breakpoint-desktop-medium) {
   .hero {
     &__content {
-      padding: 6rem 0 5rem;
+      grid-template-columns: 1fr;
+      padding: $spacing-xl 0 $spacing-lg;
+      gap: $gap-md;
     }
-    &__title { @include poppins-cta(3rem); }
-    &__subtitle { @include inter-subtitle(1.25rem); }
+
+    &__title {
+      @include poppins-cta(2.3rem);
+      max-width: 20ch;
+    }
+
+    &__panel {
+      max-width: 34rem;
+    }
   }
 }
 
 @media (max-width: $breakpoint-tablet-portrait) {
   .hero {
-    &__content { padding: 3rem 0 2rem; }
-    &__title { @include poppins-cta(1.75rem); }
-    &__subtitle { @include inter-subtitle(1rem); }
+    padding-top: 5rem;
+
+    &__content {
+      padding: $spacing-lg 0 $spacing-md;
+      width: min(100%, calc(100% - #{$spacing-md * 2}));
+      margin-inline: auto;
+    }
+
+    &__title {
+      @include poppins-cta(2rem);
+    }
+
+    &__subtitle {
+      @include inter-subtitle(0.98rem);
+    }
+
+    &__actions {
+      a[app-button] {
+        flex: 1 1 100%;
+        justify-content: center;
+      }
+    }
+
+    &__panel {
+      padding: $spacing-sm;
+      box-shadow: none;
+    }
+
+    &__metric {
+      padding: $spacing-xs $spacing-sm;
+    }
+
+    &__bottom {
+      padding-bottom: $spacing-sm;
+      width: min(100%, calc(100% - #{$spacing-md * 2}));
+      margin-inline: auto;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-mobile-large) {
+  .hero {
+    &__content {
+      width: min(100%, calc(100% - #{$spacing-sm * 2}));
+    }
+
+    &__bottom {
+      width: min(100%, calc(100% - #{$spacing-sm * 2}));
+    }
+
+    &__title {
+      @include poppins-cta(1.7rem);
+    }
+
+    &__eyebrow {
+      @include inter-subtitle(0.75rem);
+    }
+
+    &__highlights {
+      li {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    &__metric-value {
+      @include poppins-cta(1.55rem);
+    }
+  }
+}
+
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__copy,
+  .hero__actions,
+  .hero__panel,
+  .hero__bottom {
+    animation: none;
   }
 }

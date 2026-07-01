@@ -1,14 +1,49 @@
 <section class="hero" aria-label="Hero principal">
   <div class="hero__bg" aria-hidden="true">
-    <img src="../../../../assets/pictures/headerBackground.png" alt="" />
+    <img src="assets/pictures/headerBackground.png" alt="" />
     <div class="hero__overlay"></div>
   </div>
+
   <div class="hero__content app-container">
-    <h1 class="hero__title cta-title">Tecnología a tu alcance</h1>
-    <p class="hero__subtitle subtitle">Soluciones a tu medida para impulsar tu negocio.</p>
-    <div class="hero__actions">
-      <a routerLink="/Servicios" class="btn btn-primary">Ver servicios</a>
-      <a routerLink="/Contacto" class="btn btn-outline-light">Solicita tu cotización</a>
+    <div class="hero__copy">
+      <p class="hero__eyebrow">Soluciones tecnologicas para crecer</p>
+      <h1 class="hero__title">Tecnologia a tu alcance para vender, conectar y escalar</h1>
+      <p class="hero__subtitle">Creamos experiencias digitales robustas para ecommerce, soporte y operacion, con enfoque humano y resultados medibles.</p>
+
+      <ul class="hero__highlights" aria-label="Beneficios">
+        <li>Implementacion agil</li>
+        <li>Soporte especializado</li>
+        <li>Escalable para tu negocio</li>
+      </ul>
+
+      <div class="hero__actions">
+        <a app-button routerLink="/Servicios" class="button-gradient">Ver servicios</a>
+        <a app-button routerLink="/Contacto" class="button-inverse">Solicita tu cotizacion</a>
+      </div>
+    </div>
+
+    <aside class="hero__panel" aria-label="Indicadores de valor">
+      <article class="hero__metric">
+        <p class="hero__metric-value">+120</p>
+        <p class="hero__metric-label">proyectos entregados</p>
+      </article>
+      <article class="hero__metric">
+        <p class="hero__metric-value">98%</p>
+        <p class="hero__metric-label">clientes satisfechos</p>
+      </article>
+      <article class="hero__metric">
+        <p class="hero__metric-value">24/7</p>
+        <p class="hero__metric-label">acompañamiento tecnico</p>
+      </article>
+    </aside>
+  </div>
+
+  <div class="hero__bottom app-container" aria-hidden="true">
+    <div class="hero__ribbon">
+      <span>Ecommerce</span>
+      <span>Integraciones</span>
+      <span>Analitica</span>
+      <span>Automatizacion</span>
     </div>
   </div>
 </section>
