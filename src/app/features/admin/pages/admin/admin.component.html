@@ -1,0 +1,70 @@
+<section class="admin-page" *ngIf="vm$ | async as vm">
+  <header class="admin-header">
+    <div class="admin-header__identity">
+      <span class="admin-header__avatar">{{ initialLetter }}</span>
+      <div>
+        <p class="admin-header__eyebrow">Panel administrativo</p>
+        <h1 class="admin-header__title">Hola, {{ adminDisplayName }}</h1>
+      </div>
+    </div>
+
+    <div class="admin-header__actions">
+      <div class="admin-kpi">
+        <span class="admin-kpi__label">Categorías</span>
+        <strong class="admin-kpi__value">{{ vm.categoryCount }}</strong>
+      </div>
+      <div class="admin-kpi">
+        <span class="admin-kpi__label">Productos</span>
+        <strong class="admin-kpi__value">{{ vm.productCount }}</strong>
+      </div>
+      <button class="admin-header__logout" type="button" (click)="logoutAdmin()">
+        Cerrar sesión
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-grid">
+    <app-admin-category-form
+      [categories]="vm.categories"
+      (createCategory)="createCategory($event)"
+      (deleteCategory)="removeCategory($event)"
+    />
+
+    <app-admin-product-form
+      [categories]="vm.categories"
+      (createProduct)="createProduct($event)"
+    />
+  </div>
+
+  <article class="admin-card admin-card--table">
+    <h2 class="admin-card__title">Productos creados</h2>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Destacado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of vm.productsWithCategory; track trackByProductId($index, item)) {
+            <tr>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.categoryName }}</td>
+              <td>{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</td>
+              <td>{{ item.product.stock ?? 0 }}</td>
+              <td>{{ item.product.featured ? 'Sí' : 'No' }}</td>
+              <td>
+                <button type="button" (click)="removeProduct(item.product)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

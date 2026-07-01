@@ -1,0 +1,59 @@
+<nav class="navbar" role="navigation" aria-label="Principal">
+  <div class="navbar__content app-container">
+    <a class="navbar__logo" [routerLink]="'/Inicio'" aria-label="Inicio">
+      <img src="assets/pictures/Tecsisman.png" class="navbar__logo__img" alt="Tecsisman" width="120" height="40" loading="eager" />
+    </a>
+
+    <div class="navbar__mobile-actions">
+      <button type="button" class="navbar__cart" aria-label="Abrir carrito" (click)="openCartDrawer()">
+        <app-icon name="cart" size="md" customClass="navbar__cart-icon" ariaLabel="Carrito"></app-icon>
+        @if (cartItemsCount$ | async; as cartCount) {
+          @if (cartCount > 0) {
+            <span class="navbar__cart-badge" aria-label="{{ cartCount }} productos en carrito">{{ cartCount }}</span>
+          }
+        }
+      </button>
+
+      <button
+        type="button"
+        class="navbar__mobilebutton"
+        [attr.aria-expanded]="isMenuOpen"
+        aria-controls="navbar-panel"
+        [attr.aria-label]="isMenuOpen ? 'Cerrar menu' : 'Abrir menu'"
+        (click)="toggleMenu()"
+      >
+        <span class="navbar__mobileicon" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+    </div>
+
+    <div
+      id="navbar-panel"
+      class="navbar__panel"
+      [class.navbar__panel--open]="isMenuOpen"
+      [attr.aria-hidden]="!isMenuOpen"
+    >
+      <ul class="navbar__menu" aria-label="Secciones publicas">
+        @for (element of menuElements; track element.route) {
+          <li>
+            <a [routerLink]="element.route" routerLinkActive="active" class="navbar__menu-link" (click)="closeMenu()">{{ element.title }}</a>
+          </li>
+        }
+      </ul>
+
+      <div class="navbar__auth-actions">
+        @if (!isAuthenticated) {
+          <a class="navbar__auth navbar__auth--ghost" [routerLink]="'/login'" routerLinkActive="active" (click)="closeMenu()">Login</a>
+          <a class="navbar__auth" [routerLink]="'/register'" routerLinkActive="active" (click)="closeMenu()">Register</a>
+        } @else {
+          <span class="navbar__greeting">Hola, {{ greetingName }}</span>
+          <a class="navbar__auth navbar__auth--ghost" [routerLink]="accountRoute" (click)="closeMenu()">Mi cuenta</a>
+          <button class="navbar__auth navbar__auth--danger" type="button" (click)="logout()">Cerrar sesion</button>
+        }
+      </div>
+    </div>
+  </div>
+</nav>

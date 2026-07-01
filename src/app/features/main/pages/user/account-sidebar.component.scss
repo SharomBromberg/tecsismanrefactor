@@ -1,0 +1,256 @@
+@use '../../../../../assets/tokens/index.scss' as *;
+
+:host {
+    display: flex;
+    height: auto;
+    min-height: 0;
+}
+
+.account-sidebar {
+    display: flex;
+    flex-direction: column;
+    // flex-shrink: 0;
+    position: fixed;
+    top: 8rem;
+    bottom: $spacing-md;
+    height: 100%;
+    padding: $spacing-sm;
+    border: 1px solid rgba($blue-01, 0.12);
+    border-radius: $radius-lg;
+    background: rgba($white-00, 0.96);
+    box-shadow: 0 18px 38px rgba($blue-01, 0.12);
+    gap: $spacing-lg;
+    overflow: hidden;
+    z-index: 14;
+    transition: padding 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+
+    &.is-open {
+        padding: $spacing-md;
+        width: 17.5rem;
+    }
+
+    &.is-collapsed {
+        justify-items: center;
+        width: 6rem;
+
+        .account-sidebar__profile,
+        .account-sidebar__identity {
+            display: none;
+        }
+
+        .account-sidebar__nav {
+            gap: $spacing-xs;
+            align-content: space-evenly;
+            justify-items: center;
+            min-height: 0;
+            height: 50%;
+
+            button {
+                width: 100%;
+                max-width: 3.25rem;
+                padding: $spacing-sm 0;
+                border-radius: $radius-md;
+                margin: 0 auto;
+            }
+        }
+
+        .account-sidebar__logout {
+            width: 100%;
+            max-width: 3.25rem;
+            min-height: 3.25rem;
+            padding: $spacing-sm 0;
+            border-radius: $radius-md;
+            margin: 20% auto;
+        
+        }
+        .account-sidebar__toggle {
+            display:flex;
+            margin:0;
+            min-height: 2.9rem;
+        }
+      
+    }
+
+    &__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-xs;
+        min-height: 2.9rem;
+        border: 1px solid rgba($blue-01, 0.16);
+        border-radius: $radius-sm;
+        padding: $spacing-sm;
+        background: rgba($white-00, 0.98);
+        color: $blue-01;
+        font-weight: 700;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba($blue-00, 0.1);
+        }
+    }
+
+    &__profile {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        padding: $spacing-xs 0 $spacing-sm;
+        border-bottom: 1px solid rgba($blue-01, 0.12);
+        margin: 0 auto;
+    }
+
+    &__avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 1.25rem;
+        background: rgba($blue-00, 0.2);
+        color: $blue-01;
+    }
+
+    &__name {
+        margin: 0;
+        font-weight: 700;
+        color: $blue-01;
+    }
+
+    &__meta {
+        margin: 0;
+        font-size: 0.84rem;
+        color: rgba($gray-00, 0.72);
+    }
+
+    &__nav {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-sm;
+        // align-content: start;
+        min-width: 0;
+        height:40%;
+        place-content:center;
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: $spacing-sm;
+            width: 100%;
+            border: 0;
+            background: transparent;
+            text-align: center;
+            padding: $spacing-sm;
+            border-radius: $radius-md;
+            font-weight: 700;
+            color: rgba($blue-01, 0.86);
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+
+            &:hover {
+                background: rgba($blue-00, 0.12);
+                transform: translateY(-1px);
+            }
+
+            &.active {
+                background: linear-gradient(90deg, rgba($blue-00, 0.22) 0%, rgba($blue-00, 0.14) 100%);
+                color: $blue-01;
+            }
+        }
+    }
+
+    &__logout {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-xs;
+        width: 100%;
+        border: 0;
+        border-radius: $radius-sm;
+        background: rgba($blue-01, 0.92);
+        color: $white-00;
+        min-height: 3rem;
+        padding: $spacing-sm $spacing-md;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease;
+
+        &:hover {
+            background: $blue-01;
+            transform: translateY(-1px);
+        }
+    }
+
+    &.is-mobile {
+        border-radius: $radius-lg;
+    }
+}
+
+@media (max-width: $breakpoint-desktop-medium) {
+    .account-sidebar {
+        left: $spacing-md;
+        top: calc(var(--navbar-height, 5.5rem) + #{$spacing-sm});
+
+        &.is-open,
+        &.is-collapsed {
+            width: 17rem;
+        }
+
+        &.is-collapsed {
+            width: 5.5rem;
+
+            .account-sidebar__nav {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                justify-items: center;
+
+                button {
+                    max-width: 3.25rem;
+                }
+            }
+        }
+
+        &.is-open {
+            .account-sidebar__nav {
+                button {
+                    justify-content: flex-start;
+                    text-align: left;
+                    max-width: none;
+                }
+            }
+
+            .account-sidebar__logout {
+                justify-content: flex-start;
+                max-width: none;
+            }
+        }
+    }
+}
+
+@media (max-width: $breakpoint-tablet-portrait) {
+    .account-sidebar {
+        left: $spacing-sm;
+        top: calc(var(--navbar-height, 4.5rem) + #{$spacing-2xs});
+        bottom: $spacing-sm;
+        width: min(17rem, calc(100vw - #{$spacing-sm * 2}));
+        padding: $spacing-sm;
+        gap: $spacing-sm;
+
+        &.is-open {
+            padding: $spacing-sm;
+            width: min(17rem, calc(100vw - #{$spacing-sm * 2}));
+        }
+
+        &.is-collapsed {
+            width: 5.5rem;
+        }
+
+        &__toggle {
+            min-height: 2.75rem;
+        }
+
+        &__nav {
+            gap: $spacing-2xs;
+        }
+    }
+}

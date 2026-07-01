@@ -1,0 +1,58 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.product-info {
+  background: white;
+  padding: $spacing-xl;
+  border-radius: $radius-md;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  &__title {
+    font-size: 2rem;
+    color: #003366;
+    margin: 0;
+  }
+
+  &__price {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #003366;
+    margin: 0;
+  }
+
+  &__stock {
+    color: #2b507e;
+    font-weight: 600;
+  }
+
+  &__label {
+    font-weight: 700;
+    color: #163765;
+  }
+
+  &__quantity {
+    width: 100%;
+    border-radius: $radius-sm;
+    border: 1px solid #c4d8fc;
+    padding: $spacing-sm;
+  }
+
+  &__button {
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: $radius-sm;
+    font-weight: bold;
+    cursor: pointer;
+
+    &--primary {
+      background: $blue-01;
+    }
+
+    &--whatsapp {
+      background: #25d366;
+    }
+  }
+}

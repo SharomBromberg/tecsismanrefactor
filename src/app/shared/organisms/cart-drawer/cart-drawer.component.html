@@ -1,0 +1,70 @@
+<div
+  class="cart-drawer__backdrop"
+  [class.cart-drawer__backdrop--open]="(isOpen$ | async) ?? false"
+  (click)="close()"
+  aria-hidden="true"
+></div>
+
+<aside
+  class="cart-drawer"
+  [class.cart-drawer--open]="(isOpen$ | async) ?? false"
+  role="dialog"
+  aria-label="Carrito de compras"
+  [attr.aria-hidden]="!((isOpen$ | async) ?? false)"
+  [attr.aria-modal]="((isOpen$ | async) ?? false) ? true : null"
+>
+    <header class="cart-drawer__header">
+      <h2>Tus productos</h2>
+      <button app-button type="button" class="button-inverse cart-drawer__close" (click)="close()" aria-label="Cerrar carrito">
+        <app-icon name="close" size="md"></app-icon>
+      </button>
+    </header>
+
+    @if (checkoutMessage) {
+      <p class="cart-drawer__feedback cart-drawer__feedback--success">{{ checkoutMessage }}</p>
+    }
+    @if (checkoutError) {
+      <p class="cart-drawer__feedback cart-drawer__feedback--error">{{ checkoutError }}</p>
+    }
+
+    @if (items$ | async; as items) {
+      <section class="cart-drawer__content">
+        @if (items.length === 0) {
+          <article class="cart-drawer__empty">
+            <p>Tu carrito esta vacio</p>
+            <a routerLink="/Productos" (click)="close()">Explorar catalogo</a>
+          </article>
+        } @else {
+          <div class="cart-drawer__items">
+            @for (item of items; track item.product._id) {
+              <article class="cart-drawer__item">
+                <img [src]="item.product.images[0] || 'assets/pictures/placeholder.png'" [alt]="item.product.name" />
+
+                <div class="cart-drawer__meta">
+                  <h3>{{ item.product.name }}</h3>
+                  <p>{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</p>
+                </div>
+
+                <div class="cart-drawer__controls">
+                  <button app-button type="button" class="button-inverse cart-drawer__qty-btn" (click)="decrease(item)">-</button>
+                  <span>{{ item.quantity }}</span>
+                  <button app-button type="button" class="button-inverse cart-drawer__qty-btn" (click)="increase(item)">+</button>
+                </div>
+
+                <button app-button class="button-danger cart-drawer__remove" type="button" (click)="remove(item)">Eliminar</button>
+              </article>
+            }
+          </div>
+
+          <footer class="cart-drawer__summary" *ngIf="summary$ | async as summary">
+            <p><span>Subtotal:</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+            <p><span>Envio:</span><strong>$ 0</strong></p>
+            <p class="cart-drawer__total"><span>Total:</span><strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+
+            <button app-button type="button" class="button-gradient cart-drawer__primary" (click)="checkout(items)">Iniciar pedido</button>
+            <button app-button type="button" class="button-inverse cart-drawer__ghost" (click)="clear()">Vaciar carrito</button>
+          </footer>
+        }
+      </section>
+    }
+  </aside>

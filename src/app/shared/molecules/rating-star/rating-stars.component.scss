@@ -1,0 +1,39 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.rating-stars {
+  display: flex;
+  gap: $spacing-xs;
+  align-items: center;
+
+  &__button {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #d1d1d1;
+    transition: color 0.2s ease;
+
+    &.active {
+      color: #f8bf2e;
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: #f8bf2e;
+      outline: none;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px rgba(248, 191, 46, 0.28);
+      border-radius: $radius-sm;
+    }
+  }
+
+  app-icon {
+    color: inherit;
+    line-height: 1;
+  }
+}

@@ -1,0 +1,76 @@
+<section class="section app-container contact">
+  <h1>Hablemos de tu proyecto</h1>
+  <p class="muted">Comparte tu necesidad y te enviaremos una propuesta inicial.</p>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="contact__form">
+    <div class="contact__grid">
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input id="name" type="text" class="form-control" formControlName="name" [class.is-invalid]="submitted && f.name.invalid" />
+        @if (submitted && f.name.errors) {
+          <div class="invalid-feedback">
+            Ingresa un nombre valido (min. 2 caracteres).
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" class="form-control" formControlName="email" [class.is-invalid]="submitted && f.email.invalid" />
+        @if (submitted && f.email.errors) {
+          <div class="invalid-feedback">
+            Ingresa un email valido.
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Telefono</label>
+        <input id="phone" type="tel" class="form-control" formControlName="phone" [class.is-invalid]="submitted && f.phone.invalid" />
+        @if (submitted && f.phone.errors) {
+          <div class="invalid-feedback">
+            Ingresa un telefono valido.
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="company">Empresa (opcional)</label>
+        <input id="company" type="text" class="form-control" formControlName="company" />
+      </div>
+
+      <div class="form-group contact__grid--full">
+        <label for="serviceType">Tipo de servicio</label>
+        <select id="serviceType" class="form-control" formControlName="serviceType" [class.is-invalid]="submitted && f.serviceType.invalid">
+          <option value="">Selecciona una opcion</option>
+          <option value="Desarrollo web">Desarrollo web</option>
+          <option value="E-commerce">E-commerce</option>
+          <option value="Redes y seguridad">Redes y seguridad</option>
+          <option value="Soporte tecnico">Soporte tecnico</option>
+        </select>
+      </div>
+
+      <div class="form-group contact__grid--full">
+        <label for="message">Mensaje</label>
+        <textarea id="message" rows="5" class="form-control" formControlName="message" [class.is-invalid]="submitted && f.message.invalid"></textarea>
+        @if (submitted && f.message.errors) {
+          <div class="invalid-feedback">
+            Describe tu necesidad (min. 20 caracteres).
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="contact__actions">
+      <button class="btn btn-primary" type="submit" [disabled]="submitting || form.invalid">
+        {{ submitting ? 'Enviando...' : 'Enviar solicitud' }}
+      </button>
+      @if (successMessage) {
+        <span class="text-success">{{ successMessage }}</span>
+      }
+      @if (errorMsg) {
+        <span class="text-danger">{{ errorMsg }}</span>
+      }
+    </div>
+  </form>
+</section>

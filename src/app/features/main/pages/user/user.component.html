@@ -1,0 +1,337 @@
+<section
+  class="user-panel app-container"
+  [class.menu-open]="accountMenuOpen"
+  [class.mobile-no-selection]="isMobileViewport && !hasMobileSelection"
+  aria-labelledby="user-panel-title"
+>
+  <app-account-sidebar
+    [open]="accountMenuOpen"
+    [mobile]="isMobileViewport"
+    [activeSection]="activeSection"
+    [displayName]="displayName"
+    [email]="profileForm.controls.email.value"
+    (toggleSidebar)="toggleAccountMenu()"
+    (sectionSelected)="onSectionSelected($event)"
+    (logoutRequested)="logoutUser()"
+  />
+
+  <main class="user-content" [class.user-content--hidden-mobile]="!shouldShowContent">
+    @if (panelVm$ | async; as vm) {
+      <header class="user-panel__header">
+        <p class="user-panel__eyebrow">Mi cuenta</p>
+        <h1 id="user-panel-title">{{ sectionTitle }}</h1>
+        <p class="user-panel__subtitle">Configura tu informacion y visualiza tus compras como en un ecommerce real.</p>
+      </header>
+
+      <section class="user-panel__stats" aria-label="Resumen de compras">
+        <article class="user-stat">
+          <p class="user-stat__label">Compras registradas</p>
+          <p class="user-stat__value">{{ vm.totalOrders }}</p>
+        </article>
+        <article class="user-stat">
+          <p class="user-stat__label">Total invertido</p>
+          <p class="user-stat__value">{{ vm.totalSpent | currency:'COP':'symbol':'1.0-0' }}</p>
+        </article>
+        <article class="user-stat">
+          <p class="user-stat__label">Accesos rapidos</p>
+          <div class="user-stat__actions">
+            <a routerLink="/Productos">Catalogo</a>
+            <a routerLink="/Contacto">Soporte</a>
+          </div>
+        </article>
+        <article class="user-stat">
+          <p class="user-stat__label">Favoritos</p>
+          <p class="user-stat__value">{{ favoritesCount$ | async }}</p>
+        </article>
+      </section>
+
+      @if (activeSection === 'profile') {
+        <article class="user-card">
+          <h2 class="user-card__title">Perfil y contacto</h2>
+
+          <section class="user-readonly">
+            <article>
+              <p class="user-readonly__label">Nombre</p>
+              <p class="user-readonly__value">{{ profileForm.controls.displayName.value }}</p>
+            </article>
+            <article>
+              <p class="user-readonly__label">Correo</p>
+              <p class="user-readonly__value">{{ profileForm.controls.email.value }}</p>
+            </article>
+            <article>
+              <p class="user-readonly__label">Telefono</p>
+              <p class="user-readonly__value">{{ profileForm.controls.phone.value }}</p>
+            </article>
+          </section>
+
+          @if (!profileEditMode) {
+            <button type="button" class="user-card__action" (click)="profileEditMode = true">Editar perfil</button>
+          }
+
+          @if (profileEditMode) {
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="user-form" novalidate>
+              <div class="user-form__field">
+                <label for="profile-display-name">Nombre visible</label>
+                <input
+                  id="profile-display-name"
+                  type="text"
+                  formControlName="displayName"
+                  [class.is-invalid]="profileForm.controls.displayName.touched && profileForm.controls.displayName.invalid"
+                  autocomplete="name"
+                />
+              </div>
+
+              <div class="user-form__field">
+                <label for="profile-email">Correo</label>
+                <input
+                  id="profile-email"
+                  type="email"
+                  formControlName="email"
+                  [class.is-invalid]="profileForm.controls.email.touched && profileForm.controls.email.invalid"
+                  autocomplete="email"
+                />
+              </div>
+
+              <div class="user-form__field">
+                <label for="profile-phone">Telefono</label>
+                <input
+                  id="profile-phone"
+                  type="tel"
+                  formControlName="phone"
+                  [class.is-invalid]="profileForm.controls.phone.touched && profileForm.controls.phone.invalid"
+                  autocomplete="tel"
+                />
+              </div>
+
+              @if (profileErrorMessage) {
+                <p class="user-form__error">{{ profileErrorMessage }}</p>
+              }
+              @if (profileSavedMessage) {
+                <p class="user-form__success">{{ profileSavedMessage }}</p>
+              }
+
+              <div class="user-form__actions">
+                <button type="submit" class="user-form__submit" [disabled]="profileForm.invalid">Guardar cambios</button>
+                <button type="button" class="user-form__cancel" (click)="profileEditMode = false">Cancelar</button>
+              </div>
+            </form>
+          }
+        </article>
+      }
+
+      @if (activeSection === 'addresses') {
+        <article class="user-card">
+          <h2 class="user-card__title">Direcciones de envio</h2>
+
+          @if (!addressEditMode) {
+            <button type="button" class="user-card__action" (click)="addressEditMode = true">Agregar direccion</button>
+          }
+
+          @if (addressEditMode) {
+            <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="user-form" novalidate>
+              <p class="user-form__caption">
+                @if (editingAddressId) {
+                  Editar direccion
+                } @else {
+                  Nueva direccion
+                }
+              </p>
+
+              <div class="user-form__field">
+                <label for="address-label">Etiqueta</label>
+                <input id="address-label" type="text" formControlName="label" placeholder="Casa, Oficina..." />
+              </div>
+
+              <div class="user-form__field">
+                <label for="address-recipient">Destinatario</label>
+                <input id="address-recipient" type="text" formControlName="recipient" />
+              </div>
+
+              <div class="user-form__field">
+                <label for="address-phone">Telefono</label>
+                <input id="address-phone" type="tel" formControlName="phone" />
+              </div>
+
+              <div class="user-form__field">
+                <label for="address-city">Ciudad</label>
+                <input id="address-city" type="text" formControlName="city" />
+              </div>
+
+              <div class="user-form__field user-form__field--full">
+                <label for="address-line">Direccion</label>
+                <input id="address-line" type="text" formControlName="addressLine" />
+              </div>
+
+              <div class="user-form__field user-form__field--full">
+                <label for="address-reference">Referencia</label>
+                <input id="address-reference" type="text" formControlName="reference" placeholder="Apartamento, torre, punto de referencia" />
+              </div>
+
+              @if (addressErrorMessage) {
+                <p class="user-form__error">{{ addressErrorMessage }}</p>
+              }
+              @if (addressSuccessMessage) {
+                <p class="user-form__success">{{ addressSuccessMessage }}</p>
+              }
+
+              <div class="user-form__actions">
+                <button type="submit" class="user-form__submit" [disabled]="addressForm.invalid">
+                  @if (editingAddressId) {
+                    Actualizar direccion
+                  } @else {
+                    Guardar direccion
+                  }
+                </button>
+                <button type="button" class="user-form__cancel" (click)="cancelAddressEdit()">Cancelar</button>
+              </div>
+            </form>
+          }
+
+          <div class="address-list">
+            @for (address of addresses; track address.id) {
+              <article class="address-item">
+                <div>
+                  <h3>{{ address.label }} @if (address.isDefault) { <span>(Predeterminada)</span> }</h3>
+                  <p>{{ address.recipient }} - {{ address.phone }}</p>
+                  <p>{{ address.addressLine }}, {{ address.city }}</p>
+                  @if (address.reference) {
+                    <p>Ref: {{ address.reference }}</p>
+                  }
+                </div>
+                <div class="address-item__actions">
+                  <button type="button" (click)="editAddress(address.id)">Editar</button>
+                  @if (!address.isDefault) {
+                    <button type="button" (click)="setDefaultAddress(address.id)">Usar por defecto</button>
+                  }
+                  <button type="button" class="danger" (click)="removeAddress(address.id)">Eliminar</button>
+                </div>
+              </article>
+            }
+          </div>
+        </article>
+      }
+
+      @if (activeSection === 'security') {
+        <article class="user-card">
+          <h2 class="user-card__title">Seguridad</h2>
+
+          @if (!securityEditMode) {
+            <section class="user-readonly">
+              <article>
+                <p class="user-readonly__label">Contraseña</p>
+                <p class="user-readonly__value">********</p>
+              </article>
+            </section>
+
+            <button type="button" class="user-card__action" (click)="securityEditMode = true">Cambiar contraseña</button>
+          }
+
+          @if (securityEditMode) {
+            <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="user-form" novalidate>
+              <div class="user-form__field">
+                <label for="current-password">Contraseña actual</label>
+                <input id="current-password" type="password" formControlName="currentPassword" autocomplete="current-password" />
+              </div>
+
+              <div class="user-form__field">
+                <label for="new-password">Nueva contraseña</label>
+                <input id="new-password" type="password" formControlName="newPassword" autocomplete="new-password" />
+              </div>
+
+              <div class="user-form__field">
+                <label for="confirm-password">Confirmar nueva contraseña</label>
+                <input id="confirm-password" type="password" formControlName="confirmPassword" autocomplete="new-password" />
+              </div>
+
+              @if (passwordErrorMessage) {
+                <p class="user-form__error">{{ passwordErrorMessage }}</p>
+              }
+              @if (passwordSuccessMessage) {
+                <p class="user-form__success">{{ passwordSuccessMessage }}</p>
+              }
+
+              <div class="user-form__actions">
+                <button type="submit" class="user-form__submit" [disabled]="passwordForm.invalid">Actualizar contraseña</button>
+                <button type="button" class="user-form__cancel" (click)="securityEditMode = false">Cancelar</button>
+              </div>
+            </form>
+          }
+        </article>
+      }
+
+      @if (activeSection === 'favorites') {
+        <article class="user-card">
+          <div class="favorites-toolbar">
+            <h2 class="user-card__title">Favoritos</h2>
+            <label for="favorites-sort" class="favorites-toolbar__label">Ordenar por</label>
+            <select
+              id="favorites-sort"
+              class="favorites-toolbar__select"
+              [value]="favoriteSort$ | async"
+              (change)="setFavoriteSort($any($event.target).value)"
+            >
+              <option value="recent">Recientes</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+            </select>
+          </div>
+
+          @if (favoritesVm$ | async; as favorites) {
+            @if (favorites.length === 0) {
+              <div class="purchase-empty">
+                <p>Aun no tienes productos favoritos.</p>
+                <a routerLink="/Productos">Descubrir productos</a>
+              </div>
+            } @else {
+              <div class="purchase-list">
+                @for (item of favorites; track item.productId) {
+                  <article class="purchase-item">
+                    <img [src]="item.image" [alt]="item.name" />
+                    <div class="purchase-item__meta">
+                      <h3>{{ item.name }}</h3>
+                      <p>{{ item.price | currency:'COP':'symbol':'1.0-0' }}</p>
+                    </div>
+                    <div class="purchase-item__price">
+                      <a [routerLink]="['/Productos', item.productId]">Ver</a>
+                      <button type="button" (click)="removeFavorite(item.productId)">Quitar</button>
+                    </div>
+                  </article>
+                }
+              </div>
+            }
+          }
+        </article>
+      }
+
+      @if (activeSection === 'history') {
+        <article class="user-card user-card--history">
+          <h2 class="user-card__title">Historial de compras</h2>
+
+          @if (vm.items.length === 0) {
+            <div class="purchase-empty">
+              <p>Aun no tienes compras registradas.</p>
+              <a routerLink="/Productos">Explorar productos</a>
+            </div>
+          } @else {
+            <div class="purchase-list" aria-label="Compras registradas">
+              @for (item of vm.items; track item.productId + item.purchasedAt) {
+                <article class="purchase-item">
+                  <img [src]="item.image" [alt]="item.productName" />
+                  <div class="purchase-item__meta">
+                    <h3>{{ item.productName }}</h3>
+                    <p>Cantidad: {{ item.quantity }}</p>
+                    <p>Fecha: {{ item.purchasedAt | date:'mediumDate' }}</p>
+                  </div>
+                  <div class="purchase-item__price">
+                    <span>{{ item.unitPrice | currency:'COP':'symbol':'1.0-0' }} c/u</span>
+                    <strong>{{ item.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+                  </div>
+                </article>
+              }
+            </div>
+          }
+        </article>
+      }
+    }
+  </main>
+</section>

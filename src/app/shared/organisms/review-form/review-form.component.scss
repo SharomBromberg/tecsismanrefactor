@@ -1,0 +1,78 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.review-form {
+	display: grid;
+	gap: $spacing-md;
+	padding: $spacing-md;
+	border: 1px solid rgba($blue-01, 0.12);
+	border-radius: $radius-md;
+	background: linear-gradient(180deg, rgba($white-00, 0.98) 0%, rgba($white-01, 0.98) 100%);
+
+	&__title {
+		margin: 0;
+		color: $blue-01;
+		font-size: 1.2rem;
+	}
+
+	&__field {
+		display: grid;
+		gap: $spacing-2xs;
+	}
+
+	&__label {
+		color: #163765;
+		font-weight: 700;
+		font-size: 0.86rem;
+	}
+
+	&__control,
+	&__textarea {
+		width: 100%;
+		border: 1px solid #c4d8fc;
+		border-radius: $radius-sm;
+		background: $white-00;
+		color: #1f3963;
+		font-size: 0.95rem;
+		padding: $spacing-sm;
+	}
+
+	&__control:focus,
+	&__textarea:focus {
+		outline: 2px solid rgba(31, 111, 235, 0.26);
+		border-color: #1f6feb;
+	}
+
+	&__control--invalid,
+	&__textarea--invalid {
+		border-color: #bb1d1d;
+		background: #fff7f7;
+	}
+
+	&__textarea {
+		resize: vertical;
+		min-height: 7rem;
+	}
+
+	&__error {
+		margin: 0;
+		color: #bb1d1d;
+		font-size: 0.8rem;
+		font-weight: 600;
+	}
+
+	&__button {
+		justify-self: start;
+		min-width: 12rem;
+	}
+}
+
+@media (max-width: $breakpoint-mobile-large) {
+	.review-form {
+		padding: $spacing-sm;
+
+		&__button {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+}

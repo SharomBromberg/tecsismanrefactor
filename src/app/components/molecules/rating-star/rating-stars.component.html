@@ -1,9 +1,0 @@
-<div class="rating-stars">
-  @for (star of [1, 2, 3, 4, 5]; track star) {
-    <app-icon 
-      [name]="star <= rating() ? 'star-filled' : 'star-empty'" 
-      [class.active]="star <= rating()" 
-      (click)="selectRating(star)">
-    </app-icon>
-  }
-</div>

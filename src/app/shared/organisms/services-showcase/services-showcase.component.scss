@@ -1,0 +1,106 @@
+@use '../../../../assets/tokens/index.scss' as *;
+
+.services-showcase {
+  display: grid;
+  gap: $gap-lg;
+
+  &__tech,
+  &__group {
+    display: grid;
+    gap: $gap-md;
+    border: 1px solid #d8e5f8;
+    border-radius: $radius-lg;
+    padding: $spacing-lg;
+    background: linear-gradient(180deg, $white-00, #f8fbff);
+  }
+
+  &__eyebrow {
+    margin: 0;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #375c8b;
+    font-weight: 700;
+  }
+
+  h2,
+  h3 {
+    margin: 0;
+    color: #14365f;
+    line-height: 1.25;
+  }
+
+  h2 {
+    @include code-bolder;
+    font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  }
+
+  h3 {
+    @include code-bolder;
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
+  }
+
+  &__lead {
+    @include fira-code-semibold;
+    margin: 0;
+    color: #365678;
+  }
+
+  &__chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $gap-xs;
+
+    li {
+      border: 1px solid #dbe4f4;
+      border-radius: $radius-pill;
+      padding: $spacing-xs $spacing-sm;
+      background: #f9fbff;
+      font-weight: 600;
+      color: #21456f;
+      font-size: 0.86rem;
+    }
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $gap-md;
+  }
+}
+
+@media (min-width: $breakpoint-tablet-portrait) {
+  .services-showcase {
+    &__tech,
+    &__group {
+      padding: $spacing-xl;
+    }
+
+    &__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+@media (min-width: $breakpoint-desktop-medium) {
+  .services-showcase__cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: $breakpoint-mobile-large) {
+  .services-showcase {
+    &__tech,
+    &__group {
+      padding: $spacing-md;
+    }
+
+    h2,
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
+}

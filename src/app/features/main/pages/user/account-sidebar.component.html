@@ -1,0 +1,58 @@
+<aside class="account-sidebar" [class.is-open]="open" [class.is-collapsed]="!open" [class.is-mobile]="mobile" aria-label="Opciones de cuenta">
+  <button type="button" class="account-sidebar__toggle" (click)="toggleSidebar.emit()" [attr.aria-expanded]="open">
+    <app-icon [name]="open ? 'close' : 'menu'" size="sm" ariaLabel="Menu de cuenta"></app-icon>
+    @if (open) {
+      <span>Mi cuenta</span>
+    }
+  </button>
+
+  @if (open) {
+    <div class="account-sidebar__profile">
+      <div class="account-sidebar__avatar">{{ displayName.slice(0, 1) }}</div>
+      <div class="account-sidebar__identity">
+        <p class="account-sidebar__name">{{ displayName }}</p>
+        <p class="account-sidebar__meta">{{ email }}</p>
+      </div>
+    </div>
+  }
+
+  <nav class="account-sidebar__nav">
+    <button type="button" [class.active]="activeSection === 'profile'" (click)="selectSection('profile')">
+      <app-icon name="user" size="sm"></app-icon>
+      @if (open) {
+        <span>Perfil</span>
+      }
+    </button>
+    <button type="button" [class.active]="activeSection === 'security'" (click)="selectSection('security')">
+      <app-icon name="lock" size="sm"></app-icon>
+      @if (open) {
+        <span>Seguridad</span>
+      }
+    </button>
+    <button type="button" [class.active]="activeSection === 'addresses'" (click)="selectSection('addresses')">
+      <app-icon name="location" size="sm"></app-icon>
+      @if (open) {
+        <span>Direcciones</span>
+      }
+    </button>
+    <button type="button" [class.active]="activeSection === 'favorites'" (click)="selectSection('favorites')">
+      <app-icon name="heart" size="sm"></app-icon>
+      @if (open) {
+        <span>Favoritos</span>
+      }
+    </button>
+    <button type="button" [class.active]="activeSection === 'history'" (click)="selectSection('history')">
+      <app-icon name="history" size="sm"></app-icon>
+      @if (open) {
+        <span>Compras</span>
+      }
+    </button>
+  </nav>
+
+  <button type="button" class="account-sidebar__logout" (click)="logoutRequested.emit()">
+    <app-icon name="logout" size="sm"></app-icon>
+    @if (open) {
+      <span>Cerrar sesion</span>
+    }
+  </button>
+</aside>

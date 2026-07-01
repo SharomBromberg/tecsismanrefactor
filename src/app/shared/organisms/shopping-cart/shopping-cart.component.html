@@ -1,0 +1,64 @@
+<section class="cart-page app-container" aria-labelledby="cart-title">
+	<header class="cart-page__header">
+		<div>
+			<p class="cart-page__eyebrow">Compras</p>
+			<h1 id="cart-title">Tu carrito</h1>
+			<p class="cart-page__subtitle">Revisa tus productos antes de confirmar el pedido.</p>
+		</div>
+		<a class="cart-page__back" routerLink="/Productos">Seguir comprando</a>
+	</header>
+
+	@if (items$ | async; as items) {
+		@if (checkoutMessage) {
+			<p class="cart-feedback cart-feedback--success">{{ checkoutMessage }}</p>
+		}
+		@if (checkoutError) {
+			<p class="cart-feedback cart-feedback--error">{{ checkoutError }}</p>
+		}
+
+		@if (items.length === 0) {
+			<article class="cart-empty">
+				<h2>Tu carrito esta vacio</h2>
+				<p>Agrega productos desde el catalogo para iniciar tu compra.</p>
+				<a routerLink="/Productos">Ir al catalogo</a>
+			</article>
+		} @else {
+			<div class="cart-layout">
+				<div class="cart-list">
+					@for (item of items; track item.product._id) {
+						<article class="cart-item">
+							<img [src]="item.product.images[0] || 'assets/pictures/placeholder.png'" [alt]="item.product.name" />
+
+							<div class="cart-item__meta">
+								<h3>{{ item.product.name }}</h3>
+								<p>{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</p>
+							</div>
+
+							<div class="cart-item__controls">
+								<button type="button" (click)="decrease(item)">-</button>
+								<span>{{ item.quantity }}</span>
+								<button type="button" (click)="increase(item)">+</button>
+							</div>
+
+							<button class="cart-item__remove" type="button" (click)="remove(item)">Eliminar</button>
+						</article>
+					}
+				</div>
+
+				<aside class="cart-summary" *ngIf="summary$ | async as summary">
+					<h2>Resumen</h2>
+					<p><span>Items</span><strong>{{ summary.itemsCount }}</strong></p>
+					<p><span>Subtotal</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+					<p><span>IVA</span><strong>{{ summary.tax | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+					<p class="cart-summary__total">
+						<span>Total</span>
+						<strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+					</p>
+
+					<button type="button" class="cart-summary__primary" (click)="checkout(items)">Finalizar compra</button>
+					<button type="button" class="cart-summary__ghost" (click)="clear()">Vaciar carrito</button>
+				</aside>
+			</div>
+		}
+	}
+</section>

@@ -1,0 +1,102 @@
+<article class="admin-card admin-card--wide">
+  <h2 class="admin-card__title">Crear producto</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="admin-form admin-form--grid">
+    <div>
+      <label class="admin-form__label" for="product-name">Nombre</label>
+      <input class="admin-form__control" id="product-name" type="text" formControlName="name" />
+      @if (hasError('name', 'required')) {
+        <small class="admin-form__error">Nombre obligatorio.</small>
+      }
+      @if (hasError('name', 'minlength')) {
+        <small class="admin-form__error">Minimo 3 caracteres.</small>
+      }
+    </div>
+
+    <div>
+      <label class="admin-form__label" for="product-category">Categoría</label>
+      <select class="admin-form__control" id="product-category" formControlName="categoryId">
+        <option value="">Selecciona una categoría</option>
+        @for (category of categories; track trackByCategoryId($index, category)) {
+          <option [value]="category._id">{{ category.name }}</option>
+        }
+      </select>
+      @if (hasError('categoryId', 'required')) {
+        <small class="admin-form__error">Selecciona una categoría.</small>
+      }
+    </div>
+
+    <div>
+      <label class="admin-form__label" for="product-price">Precio</label>
+      <input class="admin-form__control" id="product-price" type="number" min="1" formControlName="price" />
+      @if (hasError('price', 'required') || hasError('price', 'min')) {
+        <small class="admin-form__error">El precio debe ser mayor a 0.</small>
+      }
+    </div>
+
+    <div>
+      <label class="admin-form__label" for="product-stock">Stock</label>
+      <input class="admin-form__control" id="product-stock" type="number" min="0" formControlName="stock" />
+      @if (hasError('stock', 'required') || hasError('stock', 'min')) {
+        <small class="admin-form__error">El stock no puede ser negativo.</small>
+      }
+    </div>
+
+    <div class="admin-form__span-2">
+      <label class="admin-form__label" for="product-description">Descripción</label>
+      <textarea
+        class="admin-form__control admin-form__control--textarea"
+        id="product-description"
+        formControlName="description"
+      ></textarea>
+      @if (hasError('description', 'required')) {
+        <small class="admin-form__error">La descripcion es obligatoria.</small>
+      }
+      @if (hasError('description', 'minlength')) {
+        <small class="admin-form__error">Minimo 12 caracteres.</small>
+      }
+    </div>
+
+    <div>
+      <label class="admin-form__label" for="product-image">Imagen (URL)</label>
+      <input class="admin-form__control" id="product-image" type="url" formControlName="imageUrl" />
+    </div>
+
+    <div class="admin-form__span-2">
+      <label class="admin-form__label" for="product-local-images">Imágenes desde tu dispositivo</label>
+      <input
+        class="admin-form__control"
+        id="product-local-images"
+        type="file"
+        accept="image/*"
+        multiple
+        (change)="onLocalImagesSelected($event)"
+      />
+
+      @if (selectedLocalImages.length > 0) {
+        <div class="admin-image-list">
+          @for (image of selectedLocalImages; track image.dataUrl; let i = $index) {
+            <article class="admin-image-card">
+              <img [src]="image.dataUrl" [alt]="image.name" />
+              <div class="admin-image-card__meta">
+                <p class="admin-image-card__name">{{ image.name }}</p>
+                <button type="button" (click)="removeLocalImage(i)">Quitar</button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+
+    <div>
+      <label class="admin-form__label" for="product-tags">Tags (coma)</label>
+      <input class="admin-form__control" id="product-tags" type="text" formControlName="tags" />
+    </div>
+
+    <label class="admin-form__checkbox admin-form__span-2">
+      <input type="checkbox" formControlName="featured" />
+      Marcar como destacado
+    </label>
+
+    <button class="admin-form__submit admin-form__span-2" type="submit" [disabled]="form.invalid">Guardar producto</button>
+  </form>
+</article>

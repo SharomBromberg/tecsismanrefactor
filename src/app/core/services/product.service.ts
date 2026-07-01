@@ -90,6 +90,7 @@ export class ProductService {
       comments: [],
       featured: product.featured || false,
       tags: product.tags || [],
+      filenames: product.filenames || [],
     };
     this.productsSubject.next([...this.productsSubject.value, newProduct]);
     return of(undefined);

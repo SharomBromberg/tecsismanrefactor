@@ -1,0 +1,122 @@
+@use '../../../../../assets/tokens' as *;
+
+.register-page {
+  min-height: calc(100vh - 6rem);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(31, 111, 235, 0.2), transparent 32%),
+    radial-gradient(circle at 88% 10%, rgba(10, 189, 227, 0.2), transparent 28%),
+    linear-gradient(160deg, #f7fbff 0%, #eef5ff 40%, #f5fbff 100%);
+}
+
+.register-card {
+  width: min(100%, 30rem);
+  border-radius: 1rem;
+  background: #ffffff;
+  border: 1px solid #dbe8ff;
+  box-shadow: 0 18px 40px rgba(16, 58, 125, 0.16);
+  padding: 1.4rem;
+
+  &__header {
+    margin-bottom: 1rem;
+  }
+
+  &__eyebrow {
+    margin: 0;
+    color: #1d4f9f;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.72rem;
+  }
+
+  &__title {
+    margin: 0.35rem 0 0;
+    color: #0f2449;
+    font-size: 1.65rem;
+  }
+
+  &__subtitle {
+    margin: 0.35rem 0 0;
+    color: #49638d;
+    font-size: 0.95rem;
+  }
+
+  &__footer {
+    margin-top: 0.9rem;
+    text-align: center;
+
+    a {
+      color: #265fb6;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  }
+}
+
+.register-form {
+  display: grid;
+  gap: 0.55rem;
+
+  &__label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #163765;
+  }
+
+  &__control {
+    width: 100%;
+    border-radius: 0.62rem;
+    border: 1px solid #c4d8fc;
+    background: #ffffff;
+    color: #1f3963;
+    padding: 0.64rem 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  &__control:focus {
+    outline: 2px solid rgba(31, 111, 235, 0.28);
+    border-color: #1f6feb;
+  }
+
+  &__control--invalid {
+    border-color: #bb1d1d;
+    background: #fff7f7;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #49638d;
+
+    &--error {
+      color: #bb1d1d;
+      font-weight: 600;
+    }
+  }
+
+  &__error {
+    margin: 0.35rem 0;
+    color: #bb1d1d;
+    font-weight: 600;
+    font-size: 0.84rem;
+  }
+
+  &__submit {
+    margin-top: 0.35rem;
+    border: 0;
+    border-radius: 0.7rem;
+    background: linear-gradient(90deg, #1f6feb 0%, #0c57cb 100%);
+    color: #fff;
+    font-weight: 700;
+    padding: 0.72rem;
+    cursor: pointer;
+  }
+
+  &__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

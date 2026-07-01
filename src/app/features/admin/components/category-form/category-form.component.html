@@ -1,0 +1,29 @@
+<article class="admin-card">
+  <h2 class="admin-card__title">Crear categoría</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="admin-form">
+    <label class="admin-form__label" for="category-name">Nombre de la categoría</label>
+    <input
+      class="admin-form__control"
+      id="category-name"
+      type="text"
+      formControlName="name"
+      placeholder="Ej. Redes empresariales"
+    />
+    @if (hasError('required')) {
+      <small class="admin-form__error">El nombre es obligatorio.</small>
+    }
+    @if (hasError('minlength')) {
+      <small class="admin-form__error">Mínimo 2 caracteres.</small>
+    }
+    <button class="admin-form__submit" type="submit" [disabled]="form.invalid">Crear categoria</button>
+  </form>
+
+  <ul class="admin-list">
+    @for (category of categories; track trackByCategoryId($index, category)) {
+      <li class="admin-list__item">
+        <span>{{ category.name }}</span>
+        <button type="button" (click)="remove(category)">Eliminar</button>
+      </li>
+    }
+  </ul>
+</article>

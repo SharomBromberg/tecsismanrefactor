@@ -1,0 +1,29 @@
+<section class="services-showcase">
+  <article class="services-showcase__tech">
+    <p class="services-showcase__eyebrow">Base tecnica</p>
+    <h2>Tecnologia pensada para vender, crecer y mantenerse</h2>
+    <p class="services-showcase__lead">
+      Seleccionamos herramientas segun tus objetivos de negocio para reducir riesgos y acelerar resultados.
+    </p>
+
+    <ul class="services-showcase__chips">
+      @for (item of stack(); track item) {
+        <li>{{ item }}</li>
+      }
+    </ul>
+  </article>
+
+  @for (group of serviceGroups(); track group.id) {
+    <article class="services-showcase__group">
+      <p class="services-showcase__eyebrow">{{ group.eyebrow }}</p>
+      <h3>{{ group.title }}</h3>
+      <p class="services-showcase__lead">{{ group.lead }}</p>
+
+      <div class="services-showcase__cards">
+        @for (service of group.cards; track service.id) {
+          <app-card [data]="service" />
+        }
+      </div>
+    </article>
+  }
+</section>

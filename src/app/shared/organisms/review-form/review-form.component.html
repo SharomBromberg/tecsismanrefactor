@@ -1,0 +1,52 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="review-form" novalidate>
+  <h3 class="review-form__title">Dejar una opinion</h3>
+
+  <div class="review-form__field">
+    <label class="review-form__label" for="review-author">Nombre</label>
+    <input
+      id="review-author"
+      type="text"
+      class="review-form__control"
+      [class.review-form__control--invalid]="form.controls.author.touched && form.controls.author.invalid"
+      formControlName="author"
+      placeholder="Tu nombre"
+      autocomplete="name"
+    />
+    @if (form.controls.author.touched && form.controls.author.hasError('required')) {
+      <small class="review-form__error">Tu nombre es obligatorio.</small>
+    }
+    @if (form.controls.author.touched && form.controls.author.hasError('minlength')) {
+      <small class="review-form__error">Minimo 2 caracteres.</small>
+    }
+  </div>
+
+  <div class="review-form__field">
+    <label class="review-form__label">Calificacion</label>
+    <app-rating-stars
+      [rating]="form.controls.rating.value"
+      (onRate)="form.controls.rating.setValue($event)"
+    ></app-rating-stars>
+  </div>
+
+  <div class="review-form__field">
+    <label class="review-form__label" for="review-message">Comentario</label>
+    <textarea
+      id="review-message"
+      formControlName="message"
+      class="review-form__textarea"
+      [class.review-form__textarea--invalid]="form.controls.message.touched && form.controls.message.invalid"
+      placeholder="Que te parecio el producto?"
+      rows="4"
+    ></textarea>
+    @if (form.controls.message.touched && form.controls.message.hasError('required')) {
+      <small class="review-form__error">El comentario es obligatorio.</small>
+    }
+    @if (form.controls.message.touched && form.controls.message.hasError('minlength')) {
+      <small class="review-form__error">Minimo 10 caracteres.</small>
+    }
+  </div>
+
+  <button app-button type="submit" class="button-primary review-form__button" [disabled]="form.invalid">
+    Publicar opinion
+  </button>
+</form>

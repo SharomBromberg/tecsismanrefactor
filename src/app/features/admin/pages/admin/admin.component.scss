@@ -1,0 +1,154 @@
+@use '../../../../../assets/tokens' as *;
+
+.admin-page {
+  padding: 1.2rem;
+  display: grid;
+  gap: 1rem;
+  background:
+    radial-gradient(circle at 8% 5%, rgba(29, 79, 159, 0.12), transparent 32%),
+    radial-gradient(circle at 90% 5%, rgba(12, 87, 203, 0.11), transparent 34%),
+    #f6faff;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 1px solid #d8e4f7;
+  border-radius: 0.95rem;
+  padding: 1rem;
+
+  &__identity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__avatar {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    background: linear-gradient(145deg, #1f6feb, #0c57cb);
+    color: #fff;
+    font-weight: 800;
+  }
+
+  &__eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4c6690;
+    font-weight: 700;
+  }
+
+  &__title {
+    margin: 0.2rem 0 0;
+    color: #1a365f;
+    font-size: 1.45rem;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  &__logout {
+    border: 0;
+    border-radius: 0.7rem;
+    background: #173965;
+    color: #fff;
+    font-weight: 700;
+    padding: 0.65rem 0.9rem;
+    cursor: pointer;
+  }
+}
+
+.admin-kpi {
+  min-width: 6.6rem;
+  border: 1px solid #d6e3f8;
+  border-radius: 0.7rem;
+  padding: 0.5rem;
+  background: #f8fbff;
+
+  &__label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #49648f;
+  }
+
+  &__value {
+    color: #12345c;
+    font-size: 1.15rem;
+  }
+}
+
+.admin-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+.admin-card {
+  background: #ffffff;
+  border: 1px solid #dbe6f7;
+  border-radius: 0.95rem;
+  padding: 1rem;
+
+  &__title {
+    margin: 0 0 0.9rem;
+    color: #173962;
+    font-size: 1.08rem;
+  }
+
+  &--table {
+    overflow: hidden;
+  }
+}
+
+.admin-table-wrap {
+  overflow: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border-bottom: 1px solid #e3eaf8;
+    padding: 0.62rem 0.5rem;
+    text-align: left;
+    color: #21456f;
+    font-size: 0.88rem;
+  }
+
+  th {
+    color: #1a3861;
+    font-weight: 700;
+    background: #f7faff;
+  }
+
+  button {
+    border: 0;
+    background: #fde8e8;
+    color: #a22a2a;
+    border-radius: 0.45rem;
+    padding: 0.4rem 0.56rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 980px) {
+  .admin-grid {
+    grid-template-columns: 0.9fr 1.6fr;
+  }
+}

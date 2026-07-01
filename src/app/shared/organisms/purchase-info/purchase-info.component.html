@@ -1,0 +1,22 @@
+<aside class="product-info">
+  <h1 class="product-info__title">{{ product.name }}</h1>
+  <p class="product-info__price">{{ product.price | currency:'COP':'symbol':'1.0-0' }}</p>
+  <span class="product-info__stock">Stock disponible: {{ product.stock }}</span>
+
+  <label class="product-info__label" for="quantity">Cantidad</label>
+  <input
+    id="quantity"
+    class="product-info__quantity"
+    type="number"
+    min="1"
+    [max]="product.stock || 99"
+    [(ngModel)]="quantity"
+  />
+
+  <button class="product-info__button product-info__button--primary" (click)="addToCart()">
+    Agregar al carrito
+  </button>
+  <button class="product-info__button product-info__button--whatsapp" (click)="buyByWhatsApp()">
+    Comprar por WhatsApp
+  </button>
+</aside>

@@ -1,0 +1,96 @@
+<section class="product-detail app-container">
+  @if (viewModel$ | async; as vm) {
+    <header class="product-header">
+      <p class="product-header__breadcrumb">Inicio / Productos / {{ vm.product.name }}</p>
+
+      <div class="product-header__meta-row">
+        <span class="product-chip">Categoria: {{ vm.product.categoryId }}</span>
+        <span class="product-chip">SKU: {{ getSku(vm.product._id) }}</span>
+        @if (vm.product.featured) {
+          <span class="product-chip product-chip--highlight">Producto destacado</span>
+        }
+      </div>
+
+      <h1 class="product-header__title">{{ vm.product.name }}</h1>
+
+      <div class="product-header__rating-row">
+        <div class="product-header__stars" aria-label="Calificacion del producto">
+          @for (star of stars; track star) {
+            <app-icon [name]="star <= vm.ratingValue ? 'star-filled' : 'star-empty'" size="md"></app-icon>
+          }
+        </div>
+        <span class="product-header__rating-value">
+          {{ vm.ratingValue | number: '1.1-1' }}
+          <span class="product-header__reviews">({{ vm.reviewCount }} opiniones)</span>
+        </span>
+        <button
+          type="button"
+          class="product-header__favorite"
+          [class.is-active]="vm.isFavorite"
+          (click)="toggleFavorite(vm.product._id)"
+          [attr.aria-label]="vm.isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+        >
+          <app-icon [name]="vm.isFavorite ? 'heart-filled' : 'heart'" size="sm"></app-icon>
+          <span>{{ vm.isFavorite ? 'En favoritos' : 'Agregar a favoritos' }}</span>
+        </button>
+      </div>
+
+      @if (vm.product.tags?.length) {
+        <ul class="product-tags" aria-label="Etiquetas del producto">
+          @for (tag of vm.product.tags; track tag) {
+            <li class="product-tags__item">{{ tag }}</li>
+          }
+        </ul>
+      }
+    </header>
+
+    <main class="product-main">
+      <section class="product-card product-card--gallery">
+        <app-product-gallery [images]="vm.product.images" [name]="vm.product.name" />
+      </section>
+
+      <aside class="product-card product-card--purchase">
+        <app-purchase-info [product]="vm.product" />
+      </aside>
+    </main>
+
+    <section class="product-benefits" aria-label="Beneficios de compra">
+      <article class="product-benefits__item">
+        <h3>Entrega confiable</h3>
+        <p>Despacho seguro y seguimiento claro para que recibas tu pedido sin sorpresas.</p>
+      </article>
+      <article class="product-benefits__item">
+        <h3>Soporte especializado</h3>
+        <p>Asesoria tecnica y atencion cercana para ayudarte antes y despues de la compra.</p>
+      </article>
+      <article class="product-benefits__item">
+        <h3>Compra protegida</h3>
+        <p>Transacciones transparentes, detalle de costos y experiencia de checkout profesional.</p>
+      </article>
+    </section>
+
+    <div class="product-details-bottom">
+      <section class="product-card product-card--description">
+        <app-product-description [description]="vm.product.technicalDescription || vm.product.description" />
+      </section>
+      
+      <section class="product-reviews product-card">
+        <h2 class="product-section__title">Opiniones del producto</h2>
+        <app-review-list [comments]="vm.product.comments" />
+
+        @if (canReviewProduct(vm.product._id)) {
+          <app-review-form (onSubmit)="submitComment(vm.product._id, $event)" />
+        } @else {
+          <article class="review-gate" aria-live="polite">
+            <p>{{ getReviewRestrictionMessage(vm.product._id) }}</p>
+            <a routerLink="/carrito" class="review-gate__link">Ir a finalizar compra</a>
+          </article>
+        }
+
+        @if (reviewPermissionError) {
+          <p class="review-gate review-gate--error">{{ reviewPermissionError }}</p>
+        }
+      </section>
+    </div>
+  }
+</section>
