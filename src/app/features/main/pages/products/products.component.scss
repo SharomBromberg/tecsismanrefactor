@@ -297,8 +297,6 @@
   font-family: $inter-font;
   font-size: 0.9rem;
 }
-
-/* Grilla de Productos Interna */
 .catalog-main-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
