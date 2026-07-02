@@ -5,6 +5,7 @@ import { CartService } from 'src/app/core/services/cart.service';
 import { CartDrawerService } from 'src/app/core/services/cart-drawer.service';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { Product } from 'src/app/core/interfaces/product';
+import { buildWhatsAppUrl } from 'src/app/core/constants/contact.constants';
 
 @Component({
   selector: 'app-purchase-info',
@@ -34,9 +35,7 @@ export class PurchaseInfoComponent {
   }
 
   buyByWhatsApp(): void {
-    const message = encodeURIComponent(
-      `Hola, quiero comprar ${this.product.name} (x${this.quantity}).`,
-    );
-    window.open(`https://wa.me/3239900100?text=${message}`, '_blank');
+    const message = `Hola, quiero comprar ${this.product.name} (x${this.quantity}).`;
+    window.open(buildWhatsAppUrl(message), '_blank', 'noopener,noreferrer');
   }
 }

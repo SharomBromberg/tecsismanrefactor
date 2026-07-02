@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
     this.loading = false;
 
     if (!success) {
-      this.errorMessage = 'Credenciales invalidas.';
+      this.errorMessage = this.authService.getLastAuthError();
       return;
     }
 

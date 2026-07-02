@@ -13,6 +13,14 @@ interface AuthSession {
   username: string;
   role: UserRole;
   displayName: string;
+  issuedAt: string;
+  expiresAt: string;
+}
+
+interface LoginAttemptState {
+  count: number;
+  firstAttemptAt: number;
+  lockedUntil?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +29,12 @@ export class AuthService {
   private readonly usersStorageKey = 'tecsisman_registered_users';
   private readonly passwordOverridesStorageKey =
     'tecsisman_user_password_overrides';
+  private readonly loginAttemptsStorageKey = 'tecsisman_login_attempts';
+  private readonly sessionDurationMs = 1000 * 60 * 60 * 12;
+  private readonly loginAttemptWindowMs = 1000 * 60 * 10;
+  private readonly loginLockDurationMs = 1000 * 60 * 5;
+  private readonly maxLoginAttempts = 5;
+  private lastAuthErrorMessage = '';
 
   // Los administradores se gestionan manualmente aquí hasta tener backend.
   private readonly adminUsers: AuthUser[] = [
@@ -47,6 +61,17 @@ export class AuthService {
   login(username: string, password: string): boolean {
     const normalizedUser = username.trim().toLowerCase();
 
+    if (!normalizedUser || !password) {
+      this.lastAuthErrorMessage = 'Ingresa usuario y contraseña.';
+      return false;
+    }
+
+    const lockMessage = this.getLoginLockMessage(normalizedUser);
+    if (lockMessage) {
+      this.lastAuthErrorMessage = lockMessage;
+      return false;
+    }
+
     const matched = this.getAllUsers().find(
       (user) =>
         user.username.toLowerCase() === normalizedUser &&
@@ -54,13 +79,25 @@ export class AuthService {
     );
 
     if (!matched) {
+      this.registerFailedAttempt(normalizedUser);
+      const updatedLockMessage = this.getLoginLockMessage(normalizedUser);
+      this.lastAuthErrorMessage =
+        updatedLockMessage ?? 'Credenciales invalidas.';
       return false;
     }
+
+    this.clearLoginAttempts(normalizedUser);
+    this.lastAuthErrorMessage = '';
+
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + this.sessionDurationMs);
 
     this.session = {
       username: matched.username,
       role: matched.role,
       displayName: matched.displayName,
+      issuedAt: now.toISOString(),
+      expiresAt: expiresAt.toISOString(),
     };
     this.writeSession(this.session);
     return true;
@@ -77,6 +114,19 @@ export class AuthService {
 
     if (!username || !displayName || !password) {
       return { ok: false, message: 'Completa todos los campos.' };
+    }
+
+    if (!this.isValidUsername(username)) {
+      return {
+        ok: false,
+        message:
+          'El usuario debe tener entre 3 y 24 caracteres y solo usar letras, numeros, punto, guion o guion bajo.',
+      };
+    }
+
+    const passwordPolicyError = this.validatePasswordStrength(password);
+    if (passwordPolicyError) {
+      return { ok: false, message: passwordPolicyError };
     }
 
     const exists = this.getAllUsers().some(
@@ -100,6 +150,7 @@ export class AuthService {
 
   logout(): void {
     this.session = null;
+    this.lastAuthErrorMessage = '';
     sessionStorage.removeItem(this.storageKey);
   }
 
@@ -113,6 +164,10 @@ export class AuthService {
 
   currentSession(): AuthSession | null {
     return this.session;
+  }
+
+  getLastAuthError(): string {
+    return this.lastAuthErrorMessage;
   }
 
   updateSessionDisplayName(displayName: string): void {
@@ -144,11 +199,9 @@ export class AuthService {
       return { ok: false, message: 'Completa ambos campos de contraseña.' };
     }
 
-    if (nextPassword.length < 6) {
-      return {
-        ok: false,
-        message: 'La nueva contraseña debe tener minimo 6 caracteres.',
-      };
+    const passwordPolicyError = this.validatePasswordStrength(nextPassword);
+    if (passwordPolicyError) {
+      return { ok: false, message: passwordPolicyError };
     }
 
     const username = this.session.username.trim().toLowerCase();
@@ -182,9 +235,16 @@ export class AuthService {
 
     try {
       const parsed = JSON.parse(raw) as AuthSession;
-      if (!parsed.username || !parsed.role) {
+      if (!parsed.username || !parsed.role || !parsed.expiresAt) {
         return null;
       }
+
+      const expiresAt = new Date(parsed.expiresAt).getTime();
+      if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
+        sessionStorage.removeItem(this.storageKey);
+        return null;
+      }
+
       return parsed;
     } catch {
       return null;
@@ -261,5 +321,105 @@ export class AuthService {
       ...this.baseUsers,
       ...this.getRegisteredUsers(),
     ];
+  }
+
+  private isValidUsername(username: string): boolean {
+    return /^[a-z0-9._-]{3,24}$/.test(username);
+  }
+
+  private validatePasswordStrength(password: string): string | null {
+    if (password.length < 8) {
+      return 'La contraseña debe tener minimo 8 caracteres.';
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return 'La contraseña debe incluir al menos una mayuscula.';
+    }
+
+    if (!/[a-z]/.test(password)) {
+      return 'La contraseña debe incluir al menos una minuscula.';
+    }
+
+    if (!/[0-9]/.test(password)) {
+      return 'La contraseña debe incluir al menos un numero.';
+    }
+
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      return 'La contraseña debe incluir al menos un caracter especial.';
+    }
+
+    return null;
+  }
+
+  private getLoginAttempts(): Record<string, LoginAttemptState> {
+    const raw = localStorage.getItem(this.loginAttemptsStorageKey);
+    if (!raw) {
+      return {};
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as Record<string, LoginAttemptState>;
+      return parsed ?? {};
+    } catch {
+      return {};
+    }
+  }
+
+  private writeLoginAttempts(value: Record<string, LoginAttemptState>): void {
+    localStorage.setItem(this.loginAttemptsStorageKey, JSON.stringify(value));
+  }
+
+  private clearLoginAttempts(username: string): void {
+    const attempts = this.getLoginAttempts();
+    if (!attempts[username]) {
+      return;
+    }
+
+    delete attempts[username];
+    this.writeLoginAttempts(attempts);
+  }
+
+  private registerFailedAttempt(username: string): void {
+    const now = Date.now();
+    const attempts = this.getLoginAttempts();
+    const current = attempts[username];
+
+    if (!current || now - current.firstAttemptAt > this.loginAttemptWindowMs) {
+      attempts[username] = {
+        count: 1,
+        firstAttemptAt: now,
+      };
+      this.writeLoginAttempts(attempts);
+      return;
+    }
+
+    const nextCount = current.count + 1;
+    attempts[username] = {
+      count: nextCount,
+      firstAttemptAt: current.firstAttemptAt,
+      lockedUntil:
+        nextCount >= this.maxLoginAttempts
+          ? now + this.loginLockDurationMs
+          : current.lockedUntil,
+    };
+    this.writeLoginAttempts(attempts);
+  }
+
+  private getLoginLockMessage(username: string): string | null {
+    const attempts = this.getLoginAttempts()[username];
+    if (!attempts?.lockedUntil) {
+      return null;
+    }
+
+    if (attempts.lockedUntil <= Date.now()) {
+      this.clearLoginAttempts(username);
+      return null;
+    }
+
+    const remainingMinutes = Math.max(
+      1,
+      Math.ceil((attempts.lockedUntil - Date.now()) / 60000),
+    );
+    return `Demasiados intentos. Intenta nuevamente en ${remainingMinutes} min.`;
   }
 }

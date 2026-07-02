@@ -1,6 +1,7 @@
 @use "../../../../../assets/tokens" as *;
 
 .catalog-page {
+  margin-top: 8rem;
   padding: $spacing-xl 0 $spacing-2xl;
   display: flex;
   flex-direction: column;

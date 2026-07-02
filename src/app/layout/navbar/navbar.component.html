@@ -5,15 +5,6 @@
     </a>
 
     <div class="navbar__mobile-actions">
-      <button type="button" class="navbar__cart" aria-label="Abrir carrito" (click)="openCartDrawer()">
-        <app-icon name="cart" size="md" customClass="navbar__cart-icon" ariaLabel="Carrito"></app-icon>
-        @if (cartItemsCount$ | async; as cartCount) {
-          @if (cartCount > 0) {
-            <span class="navbar__cart-badge" aria-label="{{ cartCount }} productos en carrito">{{ cartCount }}</span>
-          }
-        }
-      </button>
-
       <button
         type="button"
         class="navbar__mobilebutton"
@@ -27,6 +18,15 @@
           <span></span>
           <span></span>
         </span>
+      </button>
+
+      <button type="button" class="navbar__cart" aria-label="Abrir carrito" (click)="openCartDrawer()">
+        <app-icon name="cart" size="md" customClass="navbar__cart-icon" ariaLabel="Carrito"></app-icon>
+        @if (cartItemsCount$ | async; as cartCount) {
+          @if (cartCount > 0) {
+            <span class="navbar__cart-badge" aria-label="{{ cartCount }} productos en carrito">{{ cartCount }}</span>
+          }
+        }
       </button>
     </div>
 

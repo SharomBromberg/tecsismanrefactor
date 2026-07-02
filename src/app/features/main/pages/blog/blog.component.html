@@ -1,23 +1,108 @@
-<section class="blog-hero">
-  <div class="app-container">
-    <h1 class="marketing-title">Blog Tecnológico</h1>
-    <p class="muted">Novedades, guías y mejores prácticas relacionadas con nuestros servicios.</p>
-  </div>
-</section>
+@if (postsVm$ | async; as vm) {
+  <section class="blog-page">
+    <header class="blog-page__hero app-container">
+      <div class="blog-page__hero-copy">
+        <p class="blog-page__eyebrow">Contenido real para crecer con criterio</p>
+        <h1 class="blog-page__title">Blog tecnologico con enfoque en seguridad, conversion y operacion digital</h1>
+        <p class="blog-page__subtitle">Publicaciones administrables, comentarios de usuarios autenticados y una base editorial lista para crecer junto con tu API.</p>
+      </div>
 
-<section class="section">
-  <div class="app-container blog-grid">
-    @for (post of posts; track post) {
-      <article class="post-card">
-        <img [src]="post.image" [alt]="post.title" loading="lazy" />
-        <h3>{{ post.title }}</h3>
-        <p class="muted">{{ post.excerpt }}</p>
-        <a class="btn btn-outline-primary btn-sm" [routerLink]="['/Blog']">Leer más</a>
-      </article>
-    }
-  </div>
-</section>
-<section class="section app-container">
-  <h1>Blog Tecnológico</h1>
-  <p class="muted">Noticias, guías y mejores prácticas relacionadas con nuestros servicios.</p>
-</section>
+      <div class="blog-page__hero-stats" aria-label="Resumen editorial">
+        <article class="blog-page__stat">
+          <strong>{{ vm.totalPosts }}</strong>
+          <span>publicaciones</span>
+        </article>
+        <article class="blog-page__stat">
+          <strong>{{ vm.totalComments }}</strong>
+          <span>comentarios</span>
+        </article>
+      </div>
+    </header>
+
+    <section class="blog-page__featured app-container" aria-label="Post destacado">
+      @if (vm.featuredPost; as featuredPost) {
+        <article class="blog-page__featured-card">
+          <img class="blog-page__featured-image" [src]="featuredPost.coverImage" [alt]="featuredPost.title" loading="lazy" />
+          <div class="blog-page__featured-body">
+            <span class="blog-page__tag">{{ featuredPost.category }}</span>
+            <h2>{{ featuredPost.title }}</h2>
+            <p>{{ featuredPost.excerpt }}</p>
+            <div class="blog-page__meta">
+              <span>{{ featuredPost.authorDisplayName }}</span>
+              <span>{{ featuredPost.createdAt | date:'mediumDate' }}</span>
+            </div>
+            <div class="blog-page__content-block">
+              <p>{{ featuredPost.content }}</p>
+            </div>
+            <section class="blog-page__comments" aria-label="Comentarios del post destacado">
+              <h3>Preguntas y comentarios</h3>
+
+              @if (featuredPost.comments.length === 0) {
+                <p class="blog-page__empty">Todavia no hay comentarios en esta publicacion.</p>
+              } @else {
+                <div class="blog-page__comment-list">
+                  @for (comment of featuredPost.comments; track comment.id) {
+                    <article class="blog-page__comment">
+                      <div class="blog-page__comment-header">
+                        <strong>{{ comment.authorDisplayName }}</strong>
+                        <span>{{ comment.createdAt | date:'mediumDate' }}</span>
+                      </div>
+                      <p>{{ comment.message }}</p>
+                    </article>
+                  }
+                </div>
+              }
+
+              @if (isAuthenticated) {
+                <form class="blog-page__comment-form" [formGroup]="getCommentForm(featuredPost.id)" (ngSubmit)="submitComment(featuredPost)">
+                  <label [for]="'comment-' + featuredPost.id">Participa en la conversación</label>
+                  <textarea [id]="'comment-' + featuredPost.id" formControlName="message" rows="4" placeholder="Comparte tu duda o comentario"></textarea>
+                  @if (getCommentForm(featuredPost.id).controls['message'].touched && getCommentForm(featuredPost.id).controls['message'].invalid) {
+                    <small class="blog-page__form-error">Escribe entre 8 y 600 caracteres.</small>
+                  }
+                  @if (feedbackByPostId[featuredPost.id]) {
+                    <small class="blog-page__form-feedback">{{ feedbackByPostId[featuredPost.id] }}</small>
+                  }
+                  <button app-button type="submit" class="button-gradient">Publicar comentario</button>
+                </form>
+              } @else {
+                <div class="blog-page__login-callout">
+                  <p>Inicia sesion o registrate para comentar y hacer preguntas en el blog.</p>
+                  <a app-button routerLink="/login" class="button-inverse">Iniciar sesion</a>
+                </div>
+              }
+            </section>
+          </div>
+        </article>
+      }
+    </section>
+
+    <section class="blog-page__grid app-container" aria-label="Mas publicaciones">
+      @for (post of vm.posts; track trackByPostId($index, post)) {
+        <article class="blog-card">
+          <img class="blog-card__image" [src]="post.coverImage" [alt]="post.title" loading="lazy" />
+          <div class="blog-card__body">
+            <span class="blog-card__tag">{{ post.category }}</span>
+            <h3 class="blog-card__title">{{ post.title }}</h3>
+            <p class="blog-card__excerpt">{{ post.excerpt }}</p>
+            <p class="blog-card__content">{{ post.content }}</p>
+            <div class="blog-card__meta">
+              <span>{{ post.authorDisplayName }}</span>
+              <span>{{ post.createdAt | date:'mediumDate' }}</span>
+            </div>
+            <div class="blog-card__comments">
+              <strong>{{ post.comments.length }}</strong>
+              <span>comentarios</span>
+            </div>
+            @if (isAuthenticated) {
+              <form class="blog-card__comment-form" [formGroup]="getCommentForm(post.id)" (ngSubmit)="submitComment(post)">
+                <textarea formControlName="message" rows="3" placeholder="Haz una pregunta o comparte tu opinion"></textarea>
+                <button app-button type="submit" class="button-dark-blue">Comentar</button>
+              </form>
+            }
+          </div>
+        </article>
+      }
+    </section>
+  </section>
+}

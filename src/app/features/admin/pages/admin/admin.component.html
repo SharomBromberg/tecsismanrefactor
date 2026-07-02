@@ -17,6 +17,14 @@
         <span class="admin-kpi__label">Productos</span>
         <strong class="admin-kpi__value">{{ vm.productCount }}</strong>
       </div>
+      <div class="admin-kpi">
+        <span class="admin-kpi__label">Posts</span>
+        <strong class="admin-kpi__value">{{ vm.postCount }}</strong>
+      </div>
+      <div class="admin-kpi">
+        <span class="admin-kpi__label">Comentarios</span>
+        <strong class="admin-kpi__value">{{ vm.commentCount }}</strong>
+      </div>
       <button class="admin-header__logout" type="button" (click)="logoutAdmin()">
         Cerrar sesión
       </button>
@@ -35,6 +43,36 @@
       (createProduct)="createProduct($event)"
     />
   </div>
+
+  <article class="admin-card admin-card--wide">
+    <h2 class="admin-card__title">Crear publicación para el blog</h2>
+    <form class="admin-form admin-form--blog" [formGroup]="postForm" (ngSubmit)="createBlogPost()">
+      <div>
+        <label class="admin-form__label" for="blog-title">Título</label>
+        <input class="admin-form__control" id="blog-title" type="text" formControlName="title" />
+      </div>
+      <div>
+        <label class="admin-form__label" for="blog-category">Categoría</label>
+        <input class="admin-form__control" id="blog-category" type="text" formControlName="category" />
+      </div>
+      <div class="admin-form__full">
+        <label class="admin-form__label" for="blog-cover">Imagen</label>
+        <input class="admin-form__control" id="blog-cover" type="text" formControlName="coverImage" />
+      </div>
+      <div class="admin-form__full">
+        <label class="admin-form__label" for="blog-excerpt">Extracto</label>
+        <textarea class="admin-form__control admin-form__control--textarea" id="blog-excerpt" rows="3" formControlName="excerpt"></textarea>
+      </div>
+      <div class="admin-form__full">
+        <label class="admin-form__label" for="blog-content">Contenido</label>
+        <textarea class="admin-form__control admin-form__control--textarea" id="blog-content" rows="6" formControlName="content"></textarea>
+      </div>
+      @if (blogFeedback) {
+        <p class="admin-form__feedback">{{ blogFeedback }}</p>
+      }
+      <button class="admin-form__submit" type="submit">Publicar entrada</button>
+    </form>
+  </article>
 
   <article class="admin-card admin-card--table">
     <h2 class="admin-card__title">Productos creados</h2>
@@ -60,6 +98,36 @@
               <td>{{ item.product.featured ? 'Sí' : 'No' }}</td>
               <td>
                 <button type="button" (click)="removeProduct(item.product)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="admin-card admin-card--table">
+    <h2 class="admin-card__title">Publicaciones del blog</h2>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Autor</th>
+            <th>Comentarios</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (post of vm.posts; track trackByPostId($index, post)) {
+            <tr>
+              <td>{{ post.title }}</td>
+              <td>{{ post.category }}</td>
+              <td>{{ post.authorDisplayName }}</td>
+              <td>{{ post.comments.length }}</td>
+              <td>
+                <button type="button" (click)="removeBlogPost(post)">Eliminar</button>
               </td>
             </tr>
           }

@@ -1,7 +1,8 @@
 @use '../../../../../assets/tokens/index.scss' as *;
 
 .contact {
-	max-width: 900px;
+	margin-top:8rem;
+	max-width: 100%;
 
 	h1 {
 		margin-bottom: $spacing-xs;

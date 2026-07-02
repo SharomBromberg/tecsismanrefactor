@@ -9,7 +9,7 @@
         <input id="name" type="text" class="form-control" formControlName="name" [class.is-invalid]="submitted && f.name.invalid" />
         @if (submitted && f.name.errors) {
           <div class="invalid-feedback">
-            Ingresa un nombre valido (min. 2 caracteres).
+            Ingresa un nombre valido entre 2 y 80 caracteres.
           </div>
         }
       </div>
@@ -29,7 +29,7 @@
         <input id="phone" type="tel" class="form-control" formControlName="phone" [class.is-invalid]="submitted && f.phone.invalid" />
         @if (submitted && f.phone.errors) {
           <div class="invalid-feedback">
-            Ingresa un telefono valido.
+            Ingresa un telefono valido de 7 a 20 caracteres.
           </div>
         }
       </div>
@@ -55,7 +55,7 @@
         <textarea id="message" rows="5" class="form-control" formControlName="message" [class.is-invalid]="submitted && f.message.invalid"></textarea>
         @if (submitted && f.message.errors) {
           <div class="invalid-feedback">
-            Describe tu necesidad (min. 20 caracteres).
+            Describe tu necesidad entre 20 y 1200 caracteres.
           </div>
         }
       </div>

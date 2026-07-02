@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 // Importamos la molécula (Asegúrate de que la ruta sea correcta según tu proyecto)
 import { CardComponent } from '../../molecules/card/card.component';
+import { buildWhatsAppUrl } from 'src/app/core/constants/contact.constants';
 
 // Importamos las interfaces
 import { CardData } from '../../../core/interfaces/card-data.interface';
@@ -67,7 +68,9 @@ export class QuoteComponent {
   ]);
 
   handleQuoteClick(serviceId: string | number): void {
-    const whatsappUrl = 'https://wa.me/3239900100';
+    const whatsappUrl = buildWhatsAppUrl(
+      `Hola, quiero cotizar el servicio ${serviceId.toString()}.`,
+    );
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   }
 }

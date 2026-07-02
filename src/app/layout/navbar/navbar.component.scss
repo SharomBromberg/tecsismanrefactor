@@ -1,14 +1,15 @@
 @use "../../../assets//tokens/index.scss" as *;
 
 .navbar {
-  width: 100%;
-  position: sticky;
+  min-width: 100vw;
+  position: fixed;
   height: 8rem;
   top: 0;
   z-index: 1000;
   box-shadow: 0 8px 24px rgba(6, 22, 45, 0.14);
   background-color: $blue-01;
   overflow-x: clip;
+  justify-content: center;
 
   *,
   *::before,
@@ -20,22 +21,25 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: $spacing-sm 0;
+    padding: 0 $spacing-lg;
     gap: $gap-md;
     position: relative;
-    min-width: 0;
+    min-width:100%;
   }
 
   &__logo {
     display: flex;
-    align-items: center;
-    text-decoration: none;
-    flex-shrink: 0;
+      place-content: center;
+      text-decoration: none;
+      flex-shrink: 0;
+      height: 100%;
+    
+      place-content: center;
 
     &__img {
-      height: auto;
+      height: 85%;
       margin: 0 auto;
-      max-width: 80%;
+      
     }
   }
 
@@ -46,18 +50,22 @@
     padding: 0;
     gap: $gap-sm;
     align-items: center;
-    flex: 1 1 auto;
+    // flex: 1 1 auto;
     min-width: 0;
     justify-content: center;
   }
 
   &__mobilebutton {
     display: none;
+    align-items: center;
+    justify-content: center;
     border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: $radius-sm;
     background: rgba(255, 255, 255, 0.08);
     color: $white-00;
-    padding: $spacing-2xs $spacing-sm;
+    min-height: 2.3rem;
+    width: 2.3rem;
+    padding: 0;
     cursor: pointer;
   }
 
@@ -87,11 +95,13 @@
 
   &__panel {
     display: flex;
+    width:80%;
     align-items: center;
     gap: $gap-sm;
-    flex: 1 1 auto;
+    // flex: 1 1 auto;
+    flex-shrink: 0;
     min-width: 0;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
 
   &__cart {
@@ -168,10 +178,13 @@
     transition: background-color 0.2s ease;
     background: transparent;
     cursor: pointer;
+    box-shadow: -0.56rem 0.56rem 0rem -0.18rem rgba(4, 49, 76, 0.37);
+
 
     &:hover,
     &.active {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba($blue-06, 0.12);
+
     }
 
     &--ghost {
@@ -200,9 +213,16 @@
       width: 100%;
       justify-content: center;
       padding: $spacing-xs $spacing-sm;
+      z-index: 2;
 
       .navbar__logo_img {
         width: auto;
+      }
+
+      .navbar__logo,
+      .navbar__mobile-actions {
+        position: relative;
+        z-index: 3;
       }
 
       .navbar__mobilebutton {
@@ -211,34 +231,41 @@
 
       .navbar__panel {
         display: none;
-        position: absolute;
-        top: calc(100% + 0.25rem);
-        left: $spacing-sm;
-        right: $spacing-sm;
-        background: $blue-01;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: $radius-md;
-        padding: $spacing-sm;
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
-        max-height: calc(100vh - 5rem);
-        overflow-y: auto;
-        overflow-x: hidden;
+        position: fixed;
+        overflow: hidden;
+        z-index: 4;
+        top: 8rem;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        height: calc(100vh - 8rem);
+        background:
+          linear-gradient(180deg, rgba($blue-06, 0.98) 0%, rgba($blue-00, 0.98) 100%);
+        opacity: 1;
+        border-top: 1px solid rgba($white-00, 0.08);
+        border-radius: 0;
+        padding: $spacing-xs;
+        box-shadow: 0 18px 40px rgba(6, 22, 45, 0.18);
 
         &--open {
           display: flex;
           flex-direction: column;
-          align-items: stretch;
-          gap: $spacing-sm;
+          align-items: center;
+          justify-content: space-around;
+          padding-top: $spacing-lg;
+          padding-bottom: $spacing-lg;
         }
       }
 
       .navbar__menu {
+        height: 50%;
         width: 100%;
-        justify-content: stretch;
         flex-direction: column;
-        align-items: stretch;
-        gap: $gap-xs;
-        margin-bottom: 0;
+        gap: $gap-md;
+        margin-top: 10%;
+
+
+
       }
 
       .navbar__menu li {
@@ -248,30 +275,68 @@
       .navbar__menu-link {
         display: block;
         width: 100%;
-        padding: $spacing-xs;
+        padding: $spacing-sm 0;
+        line-height: 1.6;
+        text-align: center;
+        color: $white-00;
+        border: 0;
+        font-size: 1.08rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        background: $blue-01;
+        border: 0.15rem solid rgba($blue-01, 0.12);
         border-radius: $radius-sm;
+        box-shadow: -0.56rem 0.56rem 0rem -0.18rem rgba($blue-01, 0.37);
 
         &:hover,
         &.active {
-          background: rgba(255, 255, 255, 0.1);
+          color: $white-00;
+          background: rgba($white-00, 0.12);
+          border: 1px solid rgba($white-00, 0.45);
+          opacity: 1;
         }
       }
 
       .navbar__auth-actions {
         width: 100%;
-        display: grid;
-        grid-template-columns: 1fr;
+        height: 30%;
+        margin-top: auto;
+        margin-bottom: 10%;
+        display: flex;
+        flex-direction: column;
         align-items: stretch;
+        justify-content: center;
+        justify-items: center;
+        gap: $spacing-sm;
+        padding: 0 $spacing-md;
+        border-radius: $radius-lg;
+        background: $blue-06;
+
       }
 
       .navbar__mobile-actions {
-   
-        gap: $spacing-2xs;
+        gap: $gap-xs;
+        gap: $gap-2xs;
       }
 
+      .navbar__mobilebutton,
       .navbar__cart {
-        min-height: 2.1rem;
-        width: 2.1rem;
+        min-height: 2.5rem;
+        width: 2.5rem;
+        border-radius: $radius-md;
+      }
+
+      .navbar__mobilebutton {
+        display: inline-flex;
+      }
+
+      .navbar__mobileicon {
+        width: 1.05rem;
+        gap: 0.22rem;
+
+        span {
+          height: 2px;
+        }
       }
 
       .navbar__cart-badge {
@@ -285,14 +350,53 @@
 
       .navbar__auth {
         width: 100%;
+        min-height: 2.9rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-sm $spacing-md;
         text-align: center;
-        padding: $spacing-xs $spacing-sm;
-        font-size: 0.9rem;
+        font-size: 0.98rem;
+        color: $white-00;
+        background: rgba($white-00, 0.08);
+        border: 1px solid rgba($white-00, 0.18);
+        border-radius: $radius-md;
+        font-weight: $font-weight-bold;
+        letter-spacing: 0.01em;
+        text-decoration: none;
+
+
+        &:hover,
+        &.active {
+          background: rgba($white-00, 0.16);
+          border-color: rgba($white-00, 0.34);
+          transform: translateY(-1px);
+          box-shadow: 0 0.7rem 1.6rem rgba(6, 22, 45, 0.22);
+        }
+
+        &--ghost {
+          background: rgba($white-00, 0.05);
+        }
+
+        &--danger {
+          color: #ffe8e8;
+          border-color: rgba(255, 175, 175, 0.28);
+          background: rgba(255, 255, 255, 0.06);
+
+          &:hover {
+            background: rgba(194, 45, 45, 0.24);
+            border-color: rgba(255, 175, 175, 0.42);
+            color: $white-00;
+          }
+        }
       }
 
       .navbar__greeting {
         text-align: center;
-        font-size: 0.82rem;
+        font-size: 0.86rem;
+        padding: 0 $spacing-xs;
+        color: rgba($white-00, 0.88);
+        margin-bottom: $spacing-2xs;
       }
     }
 

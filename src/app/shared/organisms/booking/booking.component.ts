@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../molecules/card/card.component';
 import { CardData } from '../../../core/interfaces/card-data.interface';
 import { statusClassButton } from '../../../core/interfaces/buttoninterface';
+import { buildWhatsAppUrl } from 'src/app/core/constants/contact.constants';
 
 @Component({
   selector: 'app-booking',
@@ -48,9 +49,9 @@ export class BookingComponent {
 
   // Esta función intercepta el evento (click) de la molécula Card
   handleBookingClick(serviceId: string | number): void {
-    // Aquí podrías agregar lógica para saber qué servicio se clickeó,
-    // pero por ahora solo abrimos el enlace de WhatsApp general.
-    const whatsappUrl = 'https://wa.me/3239900100';
+    const whatsappUrl = buildWhatsAppUrl(
+      `Hola, quiero agendar el servicio ${serviceId.toString()}.`,
+    );
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   }
 }

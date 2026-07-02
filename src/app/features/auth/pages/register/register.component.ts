@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 
@@ -19,11 +25,33 @@ export class RegisterComponent {
   loading = false;
   errorMessage = '';
 
-  readonly form = this.fb.group({
-    displayName: ['', [Validators.required, Validators.minLength(2)]],
-    username: ['', [Validators.required, Validators.minLength(3)]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-  });
+  private readonly usernamePattern = /^[a-z0-9._-]{3,24}$/;
+  private readonly strongPasswordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+  readonly form = this.fb.group(
+    {
+      displayName: ['', [Validators.required, Validators.minLength(2)]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(this.usernamePattern),
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(this.strongPasswordPattern),
+        ],
+      ],
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validators: this.passwordsMatchValidator },
+  );
 
   submit(): void {
     if (this.form.invalid) {
@@ -58,5 +86,18 @@ export class RegisterComponent {
     }
 
     void this.router.navigate(['/user']);
+  }
+
+  private passwordsMatchValidator(
+    control: AbstractControl,
+  ): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    if (!password || !confirmPassword) {
+      return null;
+    }
+
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 }
