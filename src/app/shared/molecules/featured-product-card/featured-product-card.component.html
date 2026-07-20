@@ -1,0 +1,48 @@
+<article class="featured-product-card">
+  <div class="featured-product-card__media">
+    @if (product.images.length > 0) {
+      <img
+        class="featured-product-card__image"
+        [src]="product.images[0]"
+        [alt]="product.name"
+        loading="lazy"
+      />
+    } @else {
+      <div class="featured-product-card__placeholder" aria-hidden="true"></div>
+    }
+
+    <span class="featured-product-card__badge">{{ categoryName }}</span>
+  </div>
+
+  <div class="featured-product-card__body">
+    <div class="featured-product-card__copy">
+      <h3 class="featured-product-card__title">{{ product.name }}</h3>
+      <p class="featured-product-card__description">{{ product.description }}</p>
+    </div>
+
+    <div class="featured-product-card__footer">
+      <div class="featured-product-card__price-block">
+        <span class="featured-product-card__price-label">Desde</span>
+        <strong class="featured-product-card__price">{{ product.price | currency:'COP':'symbol':'1.0-0' }}</strong>
+      </div>
+
+      <div class="featured-product-card__actions">
+        <a
+          app-button
+          class="app-btn app-btn--white-outline featured-product-card__action"
+          [routerLink]="['/Productos', product._id]"
+        >
+          Ver detalle
+        </a>
+        <button
+          app-button
+          type="button"
+          class="app-btn app-btn--gradient featured-product-card__action featured-product-card__action--primary"
+          (click)="onAddToCart()"
+        >
+          Agregar al carrito
+        </button>
+      </div>
+    </div>
+  </div>
+</article>

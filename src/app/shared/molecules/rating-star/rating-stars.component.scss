@@ -13,21 +13,21 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #d1d1d1;
+    color: $rating-star-inactive;
     transition: color 0.2s ease;
 
     &.active {
-      color: #f8bf2e;
+      color: $rating-star-active;
     }
 
     &:hover,
     &:focus-visible {
-      color: #f8bf2e;
+      color: $rating-star-active;
       outline: none;
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 3px rgba(248, 191, 46, 0.28);
+      box-shadow: 0 0 0 3px rgb(248 191 46 / 28%);
       border-radius: $radius-sm;
     }
   }

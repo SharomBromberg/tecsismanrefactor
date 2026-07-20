@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-
-interface FavoriteMap {
-  [username: string]: string[];
-}
+import { FavoriteMap } from '@core/interfaces/user-favorites';
 
 @Injectable({
   providedIn: 'root',

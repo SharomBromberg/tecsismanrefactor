@@ -2,7 +2,6 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
 .m-card {
-
   display: flex;
   flex-direction: column;
   height: 100%; 
@@ -55,7 +54,9 @@
     color: $blue-01;
     padding: $spacing-2xs $spacing-sm;
     border-radius: $radius-pill;
+
     @include inter-body(0.75rem);
+
     font-weight: $font-weight-bold;
     z-index: 1;
   }
@@ -71,13 +72,16 @@
   &__title {
     margin: 0;
     color: $blue-01;
+
     @include inter-title(1.25rem);
   }
 
   &__description {
     margin: 0;
     color: $gray-00;
+
     @include inter-body(1rem);
+
     line-height: $line-height-normal;
     flex-grow: 1; // Empuja el footer hacia abajo si el texto es corto
   }
@@ -85,7 +89,7 @@
   &__footer {
     display: flex;
     margin: 0 auto;
-    padding: 0 $spacing-lg $spacing-lg $spacing-lg;
+    padding: 0 $spacing-lg $spacing-lg;
     margin-top: auto;
   }
 
@@ -99,7 +103,7 @@
     }
 
     &__footer {
-      padding: 0 $spacing-md $spacing-md $spacing-md;
+      padding: 0 $spacing-md $spacing-md;
     }
   }
 

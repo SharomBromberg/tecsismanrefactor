@@ -1,5 +1,5 @@
 <article class="admin-card">
-  <h2 class="admin-card__title">Crear categoría</h2>
+  <h2 class="admin-card__title">{{ title }}</h2>
   <form [formGroup]="form" (ngSubmit)="submit()" class="admin-form">
     <label class="admin-form__label" for="category-name">Nombre de la categoría</label>
     <input
@@ -15,14 +15,34 @@
     @if (hasError('minlength')) {
       <small class="admin-form__error">Mínimo 2 caracteres.</small>
     }
-    <button class="admin-form__submit" type="submit" [disabled]="form.invalid">Crear categoria</button>
+
+    <label class="admin-form__label" for="category-parent">Categoria padre</label>
+    <select class="admin-form__control" id="category-parent" formControlName="parentId">
+      <option value="">Sin categoria padre</option>
+      @for (category of parentCategoryOptions; track trackByCategoryId($index, category)) {
+        <option [value]="category._id">{{ category.name }}</option>
+      }
+    </select>
+
+    <div class="admin-form__actions">
+      <button class="admin-form__submit" type="submit" [disabled]="form.invalid">{{ submitLabel }}</button>
+      @if (editingCategoryId) {
+        <button class="admin-form__secondary" type="button" (click)="cancelEdit()">Cancelar</button>
+      }
+    </div>
   </form>
 
   <ul class="admin-list">
     @for (category of categories; track trackByCategoryId($index, category)) {
       <li class="admin-list__item">
-        <span>{{ category.name }}</span>
-        <button type="button" (click)="remove(category)">Eliminar</button>
+        <div class="admin-list__content">
+          <strong>{{ category.name }}</strong>
+          <small>{{ resolveParentName(category) }}</small>
+        </div>
+        <div class="admin-list__actions">
+          <button type="button" (click)="edit(category)">Editar</button>
+          <button type="button" class="admin-list__danger" (click)="remove(category)">Eliminar</button>
+        </div>
       </li>
     }
   </ul>

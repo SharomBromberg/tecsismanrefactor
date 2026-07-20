@@ -30,11 +30,14 @@
   }
 
   // Estilos que se inyectan dinámicamente en tu Átomo <app-input>
-  ::ng-deep .search-box__input {
+  // Se encadena .app-input--dark-00 (modificador BEM real del <input>, ver customStyle en el HTML)
+  // para elevar la especificidad nativa (3 clases) por encima de .app-input--dark-00 sola
+  // definida en input.component.scss, sin recurrir a !important.
+  ::ng-deep .search-box__input.app-input--dark-00 {
     width: 100%;
-    padding-left: 2.75rem !important; // Da espacio suficiente para el icono
+    padding-left: 2.75rem; // Da espacio suficiente para el icono
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
-    
+
     // Leve sombra al estar inactivo para integrarse mejor
     @include box-shadow($shadow-gray-xs);
   }

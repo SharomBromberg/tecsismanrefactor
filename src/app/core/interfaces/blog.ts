@@ -6,6 +6,11 @@ export interface BlogComment {
   createdAt: string;
 }
 
+export interface BlogReactions {
+  likes: string[];
+  dislikes: string[];
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -17,6 +22,7 @@ export interface BlogPost {
   createdAt: string;
   authorDisplayName: string;
   comments: BlogComment[];
+  reactions: BlogReactions;
 }
 
 export interface BlogPostCreateInput {
@@ -31,4 +37,9 @@ export interface BlogCommentCreateInput {
   authorUsername: string;
   authorDisplayName: string;
   message: string;
+}
+
+export interface BlogReactionInput {
+  username: string;
+  reaction: 'like' | 'dislike';
 }

@@ -15,7 +15,7 @@
 >
     <header class="cart-drawer__header">
       <h2>Tus productos</h2>
-      <button app-button type="button" class="button-inverse cart-drawer__close" (click)="close()" aria-label="Cerrar carrito">
+      <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__close" (click)="close()" aria-label="Cerrar carrito">
         <app-icon name="close" size="md"></app-icon>
       </button>
     </header>
@@ -46,24 +46,26 @@
                 </div>
 
                 <div class="cart-drawer__controls">
-                  <button app-button type="button" class="button-inverse cart-drawer__qty-btn" (click)="decrease(item)">-</button>
+                  <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__qty-btn" (click)="decrease(item)">-</button>
                   <span>{{ item.quantity }}</span>
-                  <button app-button type="button" class="button-inverse cart-drawer__qty-btn" (click)="increase(item)">+</button>
+                  <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__qty-btn" (click)="increase(item)">+</button>
                 </div>
 
-                <button app-button class="button-danger cart-drawer__remove" type="button" (click)="remove(item)">Eliminar</button>
+                <button app-button class="app-btn app-btn--danger cart-drawer__remove" type="button" (click)="remove(item)">Eliminar</button>
               </article>
             }
           </div>
 
-          <footer class="cart-drawer__summary" *ngIf="summary$ | async as summary">
-            <p><span>Subtotal:</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
-            <p><span>Envio:</span><strong>$ 0</strong></p>
-            <p class="cart-drawer__total"><span>Total:</span><strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+          @if (summary$ | async; as summary) {
+            <footer class="cart-drawer__summary">
+              <p><span>Subtotal:</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+              <p><span>Envio:</span><strong>$ 0</strong></p>
+              <p class="cart-drawer__total"><span>Total:</span><strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong></p>
 
-            <button app-button type="button" class="button-gradient cart-drawer__primary" (click)="checkout(items)">Iniciar pedido</button>
-            <button app-button type="button" class="button-inverse cart-drawer__ghost" (click)="clear()">Vaciar carrito</button>
-          </footer>
+              <button app-button type="button" class="app-btn app-btn--gradient cart-drawer__primary" (click)="checkout(items)">Iniciar pedido</button>
+              <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__ghost" (click)="clear()">Vaciar carrito</button>
+            </footer>
+          }
         }
       </section>
     }

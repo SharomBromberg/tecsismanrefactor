@@ -1,0 +1,44 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use 'breakpoints' as *;
+
+$breakpoints: (
+  'mobile-small': $breakpoint-mobile-small,
+  'mobile-medium': $breakpoint-mobile-medium,
+  'mobile-large': $breakpoint-mobile-large,
+  'tablet-portrait': $breakpoint-tablet-portrait,
+  '480p': $breakpoint-480p,
+  'desktop-medium': $breakpoint-desktop-medium,
+  'tablet-landscape': $breakpoint-tablet-landscape,
+  'desktop-large': $breakpoint-desktop-large,
+  'desktop-hd': $breakpoint-desktop-hd,
+  'desktop-full-hd': $breakpoint-desktop-full-hd,
+);
+
+/// Emits a media query for a named breakpoint token, or for a one-off
+/// length (e.g. 40rem) when no existing token matches the design.
+/// @param {String|Number} $breakpoint - key from $breakpoints, or a literal length
+/// @param {String} $direction - 'up' (width >=) or 'down' (width <=)
+@mixin respond-to($breakpoint, $direction: 'up') {
+  $value: null;
+
+  @if meta.type-of($breakpoint) == 'number' {
+    $value: $breakpoint;
+  } @else if map.has-key($breakpoints, $breakpoint) {
+    $value: map.get($breakpoints, $breakpoint);
+  } @else {
+    @error "respond-to: unknown breakpoint `#{$breakpoint}`. Available: #{map.keys($breakpoints)}.";
+  }
+
+  @if $direction == 'up' {
+    @media (width >= #{$value}) {
+      @content;
+    }
+  } @else if $direction == 'down' {
+    @media (width <= #{$value}) {
+      @content;
+    }
+  } @else {
+    @error "respond-to: unknown direction `#{$direction}`. Use 'up' or 'down'.";
+  }
+}

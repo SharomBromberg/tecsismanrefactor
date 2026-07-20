@@ -79,7 +79,7 @@
         <app-review-list [comments]="vm.product.comments" />
 
         @if (canReviewProduct(vm.product._id)) {
-          <app-review-form (onSubmit)="submitComment(vm.product._id, $event)" />
+          <app-review-form (submitted)="submitComment(vm.product._id, $event)" />
         } @else {
           <article class="review-gate" aria-live="polite">
             <p>{{ getReviewRestrictionMessage(vm.product._id) }}</p>

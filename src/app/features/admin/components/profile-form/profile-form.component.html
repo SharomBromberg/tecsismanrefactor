@@ -1,0 +1,43 @@
+<article class="admin-card admin-card--profile">
+  <div class="admin-card__heading">
+    <div>
+      <p class="admin-card__eyebrow">Perfil del administrador</p>
+      <h2 class="admin-card__title">Tu cuenta y seguridad</h2>
+    </div>
+    <span class="admin-card__role">{{ role }}</span>
+  </div>
+
+  <div class="admin-profile-meta">
+    <div>
+      <span class="admin-profile-meta__label">Usuario</span>
+      <strong class="admin-profile-meta__value">{{ username }}</strong>
+    </div>
+    <div>
+      <span class="admin-profile-meta__label">Permisos</span>
+      <strong class="admin-profile-meta__value">Gestion editorial y catalogo</strong>
+    </div>
+  </div>
+
+  <form class="admin-form" [formGroup]="profileForm" (ngSubmit)="submitProfile()">
+    <label class="admin-form__label" for="admin-display-name">Nombre visible</label>
+    <input class="admin-form__control" id="admin-display-name" type="text" formControlName="displayName" />
+    @if (profileFeedback) {
+      <p class="admin-form__feedback">{{ profileFeedback }}</p>
+    }
+    <button class="admin-form__submit" type="submit">Guardar cambios</button>
+  </form>
+
+  <form class="admin-form" [formGroup]="passwordForm" (ngSubmit)="submitPassword()">
+    <label class="admin-form__label" for="admin-current-password">Contraseña actual</label>
+    <input class="admin-form__control" id="admin-current-password" type="password" formControlName="currentPassword" />
+
+    <label class="admin-form__label" for="admin-next-password">Nueva contraseña</label>
+    <input class="admin-form__control" id="admin-next-password" type="password" formControlName="nextPassword" />
+
+    @if (passwordFeedback) {
+      <p class="admin-form__feedback">{{ passwordFeedback }}</p>
+    }
+
+    <button class="admin-form__submit admin-form__submit--secondary" type="submit">Actualizar contraseña</button>
+  </form>
+</article>

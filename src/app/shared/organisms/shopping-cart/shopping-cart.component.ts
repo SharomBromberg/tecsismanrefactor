@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
-import { CartService } from 'src/app/core/services/cart.service';
-import { CartItem } from 'src/app/core/interfaces/cart-item.interface';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { PurchaseHistoryService } from 'src/app/core/services/purchase-history.service';
+import { CartService } from '@core/services/cart.service';
+import { CartItem } from '@core/interfaces/cart-item.interface';
+import { AuthService } from '@core/services/auth.service';
+import { PurchaseHistoryService } from '@core/services/purchase-history.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -15,16 +15,14 @@ import { PurchaseHistoryService } from 'src/app/core/services/purchase-history.s
   styleUrls: ['./shopping-cart.component.scss'],
 })
 export class ShoppingCartComponent {
+  private readonly cartService = inject(CartService);
+  private readonly authService = inject(AuthService);
+  private readonly purchaseHistoryService = inject(PurchaseHistoryService);
+
   readonly items$ = this.cartService.items$;
   readonly summary$ = this.cartService.summary$;
   checkoutMessage = '';
   checkoutError = '';
-
-  constructor(
-    private readonly cartService: CartService,
-    private readonly authService: AuthService,
-    private readonly purchaseHistoryService: PurchaseHistoryService,
-  ) {}
 
   increase(item: CartItem): void {
     this.cartService.updateQuantity(item.product._id, item.quantity + 1);

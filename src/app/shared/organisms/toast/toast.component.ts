@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { ToastService } from 'src/app/core/services/toast.service';
+import { ToastService } from '@core/services/toast.service';
 
 @Component({
   selector: 'app-toast',
@@ -11,9 +11,8 @@ import { ToastService } from 'src/app/core/services/toast.service';
   styleUrls: ['./toast.component.scss'],
 })
 export class ToastComponent {
+  private readonly toastService = inject(ToastService);
   readonly toast$ = this.toastService.toast$;
-
-  constructor(private readonly toastService: ToastService) {}
 
   clear(): void {
     this.toastService.clear();

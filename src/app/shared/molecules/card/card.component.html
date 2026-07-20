@@ -14,7 +14,7 @@
     </div>
     @if (data.buttonText) {
     <div class="m-card__footer">
-        <button app-button [ngClass]="data.buttonVariant || 'button-dark-blue'" (click)="onActionClick()">
+        <button app-button [ngClass]="['app-btn', data.buttonVariant || 'app-btn--dark-blue']" (click)="onActionClick()">
             {{ data.buttonText }}
         </button>
     </div>

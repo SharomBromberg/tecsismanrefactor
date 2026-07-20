@@ -6,7 +6,7 @@
     background-color: $blue-01;
     color: $white-00;
     padding: 2rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgb(255 255 255 / 10%);
 
     .container {
       margin: 0 auto;
@@ -24,7 +24,8 @@
 
         h2 {
           @include inter-title(1.25rem);
-          margin: 0 0 0.75rem 0;
+
+          margin: 0 0 0.75rem;
         }
 
         &__list {
@@ -59,6 +60,7 @@
 
         &__link {
           @include inter-body(1rem);
+
           color: $white-00;
           text-decoration: none;
         }
@@ -76,7 +78,8 @@
 
         h2 {
           @include inter-title(1.25rem);
-          margin: 0 0 0.75rem 0;
+
+          margin: 0 0 0.75rem;
         }
 
         &__list {
@@ -125,6 +128,7 @@
 
         &__text {
           @include inter-body(0.95rem);
+
           color: rgba($white-00, 0.85);
           line-height: 1.6;
         }
@@ -143,12 +147,11 @@
     background-color: $blue-01;
     color: $white-00;
     padding: 2rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgb(255 255 255 / 10%);
 
     .container {
       display: grid;
       grid-template-columns: 1fr;
-
       padding: 0 1rem;
 
       &__contact {
@@ -159,7 +162,8 @@
 
         h2 {
           @include inter-title(1.1rem);
-          margin: 0 0 0.5rem 0;
+
+          margin: 0 0 0.5rem;
         }
 
         &__list {
@@ -194,6 +198,7 @@
 
         &__link {
           @include inter-body(0.95rem);
+
           color: $white-00;
           text-decoration: none;
         }
@@ -211,7 +216,8 @@
 
         h2 {
           @include inter-title(1.1rem);
-          margin: 0 0 0.5rem 0;
+
+          margin: 0 0 0.5rem;
         }
 
         &__list {
@@ -254,6 +260,7 @@
 
         &__text {
           @include inter-body(0.95rem);
+
           color: rgba($white-00, 0.85);
           line-height: 1.6;
         }

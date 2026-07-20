@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RatingStarsComponent } from '../../molecules/rating-star/rating-stars.component';
-import { CommentRequest } from 'src/app/core/interfaces/comment';
+import { CommentRequest } from '@core/interfaces/comment';
 
 @Component({
   selector: 'app-review-list',

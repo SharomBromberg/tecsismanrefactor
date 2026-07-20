@@ -1,11 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   AdminProductCreatePayload,
+  AdminProductUpdatePayload,
   SelectedLocalImage,
-} from 'src/app/core/interfaces/admin-product-form.interface';
-import { Category } from 'src/app/core/interfaces/categories';
+} from '@core/interfaces/admin-product-form.interface';
+import { Category } from '@core/interfaces/categories';
+import { Product } from '@core/interfaces/product';
 
 @Component({
   selector: 'app-admin-product-form',
@@ -14,9 +23,12 @@ import { Category } from 'src/app/core/interfaces/categories';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss'],
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnChanges {
   @Input() categories: Category[] = [];
+  @Input() product: Product | null = null;
   @Output() createProduct = new EventEmitter<AdminProductCreatePayload>();
+  @Output() updateProduct = new EventEmitter<AdminProductUpdatePayload>();
+  @Output() cancelEdit = new EventEmitter<void>();
 
   private readonly fb = new FormBuilder();
   selectedLocalImages: SelectedLocalImage[] = [];
@@ -32,6 +44,12 @@ export class ProductFormComponent {
     featured: [false],
   });
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('product' in changes) {
+      this.syncFormWithProduct();
+    }
+  }
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -39,20 +57,21 @@ export class ProductFormComponent {
     }
 
     const raw = this.form.getRawValue();
-    const manualImageUrl = raw.imageUrl?.trim() ?? '';
+    const manualImageUrls = (raw.imageUrl ?? '')
+      .split(/[\n,]+/)
+      .map((value) => value.trim())
+      .filter(Boolean);
     const localImageUrls = this.selectedLocalImages.map(
       (image) => image.dataUrl,
     );
-    const mergedImages = manualImageUrl
-      ? [...localImageUrls, manualImageUrl]
-      : localImageUrls;
+    const mergedImages = [...localImageUrls, ...manualImageUrls];
 
     const parsedTags = (raw.tags ?? '')
       .split(',')
       .map((tag) => tag.trim())
       .filter(Boolean);
 
-    this.createProduct.emit({
+    const payload: AdminProductCreatePayload = {
       name: raw.name ?? '',
       description: raw.description ?? '',
       categoryId: raw.categoryId ?? '',
@@ -62,19 +81,18 @@ export class ProductFormComponent {
       filenames: this.selectedLocalImages.map((image) => image.name),
       featured: !!raw.featured,
       tags: parsedTags,
-    });
+    };
 
-    this.selectedLocalImages = [];
-    this.form.reset({
-      name: '',
-      description: '',
-      categoryId: '',
-      price: 0,
-      stock: 1,
-      imageUrl: '',
-      tags: '',
-      featured: false,
-    });
+    if (this.product) {
+      this.updateProduct.emit({
+        _id: this.product._id,
+        ...payload,
+      });
+    } else {
+      this.createProduct.emit(payload);
+    }
+
+    this.resetForm();
   }
 
   async onLocalImagesSelected(event: Event): Promise<void> {
@@ -118,12 +136,81 @@ export class ProductFormComponent {
     return category._id || `${index}`;
   }
 
+  handleCancelEdit(): void {
+    this.resetForm();
+    this.cancelEdit.emit();
+  }
+
+  get isEditing(): boolean {
+    return !!this.product;
+  }
+
+  get title(): string {
+    return this.isEditing ? 'Editar producto' : 'Crear producto';
+  }
+
+  get submitLabel(): string {
+    return this.isEditing ? 'Guardar cambios' : 'Guardar producto';
+  }
+
+  get categoryOptions(): Category[] {
+    const topLevel = this.categories.filter((category) => !category.parentId);
+    const subcategories = this.categories.filter(
+      (category) => !!category.parentId,
+    );
+    return [...topLevel, ...subcategories];
+  }
+
+  resolveCategoryLabel(category: Category): string {
+    if (!category.parentId) {
+      return category.name;
+    }
+
+    const parent = this.categories.find(
+      (item) => item._id === category.parentId,
+    );
+    return `${parent?.name ?? 'Subcategoria'} / ${category.name}`;
+  }
+
   private fileToDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(String(reader.result ?? ''));
       reader.onerror = () => reject(new Error('No se pudo leer la imagen.'));
       reader.readAsDataURL(file);
+    });
+  }
+
+  private syncFormWithProduct(): void {
+    if (!this.product) {
+      this.resetForm();
+      return;
+    }
+
+    this.selectedLocalImages = [];
+    this.form.reset({
+      name: this.product.name,
+      description: this.product.description,
+      categoryId: this.product.categoryId,
+      price: this.product.price,
+      stock: this.product.stock ?? 0,
+      imageUrl: this.product.images.join(', '),
+      tags: (this.product.tags ?? []).join(', '),
+      featured: !!this.product.featured,
+    });
+  }
+
+  private resetForm(): void {
+    this.selectedLocalImages = [];
+    this.form.reset({
+      name: '',
+      description: '',
+      categoryId: '',
+      price: 0,
+      stock: 1,
+      imageUrl: '',
+      tags: '',
+      featured: false,
     });
   }
 }

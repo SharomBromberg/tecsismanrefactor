@@ -15,12 +15,12 @@
 .review-card {
   background: $white-00;
   padding: $spacing-md;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgb(0 0 0 / 8%);
   border-radius: $radius-sm;
   transition: transform 0.2s ease;
 
   &:hover {
-    border-color: rgba(0, 0, 0, 0.15);
+    border-color: $review-list-border-shadow;
   }
 
   &__header {

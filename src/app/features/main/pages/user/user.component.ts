@@ -1,19 +1,15 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, combineLatest, map, of } from 'rxjs';
-import { AuthService } from 'src/app/core/services/auth.service';
-import {
-  ShippingAddress,
-  UserProfileService,
-} from 'src/app/core/services/user-profile.service';
-import {
-  PurchaseEntry,
-  PurchaseHistoryService,
-} from 'src/app/core/services/purchase-history.service';
-import { ProductService } from 'src/app/core/services/product.service';
-import { UserFavoritesService } from 'src/app/core/services/user-favorites.service';
+import { AuthService } from '@core/services/auth.service';
+import { UserProfileService } from '@core/services/user-profile.service';
+import { PurchaseHistoryService } from '@core/services/purchase-history.service';
+import { ProductService } from '@core/services/product.service';
+import { UserFavoritesService } from '@core/services/user-favorites.service';
+import { ShippingAddress } from '@core/interfaces/user-profile';
+import { PurchaseEntry } from '@core/interfaces/purchase-history';
 import { AccountSidebarComponent } from '../../../../shared/organisms/account-sidebar/account-sidebar.component';
 
 interface PurchaseHistoryItemVm {
@@ -61,6 +57,13 @@ type AccountSection =
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent {
+  private readonly authService = inject(AuthService);
+  private readonly userProfileService = inject(UserProfileService);
+  private readonly purchaseHistoryService = inject(PurchaseHistoryService);
+  private readonly productService = inject(ProductService);
+  private readonly userFavoritesService = inject(UserFavoritesService);
+  private readonly router = inject(Router);
+
   private readonly fb = new FormBuilder();
   private readonly session = this.authService.currentSession();
   private readonly username = this.session?.username ?? '';
@@ -109,14 +112,7 @@ export class UserComponent {
   readonly favoritesCount$;
   readonly favoriteSort$ = new BehaviorSubject<FavoriteSort>('recent');
 
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userProfileService: UserProfileService,
-    private readonly purchaseHistoryService: PurchaseHistoryService,
-    private readonly productService: ProductService,
-    private readonly userFavoritesService: UserFavoritesService,
-    private readonly router: Router,
-  ) {
+  constructor() {
     this.syncViewportState();
 
     if (!this.username) {

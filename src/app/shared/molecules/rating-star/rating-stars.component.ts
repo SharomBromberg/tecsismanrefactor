@@ -13,9 +13,9 @@ export class RatingStarsComponent {
   rating = input<number>(0);
 
   // Emite el cambio al componente padre (el formulario)
-  onRate = output<number>();
+  rated = output<number>();
 
   selectRating(value: number): void {
-    this.onRate.emit(value);
+    this.rated.emit(value);
   }
 }

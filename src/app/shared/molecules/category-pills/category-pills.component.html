@@ -1,14 +1,22 @@
 <ul class="category-pills">
-  <li class="category-pills__item" 
-      [class.category-pills__item--active]="selectedCategoryId() === ''" 
-      (click)="onSelect('')">
+  <li class="category-pills__item"
+      role="button"
+      tabindex="0"
+      [class.category-pills__item--active]="selectedCategoryId() === ''"
+      (click)="onSelect('')"
+      (keydown.enter)="onSelect('')"
+      (keydown.space)="onSelect('')">
     Todos
   </li>
-  
+
   @for (category of categories(); track trackByCategoryId($index, category)) {
-    <li class="category-pills__item" 
-        [class.category-pills__item--active]="selectedCategoryId() === category._id" 
-        (click)="onSelect(category._id)"> {{ category.name }}
+    <li class="category-pills__item"
+        role="button"
+        tabindex="0"
+        [class.category-pills__item--active]="selectedCategoryId() === category._id"
+        (click)="onSelect(category._id)"
+        (keydown.enter)="onSelect(category._id)"
+        (keydown.space)="onSelect(category._id)"> {{ category.name }}
     </li>
   }
 </ul>

@@ -1,25 +1,9 @@
 import { Injectable } from '@angular/core';
-
-export interface UserProfile {
-  displayName: string;
-  email: string;
-  phone: string;
-}
-
-export interface ShippingAddress {
-  id: string;
-  label: string;
-  recipient: string;
-  phone: string;
-  city: string;
-  addressLine: string;
-  reference: string;
-  isDefault: boolean;
-}
-
-interface UserProfilesMap {
-  [username: string]: UserProfile;
-}
+import {
+  ShippingAddress,
+  UserProfile,
+  UserProfilesMap,
+} from '@core/interfaces/user-profile';
 
 @Injectable({ providedIn: 'root' })
 export class UserProfileService {

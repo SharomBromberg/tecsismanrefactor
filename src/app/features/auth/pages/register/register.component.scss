@@ -6,17 +6,17 @@
   place-items: center;
   padding: 2rem 1rem;
   background:
-    radial-gradient(circle at 12% 20%, rgba(31, 111, 235, 0.2), transparent 32%),
-    radial-gradient(circle at 88% 10%, rgba(10, 189, 227, 0.2), transparent 28%),
+    radial-gradient(circle at 12% 20%, rgb(31 111 235 / 20%), transparent 32%),
+    radial-gradient(circle at 88% 10%, rgb(10 189 227 / 20%), transparent 28%),
     linear-gradient(160deg, #f7fbff 0%, #eef5ff 40%, #f5fbff 100%);
 }
 
 .register-card {
   width: min(100%, 30rem);
   border-radius: 1rem;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #dbe8ff;
-  box-shadow: 0 18px 40px rgba(16, 58, 125, 0.16);
+  box-shadow: 0 18px 40px rgb(16 58 125 / 16%);
   padding: 1.4rem;
 
   &__header {
@@ -25,7 +25,7 @@
 
   &__eyebrow {
     margin: 0;
-    color: #1d4f9f;
+    color: $admin-accent-deep;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -34,13 +34,13 @@
 
   &__title {
     margin: 0.35rem 0 0;
-    color: #0f2449;
+    color: $form-title-text;
     font-size: 1.65rem;
   }
 
   &__subtitle {
     margin: 0.35rem 0 0;
-    color: #49638d;
+    color: $form-subtle-text;
     font-size: 0.95rem;
   }
 
@@ -49,7 +49,7 @@
     text-align: center;
 
     a {
-      color: #265fb6;
+      color: $form-link-text;
       text-decoration: none;
       font-weight: 600;
     }
@@ -63,43 +63,43 @@
   &__label {
     font-size: 0.82rem;
     font-weight: 700;
-    color: #163765;
+    color: $form-heading-text;
   }
 
   &__control {
     width: 100%;
     border-radius: 0.62rem;
     border: 1px solid #c4d8fc;
-    background: #ffffff;
-    color: #1f3963;
+    background: #fff;
+    color: $form-input-text;
     padding: 0.64rem 0.7rem;
     font-size: 0.95rem;
   }
 
   &__control:focus {
-    outline: 2px solid rgba(31, 111, 235, 0.28);
-    border-color: #1f6feb;
+    outline: 2px solid rgb(31 111 235 / 28%);
+    border-color: $admin-accent;
   }
 
   &__control--invalid {
-    border-color: #bb1d1d;
+    border-color: $form-error;
     background: #fff7f7;
   }
 
   &__hint {
     margin: 0;
     font-size: 0.8rem;
-    color: #49638d;
+    color: $form-subtle-text;
 
     &--error {
-      color: #bb1d1d;
+      color: $form-error;
       font-weight: 600;
     }
   }
 
   &__error {
     margin: 0.35rem 0;
-    color: #bb1d1d;
+    color: $form-error;
     font-weight: 600;
     font-size: 0.84rem;
   }
@@ -109,7 +109,7 @@
     border: 0;
     border-radius: 0.7rem;
     background: linear-gradient(90deg, #1f6feb 0%, #0c57cb 100%);
-    color: #fff;
+    color: $white-00;
     font-weight: 700;
     padding: 0.72rem;
     cursor: pointer;

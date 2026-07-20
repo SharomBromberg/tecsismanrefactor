@@ -12,15 +12,15 @@ import {
   switchMap,
 } from 'rxjs';
 
-import { NgFor, NgIf, AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { ProductService } from 'src/app/core/services/product.service';
-import { CatalogCardVm, Product } from 'src/app/core/interfaces/product';
-import { Category } from 'src/app/core/interfaces/categories';
-import { UserFavoritesService } from 'src/app/core/services/user-favorites.service';
-import { ToastService } from 'src/app/core/services/toast.service';
-import { IconComponent } from 'src/app/shared/atoms/icon/icon.component';
+import { AuthService } from '@core/services/auth.service';
+import { ProductService } from '@core/services/product.service';
+import { CatalogCardVm, Product } from '@core/interfaces/product';
+import { Category } from '@core/interfaces/categories';
+import { UserFavoritesService } from '@core/services/user-favorites.service';
+import { ToastService } from '@core/services/toast.service';
+import { IconComponent } from '@shared/atoms/icon/icon.component';
 
 interface ProductCardFavoriteVm extends CatalogCardVm {
   isFavorite: boolean;
@@ -32,9 +32,7 @@ interface ProductCardFavoriteVm extends CatalogCardVm {
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
     RouterLink,
-    NgIf,
     AsyncPipe,
     CurrencyPipe,
     IconComponent,

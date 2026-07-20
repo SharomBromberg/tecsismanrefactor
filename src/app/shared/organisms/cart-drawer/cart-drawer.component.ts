@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { CartService } from 'src/app/core/services/cart.service';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { PurchaseHistoryService } from 'src/app/core/services/purchase-history.service';
-import { CartDrawerService } from 'src/app/core/services/cart-drawer.service';
-import { CartItem } from 'src/app/core/interfaces/cart-item.interface';
+import { CartService } from '@core/services/cart.service';
+import { AuthService } from '@core/services/auth.service';
+import { PurchaseHistoryService } from '@core/services/purchase-history.service';
+import { CartDrawerService } from '@core/services/cart-drawer.service';
+import { CartItem } from '@core/interfaces/cart-item.interface';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { ButtonComponent } from '../../atoms/button/button.component';
 
@@ -26,6 +26,11 @@ import { ButtonComponent } from '../../atoms/button/button.component';
   styleUrls: ['./cart-drawer.component.scss'],
 })
 export class CartDrawerComponent implements OnDestroy {
+  private readonly cartService = inject(CartService);
+  private readonly authService = inject(AuthService);
+  private readonly purchaseHistoryService = inject(PurchaseHistoryService);
+  private readonly cartDrawerService = inject(CartDrawerService);
+
   readonly isOpen$ = this.cartDrawerService.isOpen$;
   readonly items$ = this.cartService.items$;
   readonly summary$ = this.cartService.summary$;
@@ -36,12 +41,7 @@ export class CartDrawerComponent implements OnDestroy {
 
   private readonly openStateSub: Subscription;
 
-  constructor(
-    private readonly cartService: CartService,
-    private readonly authService: AuthService,
-    private readonly purchaseHistoryService: PurchaseHistoryService,
-    private readonly cartDrawerService: CartDrawerService,
-  ) {
+  constructor() {
     this.openStateSub = this.isOpen$.subscribe((isOpen) => {
       this.isOpen = isOpen;
       document.body.style.overflow = isOpen ? 'hidden' : '';

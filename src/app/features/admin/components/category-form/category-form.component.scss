@@ -1,13 +1,15 @@
+@use '../../../../../assets/tokens/index.scss' as *;
+
 .admin-card {
-  background: #ffffff;
-  border: 1px solid rgba(4, 49, 76, 0.12);
-  border-radius: 1rem;
-  padding: 1rem;
-  box-shadow: 0 12px 28px rgba(4, 49, 76, 0.08);
+  background: $white-00;
+  border: 1px solid rgba($blue-01, 0.12);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-shadow: 0 12px 28px rgba($blue-01, 0.08);
 
   &__title {
     margin: 0 0 0.9rem;
-    color: #173962;
+    color: $blue-01;
     font-size: 1.08rem;
   }
 }
@@ -17,32 +19,38 @@
   gap: 0.65rem;
 
   &__label {
-    color: #2a4a77;
+    color: $blue-01;
     font-weight: 700;
     font-size: 0.82rem;
   }
 
   &__control {
     width: 100%;
-    border: 1px solid #c8d8f5;
-    border-radius: 0.6rem;
-    color: #203f68;
-    padding: 0.56rem 0.62rem;
-    background: #fff;
+    border: 1px solid rgba($blue-01, 0.18);
+    border-radius: $radius-sm;
+    color: $blue-01;
+    padding: $spacing-xs;
+    background: $white-00;
   }
 
   &__control:focus {
-    outline: 2px solid rgba(31, 111, 235, 0.25);
-    border-color: #1f6feb;
+    outline: 2px solid rgba($blue-00, 0.25);
+    border-color: $blue-00;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
   }
 
   &__submit {
     border: 0;
-    border-radius: 0.7rem;
-    background: linear-gradient(90deg, #1f6feb 0%, #0c57cb 100%);
-    color: #fff;
+    border-radius: $radius-sm;
+    background: linear-gradient(90deg, $blue-00 0%, $admin-accent-strong 100%);
+    color: $white-00;
     font-weight: 700;
-    padding: 0.62rem 0.86rem;
+    padding: $spacing-xs $spacing-sm;
     cursor: pointer;
 
     &:disabled {
@@ -52,14 +60,24 @@
   }
 
   &__error {
-    color: #c02020;
+    color: $admin-danger;
     font-size: 0.8rem;
     font-weight: 600;
+  }
+
+  &__secondary {
+    border: 1px solid rgba($blue-01, 0.14);
+    border-radius: $radius-sm;
+    background: rgba($white-01, 0.92);
+    color: $blue-01;
+    font-weight: 700;
+    padding: $spacing-xs $spacing-sm;
+    cursor: pointer;
   }
 }
 
 .admin-list {
-  margin: 0.9rem 0 0;
+  margin: $spacing-md 0 0;
   padding: 0;
   list-style: none;
   display: grid;
@@ -69,20 +87,64 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 0.7rem;
-    border: 1px solid #dae6f9;
-    border-radius: 0.6rem;
-    padding: 0.56rem 0.62rem;
-    color: #2b4b78;
+    gap: $spacing-sm;
+    border: 1px solid rgba($blue-01, 0.1);
+    border-radius: $radius-sm;
+    padding: $spacing-xs;
+    color: $blue-01;
+  }
+
+  &__content {
+    display: grid;
+    gap: $spacing-2xs;
+
+    strong {
+      font-size: 0.92rem;
+    }
+
+    small {
+      color: rgba($blue-01, 0.68);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-2xs;
+  }
+
+  &__danger {
+    background: $admin-danger-bg;
+    color: $admin-danger-strong;
   }
 
   button {
     border: 0;
-    background: #eaf1ff;
-    color: #244f96;
-    border-radius: 0.5rem;
+    background: $admin-info-bg;
+    color: $admin-info-text;
+    border-radius: $radius-sm;
     font-weight: 700;
-    padding: 0.45rem 0.7rem;
+    padding: $spacing-xs $spacing-sm;
     cursor: pointer;
+  }
+}
+
+@media (max-width: $breakpoint-mobile-large) {
+  .admin-list {
+    &__item {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__actions {
+      width: 100%;
+
+      button {
+        flex: 1 1 calc(50% - #{$spacing-2xs});
+      }
+    }
   }
 }

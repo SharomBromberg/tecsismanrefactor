@@ -1,18 +1,115 @@
-$black-00: #000000;
+$black-00: #000;
 $blue-00: #509FCB;
 $blue-01: #04314C;
-$blue-02: #66ccff;
-$blue-03: #336699;
-$blue-05: #003333;
+$blue-02: #6cf;
+$blue-03: #369;
+$blue-05: #033;
 $blue-06: #06507D;
-$gray-00: #333333;
+$gray-00: #333;
 $gray-01: #BCBEC0;
+$gray-02: #e0e0e0;
+$gray-03: #999;
 $green-00: #BDF347;
 $green-01: #121712;
 $green-02: #9BCB3C;
+$green-whatsapp-00: #60e671;
+$green-whatsapp-01: #40c252;
 $orange-00: #F7941D;
 $pink-00: #F387AF;
-$red-00: #ff0000;
-$red-01: #cc0000;
-$white-00: #ffffff;
+$red-00: #f00;
+$red-01: #c00;
+$red-02: #a22828; // shared danger/error accent (shopping cart feedback, product review gate)
+$white-00: #fff;
 $white-01: #f5f5f5;
+$white-02: #fcfcfc;
+
+// Admin dashboard palette - scoped to the /admin surfaces (light control-panel theme)
+$admin-surface-mist: #f7faff;
+$admin-border: #d8e4f7;
+$admin-text-strong: #173962;
+$admin-text-medium: #21456f;
+$admin-text-soft: #4c6690;
+$admin-accent: #1f6feb;
+$admin-accent-strong: #0c57cb;
+$admin-accent-deep: #1d4f9f;
+$admin-teal-accent: #21c2a4;
+$admin-navy: #113b66;
+$admin-success: #0f6b37;
+$admin-danger: #c02020;
+$admin-danger-soft: #cf4b4b;
+$admin-danger-strong: #a22a2a;
+$admin-danger-bg: #fde8e8;
+$admin-info-bg: #eaf1ff;
+$admin-info-text: #244f96;
+
+// Navbar palette - scoped to the fixed navigation surface (accents with no
+// equivalent in the base palette above)
+$navbar-shadow-ambient: #06162d; // elevation shadow tint (box-shadow only)
+$navbar-badge-bg: #ff8a2a; // cart item-count badge background
+$navbar-badge-text: #0a223f; // cart item-count badge text
+$navbar-greeting-text: #d7e8ff; // "Hola, {name}" greeting text
+$navbar-danger-border: #ff9595; // logout/danger action border (desktop panel)
+$navbar-danger-text: #ffd6d6; // logout/danger action text (desktop panel)
+$navbar-danger-hover-bg: #c22d2d; // logout/danger action hover background
+$navbar-danger-text-mobile: #ffe8e8; // logout/danger action text (mobile panel)
+$navbar-danger-border-mobile: #ffafaf; // logout/danger action border (mobile panel)
+
+// Product catalog palette - scoped to the "favorite" (wishlist) heart affordance
+// on product cards/detail pages (no equivalent in the base palette above)
+$catalog-favorite-active: #d8305b; // filled heart icon color
+$catalog-favorite-active-bg: #fff1f5; // filled heart background
+$catalog-favorite-active-border: rgb(216 48 91 / 28%); // filled heart border (alpha variant of $catalog-favorite-active)
+
+// Auth/form palette - scoped to shared auth & contact-form UI (login, register,
+// contact, review-form, and the purchase-info label — identical values reused
+// verbatim across these components)
+$form-heading-text: #163765; // form label / section-heading text
+$form-input-text: #1f3963; // form control (input/textarea) text
+$form-error: #bb1d1d; // validation error text & invalid-field border
+$form-title-text: #0f2449; // card title text (login/register)
+$form-subtle-text: #49638d; // subtitle / hint muted text (login/register)
+$form-link-text: #265fb6; // footer link text (login/register)
+$auth-demo-text: #20457e; // login demo-credentials note text
+$contact-invalid-border: #cc3434; // contact form invalid-field border
+$contact-success-text: #1d7a42; // contact form success message text
+
+// Product detail palette - scoped to the /products/:id page and its organisms
+// (product-description, purchase-info, and the product-details review gate)
+$product-description-text: #4a4a4a; // product-description body copy
+$purchase-info-heading: #036; // purchase panel title & price
+$purchase-info-stock: #2b507e; // purchase panel stock-status text
+$product-review-gate-text: #1c4f89; // "sign in to review" gate prompt text
+$product-review-gate-error-border: #efb8b8; // review gate error-state border
+
+// Shopping cart palette - scoped to the /cart page
+$cart-eyebrow-text: #3a628f; // page eyebrow text
+$cart-heading-text: #12355e; // page h1
+$cart-subtitle-text: #446583; // page subtitle
+$cart-section-heading-text: #153a67; // item title & summary heading
+$cart-item-price-text: #35608f; // line-item price text
+$cart-control-button-text: #184274; // quantity +/- button text
+$cart-quantity-text: #143b6a; // quantity value text
+$cart-summary-row-text: #355f8e; // summary line-item text
+$cart-summary-total-text: #11345d; // summary total text
+
+// Rating stars palette - scoped to the star-rating control (shared by
+// rating-stars and product-details)
+$rating-star-inactive: #d1d1d1; // unfilled star color
+$rating-star-active: #f8bf2e; // filled/hover star color
+
+// Services palette - scoped to the /services hero & CTA sections (light text
+// set over dark gradient backgrounds)
+$services-hero-text: #f7fbff; // hero heading/body text
+$services-cta-text: #f6fbff; // CTA card text
+
+// Services showcase palette - scoped to the services-showcase organism
+$services-showcase-eyebrow-text: #375c8b; // eyebrow text
+$services-showcase-heading-text: #14365f; // h2/h3 text
+$services-showcase-lead-text: #365678; // lead paragraph text
+
+// Review list palette - scoped to the review-card hover state
+$review-list-border-shadow: rgb(0 0 0 / 15%); // review-card hover border
+
+// User panel palette - scoped to the /user account forms
+$user-form-error: #c94a4a; // invalid input border & error text
+$user-form-success: #1f7a46; // success message text

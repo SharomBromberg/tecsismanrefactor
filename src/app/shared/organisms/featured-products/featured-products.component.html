@@ -1,0 +1,66 @@
+<section class="featured-products section" aria-labelledby="featured-products-title">
+  <div class="app-container featured-products__container">
+    <div class="featured-products__header">
+      <div class="featured-products__copy">
+        <p class="featured-products__eyebrow">Productos destacados</p>
+        <h2 id="featured-products-title" class="featured-products__title">Selecciones clave para acelerar tu infraestructura</h2>
+        <p class="featured-products__subtitle">
+          Descubre soluciones destacadas por el equipo y agrega al carrito los productos mas relevantes sin salir del inicio.
+        </p>
+      </div>
+
+      <a app-button class="app-btn app-btn--dark-blue featured-products__catalog-link" routerLink="/Productos">
+        Ver catalogo completo
+      </a>
+    </div>
+
+    @if (featuredCards$ | async; as featuredCards) {
+      @if (featuredCards.length > 0) {
+        <div class="featured-products__carousel-shell">
+          <button
+            type="button"
+            class="featured-products__control featured-products__control--prev"
+            [disabled]="!canScrollPrev"
+            (click)="scrollCarousel(-1)"
+            aria-label="Ver productos destacados anteriores"
+          >
+            <span aria-hidden="true">&#8249;</span>
+          </button>
+
+          <div
+            #carouselTrack
+            class="featured-products__carousel"
+            (scroll)="updateCarouselState()"
+          >
+            @for (item of featuredCards; track trackByProductId($index, item)) {
+              <div class="featured-products__slide">
+                <app-featured-product-card
+                  [product]="item.product"
+                  [categoryName]="item.categoryName"
+                  (addToCart)="addToCart($event)"
+                />
+              </div>
+            }
+          </div>
+
+          <button
+            type="button"
+            class="featured-products__control featured-products__control--next"
+            [disabled]="!canScrollNext"
+            (click)="scrollCarousel(1)"
+            aria-label="Ver mas productos destacados"
+          >
+            <span aria-hidden="true">&#8250;</span>
+          </button>
+        </div>
+      } @else {
+        <div class="featured-products__empty">
+          <p class="featured-products__empty-text">Todavia no hay productos marcados como destacados desde el panel administrativo.</p>
+          <a app-button class="app-btn app-btn--gradient featured-products__empty-action" routerLink="/Productos">
+            Explorar productos
+          </a>
+        </div>
+      }
+    }
+  </div>
+</section>

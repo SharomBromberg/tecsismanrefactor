@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-
-export interface PurchaseEntry {
-  productId: string;
-  quantity: number;
-  purchasedAt: string;
-}
-
-interface PurchaseHistoryByUser {
-  [username: string]: PurchaseEntry[];
-}
+import {
+  PurchaseEntry,
+  PurchaseHistoryByUser,
+} from '@core/interfaces/purchase-history';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +16,7 @@ export class PurchaseHistoryService {
 
   recordPurchase(
     username: string,
-    products: Array<{ productId: string; quantity: number }>,
+    products: { productId: string; quantity: number }[],
   ): void {
     const normalizedUsername = this.normalizeUsername(username);
     if (!normalizedUsername || products.length === 0) {

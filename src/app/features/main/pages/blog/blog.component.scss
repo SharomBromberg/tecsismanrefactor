@@ -34,7 +34,9 @@
 	&__title {
 		margin: 0;
 		color: $blue-01;
+
 		@include poppins-cta(2.6rem);
+
 		line-height: 1.08;
 		max-width: 17ch;
 	}
@@ -43,7 +45,9 @@
 		margin: $spacing-sm 0 0;
 		color: rgba($gray-00, 0.82);
 		max-width: 62ch;
+
 		@include inter-body(1rem);
+
 		line-height: 1.6;
 	}
 
@@ -139,6 +143,27 @@
 		background: linear-gradient(180deg, rgba($blue-00, 0.05), rgba($white-00, 0.8));
 	}
 
+	&__reactions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: $spacing-xs;
+	}
+
+	&__reaction-btn {
+		border: 1px solid rgba($blue-01, 0.12);
+		border-radius: 999px;
+		background: rgba($white-00, 0.95);
+		color: $blue-01;
+		font-weight: 700;
+		padding: $spacing-2xs $spacing-sm;
+		cursor: pointer;
+
+		&--active {
+			background: rgba($blue-00, 0.12);
+			border-color: rgba($blue-00, 0.22);
+		}
+	}
+
 	&__comments {
 		display: grid;
 		gap: $spacing-sm;
@@ -197,13 +222,13 @@
 	}
 
 	&__form-error {
-		color: #a22a2a;
+		color: $admin-danger-strong;
 		font-size: 0.82rem;
 		font-weight: 700;
 	}
 
 	&__form-feedback {
-		color: #0f6b37;
+		color: $admin-success;
 		font-size: 0.82rem;
 		font-weight: 700;
 	}
@@ -297,6 +322,27 @@
 		color: $blue-01;
 	}
 
+	&__reactions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: $spacing-xs;
+	}
+
+	&__reaction-btn {
+		border: 1px solid rgba($blue-01, 0.12);
+		border-radius: 999px;
+		background: rgba($white-00, 0.94);
+		color: $blue-01;
+		font-weight: 700;
+		padding: $spacing-2xs $spacing-sm;
+		cursor: pointer;
+
+		&--active {
+			background: rgba($green-00, 0.16);
+			border-color: rgba($green-02, 0.24);
+		}
+	}
+
 	&__comment-form button[app-button] {
 		justify-self: start;
 	}
@@ -324,6 +370,7 @@
 
 		&__title {
 			@include poppins-cta(2.1rem);
+
 			max-width: none;
 		}
 	}

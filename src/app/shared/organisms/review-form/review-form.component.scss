@@ -20,7 +20,7 @@
 	}
 
 	&__label {
-		color: #163765;
+		color: $form-heading-text;
 		font-weight: 700;
 		font-size: 0.86rem;
 	}
@@ -31,20 +31,20 @@
 		border: 1px solid #c4d8fc;
 		border-radius: $radius-sm;
 		background: $white-00;
-		color: #1f3963;
+		color: $form-input-text;
 		font-size: 0.95rem;
 		padding: $spacing-sm;
 	}
 
 	&__control:focus,
 	&__textarea:focus {
-		outline: 2px solid rgba(31, 111, 235, 0.26);
-		border-color: #1f6feb;
+		outline: 2px solid rgb(31 111 235 / 26%);
+		border-color: $admin-accent;
 	}
 
 	&__control--invalid,
 	&__textarea--invalid {
-		border-color: #bb1d1d;
+		border-color: $form-error;
 		background: #fff7f7;
 	}
 
@@ -55,7 +55,7 @@
 
 	&__error {
 		margin: 0;
-		color: #bb1d1d;
+		color: $form-error;
 		font-size: 0.8rem;
 		font-weight: 600;
 	}

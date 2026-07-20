@@ -1,0 +1,196 @@
+@use '../../../../assets/tokens/index.scss' as *;
+
+.featured-products {
+  position: relative;
+  padding: $spacing-3xl 0;
+  background:
+    radial-gradient(circle at top left, rgba($green-00, 0.12), transparent 30%),
+    radial-gradient(circle at bottom right, rgba($blue-00, 0.1), transparent 32%),
+    linear-gradient(180deg, #f8fbff 0%, #fff 100%);
+
+  &__container {
+    display: grid;
+    gap: $spacing-xl;
+  }
+
+  &__header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: $spacing-lg;
+  }
+
+  &__copy {
+    display: grid;
+    gap: $spacing-xs;
+    max-width: 46rem;
+  }
+
+  &__eyebrow {
+    margin: 0;
+    color: $blue-00;
+
+    @include inter-body(0.8rem);
+
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__title {
+    margin: 0;
+    color: $blue-01;
+
+    @include poppins-cta(clamp(1.9rem, 3vw, 2.5rem));
+
+    line-height: 1.12;
+    max-width: 18ch;
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: rgba($blue-01, 0.78);
+
+    @include inter-body(1rem);
+
+    line-height: 1.6;
+  }
+
+  &__catalog-link {
+    flex-shrink: 0;
+  }
+
+  &__carousel-shell {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - #{$spacing-md * 2}) / 3);
+    gap: $spacing-md;
+    overflow-x: auto;
+    padding: $spacing-xs 0 $spacing-sm;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__slide {
+    scroll-snap-align: start;
+    height: 100%;
+  }
+
+  &__control {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid rgba($blue-01, 0.14);
+    border-radius: 999px;
+    background: rgba($white-00, 0.96);
+    color: $blue-01;
+    box-shadow: 0 10px 24px rgba($blue-01, 0.1);
+    cursor: pointer;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      opacity 180ms ease,
+      background 180ms ease;
+
+    span {
+      font-size: 2rem;
+      line-height: 1;
+      transform: translateY(-1px);
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba($blue-01, 0.14);
+      background: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+
+  &__empty {
+    display: grid;
+    justify-items: start;
+    gap: $spacing-md;
+    padding: $spacing-xl;
+    border: 1px dashed rgba($blue-01, 0.18);
+    border-radius: $radius-lg;
+    background: rgba($white-00, 0.82);
+  }
+
+  &__empty-text {
+    margin: 0;
+    color: rgba($blue-01, 0.76);
+
+    @include inter-body(0.98rem);
+  }
+
+  &__empty-action {
+    color: $blue-01;
+  }
+}
+
+@media (max-width: $breakpoint-desktop-medium) {
+  .featured-products {
+    &__carousel {
+      grid-auto-columns: calc((100% - #{$spacing-md}) / 2);
+    }
+  }
+}
+
+@media (max-width: $breakpoint-tablet-portrait) {
+  .featured-products {
+    &__header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__catalog-link {
+      width: 100%;
+      justify-content: center;
+    }
+
+    &__carousel-shell {
+      grid-template-columns: 1fr;
+    }
+
+    &__control {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-mobile-large) {
+  .featured-products {
+    padding: $spacing-2xl 0;
+
+    &__carousel {
+      grid-auto-columns: minmax(84%, 1fr);
+      gap: $spacing-sm;
+    }
+
+    &__title {
+      max-width: none;
+    }
+
+    &__empty {
+      padding: $spacing-md;
+    }
+  }
+}

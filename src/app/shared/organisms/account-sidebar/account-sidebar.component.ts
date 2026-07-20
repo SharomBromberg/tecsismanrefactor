@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { IconComponent } from 'src/app/shared/atoms/icon/icon.component';
+import { IconComponent } from '@shared/atoms/icon/icon.component';
 
 @Component({
   selector: 'app-account-sidebar',

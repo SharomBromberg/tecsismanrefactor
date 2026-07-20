@@ -1,5 +1,5 @@
-import { Category } from 'src/app/core/interfaces/categories';
-import { Product, ProductComment } from 'src/app/core/interfaces/product';
+import { Category } from '@core/interfaces/categories';
+import { Product, ProductComment } from '@core/interfaces/product';
 
 export const MOCK_CATEGORIES: Category[] = [
   { _id: 'c1', name: 'Cloud Computing' },

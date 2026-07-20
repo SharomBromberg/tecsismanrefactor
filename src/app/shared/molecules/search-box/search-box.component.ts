@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { IconComponent } from 'src/app/shared/atoms/icon/icon.component';
-import { InputComponent } from 'src/app/shared/atoms/input/input.component';
+import { IconComponent } from '@shared/atoms/icon/icon.component';
+import { InputComponent } from '@shared/atoms/input/input.component';
 
 @Component({
   selector: 'app-search-box',

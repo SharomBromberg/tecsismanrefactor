@@ -32,6 +32,6 @@ export class IconComponent {
     | 'star-empty'
     | '' = '';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
-  @Input() customClass: string = '';
-  @Input() ariaLabel: string = '';
+  @Input() customClass = '';
+  @Input() ariaLabel = '';
 }

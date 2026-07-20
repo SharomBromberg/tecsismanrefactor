@@ -31,6 +31,24 @@
               <span>{{ featuredPost.authorDisplayName }}</span>
               <span>{{ featuredPost.createdAt | date:'mediumDate' }}</span>
             </div>
+            <div class="blog-page__reactions">
+              <button
+                type="button"
+                class="blog-page__reaction-btn"
+                [class.blog-page__reaction-btn--active]="featuredPost.activeReaction === 'like'"
+                (click)="react(featuredPost, 'like')"
+              >
+                Like · {{ featuredPost.likesCount }}
+              </button>
+              <button
+                type="button"
+                class="blog-page__reaction-btn"
+                [class.blog-page__reaction-btn--active]="featuredPost.activeReaction === 'dislike'"
+                (click)="react(featuredPost, 'dislike')"
+              >
+                Dislike · {{ featuredPost.dislikesCount }}
+              </button>
+            </div>
             <div class="blog-page__content-block">
               <p>{{ featuredPost.content }}</p>
             </div>
@@ -63,12 +81,12 @@
                   @if (feedbackByPostId[featuredPost.id]) {
                     <small class="blog-page__form-feedback">{{ feedbackByPostId[featuredPost.id] }}</small>
                   }
-                  <button app-button type="submit" class="button-gradient">Publicar comentario</button>
+                  <button app-button type="submit" class="app-btn app-btn--gradient">Publicar comentario</button>
                 </form>
               } @else {
                 <div class="blog-page__login-callout">
                   <p>Inicia sesion o registrate para comentar y hacer preguntas en el blog.</p>
-                  <a app-button routerLink="/login" class="button-inverse">Iniciar sesion</a>
+                  <a app-button routerLink="/login" class="app-btn app-btn--inverse">Iniciar sesion</a>
                 </div>
               }
             </section>
@@ -90,6 +108,24 @@
               <span>{{ post.authorDisplayName }}</span>
               <span>{{ post.createdAt | date:'mediumDate' }}</span>
             </div>
+            <div class="blog-card__reactions">
+              <button
+                type="button"
+                class="blog-card__reaction-btn"
+                [class.blog-card__reaction-btn--active]="post.activeReaction === 'like'"
+                (click)="react(post, 'like')"
+              >
+                Like · {{ post.likesCount }}
+              </button>
+              <button
+                type="button"
+                class="blog-card__reaction-btn"
+                [class.blog-card__reaction-btn--active]="post.activeReaction === 'dislike'"
+                (click)="react(post, 'dislike')"
+              >
+                Dislike · {{ post.dislikesCount }}
+              </button>
+            </div>
             <div class="blog-card__comments">
               <strong>{{ post.comments.length }}</strong>
               <span>comentarios</span>
@@ -97,7 +133,7 @@
             @if (isAuthenticated) {
               <form class="blog-card__comment-form" [formGroup]="getCommentForm(post.id)" (ngSubmit)="submitComment(post)">
                 <textarea formControlName="message" rows="3" placeholder="Haz una pregunta o comparte tu opinion"></textarea>
-                <button app-button type="submit" class="button-dark-blue">Comentar</button>
+                <button app-button type="submit" class="app-btn app-btn--dark-blue">Comentar</button>
               </form>
             }
           </div>

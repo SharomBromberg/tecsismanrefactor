@@ -19,31 +19,34 @@
     font-size: 0.76rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #375c8b;
+    color: $services-showcase-eyebrow-text;
     font-weight: 700;
   }
 
   h2,
   h3 {
     margin: 0;
-    color: #14365f;
+    color: $services-showcase-heading-text;
     line-height: 1.25;
   }
 
   h2 {
-    @include code-bolder;
+    @include inter-title(2.5rem);
+
     font-size: clamp(1.25rem, 2.2vw, 1.7rem);
   }
 
   h3 {
-    @include code-bolder;
+    @include inter-title(2.5rem);
+
     font-size: clamp(1.15rem, 2vw, 1.45rem);
   }
 
   &__lead {
-    @include fira-code-semibold;
+    @include inter-subtitle(1.5rem);
+
     margin: 0;
-    color: #365678;
+    color: $services-showcase-lead-text;
   }
 
   &__chips {
@@ -60,17 +63,36 @@
       padding: $spacing-xs $spacing-sm;
       background: #f9fbff;
       font-weight: 600;
-      color: #21456f;
+      color: $admin-text-medium;
       font-size: 0.86rem;
     }
   }
 
   &__cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: $gap-md;
+    // hacer que todas las cards tengan el mismo tamaño por medio del display flex quiero que las cards que queden abajo esten en el centro y no a un lado: 
+    display: flex;
+    flex-wrap: wrap;
+    gap: $gap-lg;
+    justify-content: center;
+
+    app-card {
+      width: 30%;
+      min-width: 0;
+    }
   }
 }
+
+//     display:flex;
+//     flex-wrap: wrap;
+//     gap: $gap-md;
+//     app-card {
+//       widht:25%;
+
+//       // flex: 1 1 calc(30% - #{$gap-md});
+//       min-width: 0;
+//     }
+//   }
+// }
 
 @media (min-width: $breakpoint-tablet-portrait) {
   .services-showcase {

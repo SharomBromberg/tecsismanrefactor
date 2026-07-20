@@ -1,122 +1,139 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
-@mixin inputConfig($border, $outline, $background, $border-bottom, $border-radius, $height, $width, $padding) {
- border: $border;
- outline: $outline;
- background: $background;
- border-bottom: $border-bottom;
- border-radius: $border-radius;
- height: $height;
- width: $width;
- padding: $padding;
-}
-
 /* ==========================================
- NUEVAS INPUTS - IDENTIDAD DE MARCA
+ BLOQUE: app-input
 ========================================== */
 
-.input-dark-00 {
- @include inputConfig(1px solid rgba($white-00, 0.1), none, $blue-01, none, $radius-md, 44px, 100%, 0 $spacing-md);
- @include inter-body(1rem);
- color: $white-00;
+.app-input {
+    outline: none;
+    width: 100%;
 
- &::placeholder {
-  color: $gray-01;
- }
- &:focus {
-  border: 1px solid $green-02;
-  background: $blue-05;
- }
-}
+    @include inter-body(1rem);
 
-.input-dark-01 {
- @include inputConfig(none, none, $blue-05, 1px solid rgba($white-00, 0.1), $radius-md, 44px, 100%, 0 $spacing-md);
- @include inter-body(1rem);
- color: $white-00;
+    /* ==========================================
+     MODIFICADORES - IDENTIDAD DE MARCA
+    ========================================== */
 
- &::placeholder {
-  color: $gray-01;
- }
- &:focus {
-  border-bottom: 1px solid $green-02;
- }
-}
+    &--dark-00 {
+        border: 1px solid rgba($white-00, 0.1);
+        background: $blue-01;
+        border-radius: $radius-md;
+        height: $control-height-md;
+        padding: 0 $spacing-md;
+        color: $white-00;
 
-.input-outline-00 {
- @include inputConfig(1px solid $blue-03, none, transparent, none, $radius-md, 44px, 100%, 0 $spacing-md);
- @include inter-body(1rem);
- color: $white-00;
+        &::placeholder {
+            color: $gray-01;
+        }
 
- &::placeholder {
-  color: $gray-01;
- }
- &:focus {
-  border: 1px solid $green-02;
-  background: rgba($blue-01, 0.3);
- }
-}
+        &:focus {
+            border: 1px solid $green-02;
+            background: $blue-05;
+        }
+    }
 
-.input-transparent-00 {
- @include inputConfig(none, none, transparent, 1px solid $gray-01, 0, 40px, 100%, 0);
- @include inter-body(1rem);
- color: $white-00;
+    &--dark-01 {
+        border-bottom: 1px solid rgba($white-00, 0.1);
+        background: $blue-05;
+        border-radius: $radius-md;
+        height: $control-height-md;
+        padding: 0 $spacing-md;
+        color: $white-00;
 
- &::placeholder {
-  color: $gray-01;
- }
- &:focus {
-  border-bottom: 1px solid $green-02;
- }
-}
+        &::placeholder {
+            color: $gray-01;
+        }
 
-/* ==========================================
- VARIANTES DE LABELS
-========================================== */
+        &:focus {
+            border-bottom: 1px solid $green-02;
+        }
+    }
 
-.label-default-00 {
- @include inter-body(1rem);
- color: $white-00;
- margin-bottom: $spacing-xs;
- display: block;
-}
+    &--outline-00 {
+        border: 1px solid $blue-03;
+        background: transparent;
+        border-radius: $radius-md;
+        height: $control-height-md;
+        padding: 0 $spacing-md;
+        color: $white-00;
 
-.label-accent-00 {
- @include inter-subtitle(1.125rem);
- color: $green-02;
- margin-bottom: $spacing-xs;
- display: block;
-}
+        &::placeholder {
+            color: $gray-01;
+        }
 
-/* ==========================================
- CONTENEDOR GENERAL
-========================================== */
+        &:focus {
+            border: 1px solid $green-02;
+            background: rgba($blue-01, 0.3);
+        }
+    }
 
-.input-wrapper {
- display: flex;
- flex-direction: column;
- width: 100%;
-}
-/* ==========================================
-   VARIANTES LIGHT (Para fondos blancos)
-========================================== */
+    &--transparent-00 {
+        border-bottom: 1px solid $gray-01;
+        background: transparent;
+        border-radius: 0;
+        height: $control-height-sm;
+        color: $white-00;
 
-.input-light-00 {
-  @include inputConfig(1px solid #e0e0e0, none, $white-00, none, $radius-md, 44px, 100%, 0 $spacing-md);
-  @include inter-body(1rem);
-  color: #333333; // Texto oscuro para alta legibilidad
+        &::placeholder {
+            color: $gray-01;
+        }
 
-  &::placeholder {
-    color: #999999;
-  }
-  &:focus {
-    border: 1px solid $green-02;
-    background: #fcfcfc;
-  }
-}
+        &:focus {
+            border-bottom: 1px solid $green-02;
+        }
+    }
 
-.label-light-00 {
-  @include inter-body(1rem);
-  color: #333333;
-  margin-bottom: $spacing-xs;
-  display: block;
+    /* ==========================================
+       MODIFICADOR LIGHT (Para fondos blancos)
+       ========================================== */
+
+    &--light-00 {
+        border: 1px solid $gray-02;
+        background: $white-00;
+        border-radius: $radius-md;
+        height: $control-height-md;
+        padding: 0 $spacing-md;
+        color: $gray-00;
+
+        &::placeholder {
+            color: $gray-03;
+        }
+
+        &:focus {
+            border: 1px solid $green-02;
+            background: $white-02;
+        }
+    }
+
+    /* ==========================================
+     ELEMENTO: contenedor general
+    ========================================== */
+
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* ==========================================
+     ELEMENTO: label + modificadores
+    ========================================== */
+
+    &__label {
+        @include inter-body(1rem);
+
+        color: $white-00;
+        margin-bottom: $spacing-xs;
+        display: block;
+
+        &--accent {
+            @include inter-subtitle(1.125rem);
+
+            color: $green-02;
+        }
+
+        &--light {
+            color: $gray-00;
+        }
+    }
 }

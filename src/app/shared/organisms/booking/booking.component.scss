@@ -6,9 +6,10 @@
 
     &__title {
         @include poppins-cta(2rem);
+
         color: $blue-01;
         text-align: center;
-        margin: 0 0 2rem 0;
+        margin: 0 0 2rem;
     }
 
     &__items {

@@ -5,10 +5,10 @@
 	position: relative;
 	overflow: hidden;
 	padding: $spacing-3xl 0 $spacing-2xl;
-	color: #f7fbff;
+	color: $services-hero-text;
 	background:
-		radial-gradient(circle at 12% 20%, rgba(255, 255, 255, 0.17), transparent 36%),
-		radial-gradient(circle at 88% 12%, rgba(120, 215, 255, 0.22), transparent 32%),
+		radial-gradient(circle at 12% 20%, rgb(255 255 255 / 17%), transparent 36%),
+		radial-gradient(circle at 88% 12%, rgb(120 215 255 / 22%), transparent 32%),
 		linear-gradient(135deg, $blue-01, #0f5fa8 45%, #1696c7);
 
 	&__content {
@@ -28,14 +28,18 @@
 
 	h1 {
 		margin: 0.8rem 0 0.7rem;
+
 		@include poppins-cta(2.4rem);
+
 		font-size: clamp(1.9rem, 4vw, 3rem);
 		line-height: 1.08;
 	}
 
 	p {
 		margin: 0;
+
 		@include inter-body(1rem);
+
 		max-width: 68ch;
 	}
 
@@ -49,9 +53,9 @@
 
 		li {
 			padding: 0.45rem 0.8rem;
-			border: 1px solid rgba(255, 255, 255, 0.38);
+			border: 1px solid rgb(255 255 255 / 38%);
 			border-radius: 999px;
-			background: rgba(255, 255, 255, 0.12);
+			background: rgb(255 255 255 / 12%);
 			font-size: 0.86rem;
 			font-weight: 600;
 		}
@@ -93,8 +97,8 @@
 		padding: $spacing-lg;
 		background: linear-gradient(125deg, #0b2744, $blue-01);
 		border-radius: $radius-lg;
-		color: #f6fbff;
-		border: 1px solid rgba(176, 216, 255, 0.28);
+		color: $services-cta-text;
+		border: 1px solid rgb(176 216 255 / 28%);
 	}
 
 	&__eyebrow {
@@ -107,14 +111,18 @@
 
 	h2 {
 		margin: 0.35rem 0 0.5rem;
+
 		@include poppins-cta(1.6rem);
+
 		font-size: clamp(1.25rem, 2.6vw, 1.75rem);
 		line-height: 1.2;
 	}
 
 	p {
 		margin: 0;
+
 		@include inter-body(1rem);
+
 		opacity: 0.92;
 	}
 

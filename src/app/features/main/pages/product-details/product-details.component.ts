@@ -2,20 +2,20 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { combineLatest, filter, map, of, shareReplay, switchMap } from 'rxjs';
-import { ProductService } from 'src/app/core/services/product.service';
-import { Product, ProductComment } from 'src/app/core/interfaces/product';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { PurchaseHistoryService } from 'src/app/core/services/purchase-history.service';
-import { UserFavoritesService } from 'src/app/core/services/user-favorites.service';
-import { ToastService } from 'src/app/core/services/toast.service';
+import { ProductService } from '@core/services/product.service';
+import { Product } from '@core/interfaces/product';
+import { AuthService } from '@core/services/auth.service';
+import { PurchaseHistoryService } from '@core/services/purchase-history.service';
+import { UserFavoritesService } from '@core/services/user-favorites.service';
+import { ToastService } from '@core/services/toast.service';
 
-import { ProductGalleryComponent } from 'src/app/shared/molecules/product-gallery/product-gallery.component';
-import { IconComponent } from 'src/app/shared/atoms/icon/icon.component';
-import { ReviewFormComponent } from 'src/app/shared/organisms/review-form/review-form.component';
-import { ReviewListComponent } from 'src/app/shared/organisms/review-list/review-list.component';
-import { PurchaseInfoComponent } from 'src/app/shared/organisms/purchase-info/purchase-info.component';
-import { ProductDescriptionComponent } from 'src/app/shared/organisms/product-description/product-description.component';
-import { CommentRequest } from 'src/app/core/interfaces/comment';
+import { ProductGalleryComponent } from '@shared/molecules/product-gallery/product-gallery.component';
+import { IconComponent } from '@shared/atoms/icon/icon.component';
+import { ReviewFormComponent } from '@shared/organisms/review-form/review-form.component';
+import { ReviewListComponent } from '@shared/organisms/review-list/review-list.component';
+import { PurchaseInfoComponent } from '@shared/organisms/purchase-info/purchase-info.component';
+import { ProductDescriptionComponent } from '@shared/organisms/product-description/product-description.component';
+import { CommentRequest } from '@core/interfaces/comment';
 
 @Component({
   selector: 'app-product-details',

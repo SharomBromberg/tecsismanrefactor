@@ -14,3 +14,7 @@ export interface AdminProductCreatePayload {
   featured: boolean;
   tags: string[];
 }
+
+export interface AdminProductUpdatePayload extends AdminProductCreatePayload {
+  _id: string;
+}

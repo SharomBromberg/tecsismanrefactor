@@ -9,12 +9,12 @@
   align-items: center;
   gap: $spacing-sm;
   border-radius: $radius-md;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgb(255 255 255 / 30%);
   padding: $spacing-sm $spacing-md;
   min-width: 260px;
   max-width: min(90vw, 440px);
   color: $white-00;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 24%);
   animation: toast-in 220ms ease-out;
 
   &--success {
@@ -36,7 +36,7 @@
 
   &__close {
     border: 0;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255 255 255 / 20%);
     color: $white-00;
     width: 1.55rem;
     height: 1.55rem;
@@ -55,6 +55,7 @@
     opacity: 0;
     transform: translateY(10px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);

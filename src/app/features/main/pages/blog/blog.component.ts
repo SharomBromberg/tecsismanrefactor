@@ -3,10 +3,10 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
-import { BlogPost } from 'src/app/core/interfaces/blog';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { BlogService } from 'src/app/core/services/blog.service';
-import { ButtonComponent } from 'src/app/shared/atoms/button/button.component';
+import { BlogPost } from '@core/interfaces/blog';
+import { AuthService } from '@core/services/auth.service';
+import { BlogService } from '@core/services/blog.service';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
 
 @Component({
   selector: 'app-blog',
@@ -30,8 +30,8 @@ export class BlogComponent {
 
   readonly postsVm$ = this.blogService.posts$.pipe(
     map((posts) => ({
-      featuredPost: posts[0] ?? null,
-      posts: posts.slice(1),
+      featuredPost: posts[0] ? this.toPostVm(posts[0]) : null,
+      posts: posts.slice(1).map((post) => this.toPostVm(post)),
       totalPosts: posts.length,
       totalComments: posts.reduce(
         (accumulator, post) => accumulator + post.comments.length,
@@ -104,5 +104,38 @@ export class BlogComponent {
     if (result.ok) {
       form.reset();
     }
+  }
+
+  react(post: BlogPost, reaction: 'like' | 'dislike'): void {
+    if (!this.currentSession) {
+      void this.router.navigate(['/login'], {
+        queryParams: { redirectTo: '/Blog' },
+      });
+      return;
+    }
+
+    this.blogService.reactToPost(post.id, {
+      username: this.currentSession.username,
+      reaction,
+    });
+  }
+
+  private toPostVm(post: BlogPost): BlogPost & {
+    likesCount: number;
+    dislikesCount: number;
+    activeReaction: 'like' | 'dislike' | null;
+  } {
+    const username = this.currentSession?.username?.trim().toLowerCase() ?? '';
+
+    return {
+      ...post,
+      likesCount: post.reactions.likes.length,
+      dislikesCount: post.reactions.dislikes.length,
+      activeReaction: post.reactions.likes.includes(username)
+        ? 'like'
+        : post.reactions.dislikes.includes(username)
+          ? 'dislike'
+          : null,
+    };
   }
 }

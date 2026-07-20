@@ -25,6 +25,7 @@ $size-lg: 2.25rem;        // 36px    - Large element
 $size-xl: 3rem;           // 48px    - Extra large element
 
 // Border Radius Scale - For rounded corners
+$radius-xs: 0.3125rem;    // 5px   - Brand controls (buttons, inputs)
 $radius-sm: 0.5rem;       // 8px   - Subtle rounding
 $radius-md: 0.75rem;      // 12px  - Default rounding
 $radius-lg: 1rem;         // 16px  - More rounded
@@ -40,8 +41,18 @@ $gap-lg: $spacing-lg;
 $gap-xl: $spacing-xl;
 $gap-2xl: $spacing-2xl;
 
+// Control Dimensions - For form controls (buttons, inputs)
+$control-height-sm: 2.5rem;   // 40px - buttons, compact inputs
+$control-height-md: 2.75rem;  // 44px - standard inputs
+$control-padding-x: 1.25rem;  // horizontal padding for buttons/inputs
+
 // Line Height Scale - For text readability
 $line-height-tight: 1.2;      // Compact spacing
 $line-height-normal: 1.5;     // Default spacing
 $line-height-loose: 1.8;      // Generous spacing
 $line-height-relaxed: 2;      // Very relaxed spacing
+
+// Layout Offsets - one-off fixed clearances outside the linear t-shirt scale
+// (reserve space below the fixed navbar for full-height admin layouts)
+$layout-header-clearance: 5rem;
+$layout-header-clearance-sm: 4.75rem;

@@ -1,0 +1,30 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "plugins": [
+    "stylelint-selector-bem-pattern",
+    "stylelint-declaration-strict-value"
+  ],
+  "rules": {
+    "declaration-no-important": true,
+    "selector-class-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z][a-z0-9]*(-[a-z0-9]+)*)?(--[a-z][a-z0-9]*(-[a-z0-9]+)*)?$",
+    "selector-pseudo-element-no-unknown": [
+      true,
+      { "ignorePseudoElements": ["ng-deep"] }
+    ],
+    "plugin/selector-bem-pattern": {
+      "preset": "bem",
+      "implicitComponents": false,
+      "ignoreSelectors": ["^[^.]"]
+    },
+    "scale-unlimited/declaration-strict-value": [
+      ["/^color$/", "/^background-color$/", "/^border-color$/"],
+      {
+        "ignoreValues": ["inherit", "transparent", "currentColor", "none", "/\\$[\\w-]/"],
+        "ignoreFunctions": false
+      }
+    ],
+    "scss/at-rule-no-unknown": null,
+    "no-descending-specificity": null,
+    "value-keyword-case": ["lower", { "camelCaseSvgKeywords": true }]
+  }
+}

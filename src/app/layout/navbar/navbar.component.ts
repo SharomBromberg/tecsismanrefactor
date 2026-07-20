@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subscription, filter, map } from 'rxjs';
@@ -16,6 +16,11 @@ import { CartDrawerService } from '../../core/services/cart-drawer.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly cartService = inject(CartService);
+  private readonly cartDrawerService = inject(CartDrawerService);
+
   menuElements: MenuElement[] = [
     { title: 'Inicio', route: '/Inicio' },
     { title: 'Servicios', route: '/Servicios' },
@@ -29,13 +34,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   );
 
   private routeSub?: Subscription;
-
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router,
-    private readonly cartService: CartService,
-    private readonly cartDrawerService: CartDrawerService,
-  ) {}
 
   ngOnInit(): void {
     this.routeSub = this.router.events

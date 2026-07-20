@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, map, of } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { Category } from '../interfaces/categories';
 import { Product, ProductComment } from '../interfaces/product';
+import { CommentRequest } from '../interfaces/comment';
 import { MOCK_CATEGORIES, MOCK_PRODUCTS } from '../mocks/product.mocks';
 
 @Injectable({
@@ -61,18 +62,52 @@ export class ProductService {
     );
   }
 
-  addCategory(name: string): Observable<void> {
+  addCategory(name: string, parentId?: string | null): Observable<void> {
     const newCategory: Category = {
       _id: `c${new Date().getTime()}`,
       name,
+      parentId: parentId ?? null,
     };
     this.categoriesSubject.next([...this.categoriesSubject.value, newCategory]);
     return of(undefined);
   }
 
+  updateCategory(
+    id: string,
+    payload: Pick<Category, 'name' | 'parentId'>,
+  ): Observable<void> {
+    const updated = this.categoriesSubject.value.map((category) =>
+      category._id === id
+        ? {
+            ...category,
+            name: payload.name,
+            parentId: payload.parentId ?? null,
+          }
+        : category,
+    );
+    this.categoriesSubject.next(updated);
+    return of(undefined);
+  }
+
   deleteCategory(id: string): Observable<void> {
-    const filtered = this.categoriesSubject.value.filter((c) => c._id !== id);
+    const removedIds = new Set<string>([id]);
+    this.categoriesSubject.value.forEach((category) => {
+      if (category.parentId === id) {
+        removedIds.add(category._id);
+      }
+    });
+
+    const filtered = this.categoriesSubject.value.filter(
+      (c) => !removedIds.has(c._id),
+    );
     this.categoriesSubject.next(filtered);
+
+    const normalizedProducts = this.productsSubject.value.map((product) =>
+      removedIds.has(product.categoryId)
+        ? { ...product, categoryId: '' }
+        : product,
+    );
+    this.productsSubject.next(normalizedProducts);
     return of(undefined);
   }
 
@@ -96,19 +131,44 @@ export class ProductService {
     return of(undefined);
   }
 
+  updateProduct(
+    productId: string,
+    payload: Partial<Product>,
+  ): Observable<void> {
+    const updated = this.productsSubject.value.map((product) =>
+      product._id === productId
+        ? {
+            ...product,
+            ...payload,
+            _id: product._id,
+          }
+        : product,
+    );
+    this.productsSubject.next(updated);
+    return of(undefined);
+  }
+
   deleteProduct(id: string): Observable<void> {
     const filtered = this.productsSubject.value.filter((p) => p._id !== id);
     this.productsSubject.next(filtered);
     return of(undefined);
   }
 
-  addComment(productId: string, comment: any): Observable<void> {
+  setProductFeatured(productId: string, featured: boolean): Observable<void> {
+    const updated = this.productsSubject.value.map((product) =>
+      product._id === productId ? { ...product, featured } : product,
+    );
+    this.productsSubject.next(updated);
+    return of(undefined);
+  }
+
+  addComment(productId: string, comment: CommentRequest): Observable<void> {
     const updated = this.productsSubject.value.map((p) => {
       if (p._id === productId) {
         const newComment: ProductComment = {
           author: comment.author,
-          text: comment.message || comment.text, // Adaptado para retrocompatibilidad
-          message: comment.message || comment.text,
+          text: comment.message,
+          message: comment.message,
           rating: comment.rating,
           createdAt: new Date().toISOString(),
         };

@@ -1,27 +1,10 @@
 import { Injectable } from '@angular/core';
-
-export type UserRole = 'admin' | 'user';
-
-interface AuthUser {
-  username: string;
-  password: string;
-  role: UserRole;
-  displayName: string;
-}
-
-interface AuthSession {
-  username: string;
-  role: UserRole;
-  displayName: string;
-  issuedAt: string;
-  expiresAt: string;
-}
-
-interface LoginAttemptState {
-  count: number;
-  firstAttemptAt: number;
-  lockedUntil?: number;
-}
+import {
+  AuthSession,
+  AuthUser,
+  LoginAttemptState,
+  UserRole,
+} from '@core/interfaces/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -29,6 +12,8 @@ export class AuthService {
   private readonly usersStorageKey = 'tecsisman_registered_users';
   private readonly passwordOverridesStorageKey =
     'tecsisman_user_password_overrides';
+  private readonly displayNameOverridesStorageKey =
+    'tecsisman_user_display_name_overrides';
   private readonly loginAttemptsStorageKey = 'tecsisman_login_attempts';
   private readonly sessionDurationMs = 1000 * 60 * 60 * 12;
   private readonly loginAttemptWindowMs = 1000 * 60 * 10;
@@ -184,6 +169,9 @@ export class AuthService {
       ...this.session,
       displayName: sanitized,
     };
+    const overrides = this.getDisplayNameOverrides();
+    overrides[this.session.username.trim().toLowerCase()] = sanitized;
+    this.writeDisplayNameOverrides(overrides);
     this.writeSession(this.session);
   }
 
@@ -275,6 +263,27 @@ export class AuthService {
     }
   }
 
+  private getDisplayNameOverrides(): Record<string, string> {
+    const raw = localStorage.getItem(this.displayNameOverridesStorageKey);
+    if (!raw) {
+      return {};
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as Record<string, string>;
+      return parsed ?? {};
+    } catch {
+      return {};
+    }
+  }
+
+  private writeDisplayNameOverrides(mapValue: Record<string, string>): void {
+    localStorage.setItem(
+      this.displayNameOverridesStorageKey,
+      JSON.stringify(mapValue),
+    );
+  }
+
   private getUserPassword(user: AuthUser): string {
     const normalized = user.username.trim().toLowerCase();
     const overrides = this.getPasswordOverrides();
@@ -316,11 +325,18 @@ export class AuthService {
   }
 
   private getAllUsers(): AuthUser[] {
+    const displayNameOverrides = this.getDisplayNameOverrides();
+
     return [
       ...this.adminUsers,
       ...this.baseUsers,
       ...this.getRegisteredUsers(),
-    ];
+    ].map((user) => ({
+      ...user,
+      displayName:
+        displayNameOverrides[user.username.trim().toLowerCase()] ??
+        user.displayName,
+    }));
   }
 
   private isValidUsername(username: string): boolean {

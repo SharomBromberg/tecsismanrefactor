@@ -177,7 +177,7 @@
 		margin: $spacing-2xs 0 0;
 		font-weight: 600;
 		color: $gray-00;
-		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 }
 
@@ -214,7 +214,7 @@
 		input.is-invalid,
 		textarea.is-invalid,
 		select.is-invalid {
-			border-color: #c94a4a;
+			border-color: $user-form-error;
 		}
 	}
 
@@ -232,11 +232,11 @@
 	}
 
 	&__error {
-		color: #c94a4a;
+		color: $user-form-error;
 	}
 
 	&__success {
-		color: #1f7a46;
+		color: $user-form-success;
 	}
 
 	&__actions {

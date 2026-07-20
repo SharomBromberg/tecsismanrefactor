@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
   buildWhatsAppUrl,
   WHATSAPP_DISPLAY_NUMBER,
-} from 'src/app/core/constants/contact.constants';
+} from '@core/constants/contact.constants';
 
 @Component({
   selector: 'app-footer',

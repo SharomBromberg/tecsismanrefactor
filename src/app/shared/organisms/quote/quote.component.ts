@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 
 // Importamos la molécula (Asegúrate de que la ruta sea correcta según tu proyecto)
 import { CardComponent } from '../../molecules/card/card.component';
-import { buildWhatsAppUrl } from 'src/app/core/constants/contact.constants';
+import { buildWhatsAppUrl } from '@core/constants/contact.constants';
+import {
+  QUOTE_SERVICE_IDS,
+  SERVICES_FLAT_CARDS,
+} from '@core/constants/services-catalog.constants';
 
 // Importamos las interfaces
 import { CardData } from '../../../core/interfaces/card-data.interface';
@@ -18,54 +22,17 @@ import { statusClassButton } from '../../../core/interfaces/buttoninterface';
   styleUrl: './quote.component.scss',
 })
 export class QuoteComponent {
-  servicesList = signal<CardData[]>([
-    {
-      id: 'corp',
-      title: 'Páginas web corporativas',
-      description:
-        'Soluciones profesionales para impulsar la identidad digital de tu empresa.',
-      imageUrl: '../../../../assets/pictures/corporativa.jpg',
+  servicesList = signal<CardData[]>(
+    SERVICES_FLAT_CARDS.filter(
+      (service) =>
+        typeof service.id === 'string' &&
+        QUOTE_SERVICE_IDS.includes(service.id),
+    ).map((service) => ({
+      ...service,
       buttonText: 'Cotizar',
       buttonVariant: statusClassButton.BUTTON_WHITE_OUTLINE,
-    },
-    {
-      id: 'ecommerce',
-      title: 'Tiendas en línea',
-      description:
-        'Plataformas seguras y optimizadas para maximizar tus ventas digitales.',
-      imageUrl: '../../../../assets/pictures/ecommerce.jpg',
-      buttonText: 'Cotizar',
-      buttonVariant: statusClassButton.BUTTON_WHITE_OUTLINE,
-    },
-    {
-      id: 'blogs',
-      title: 'Blogs y Portales',
-      description:
-        'Gestores de contenido robustos para conectar con tu audiencia.',
-      imageUrl: '../../../../assets/pictures/blogs.jpg',
-      buttonText: 'Cotizar',
-      buttonVariant: statusClassButton.BUTTON_WHITE_OUTLINE,
-    },
-    {
-      id: 'landing',
-      title: 'Landing Pages',
-      description:
-        'Páginas de aterrizaje diseñadas estratégicamente para conversiones altas.',
-      imageUrl: '../../../../assets/pictures/landing.png',
-      buttonText: 'Cotizar',
-      buttonVariant: statusClassButton.BUTTON_WHITE_OUTLINE,
-    },
-    {
-      id: 'portfolio',
-      title: 'Portafolios Creativos',
-      description:
-        'Muestra tu trabajo al mundo con diseños únicos y memorables.',
-      imageUrl: '../../../../assets/pictures/portfolio.png',
-      imageFitContain: true, // Para que esta imagen no se recorte
-      buttonText: 'Cotizar',
-      buttonVariant: statusClassButton.BUTTON_WHITE_OUTLINE,
-    },
-  ]);
+    })),
+  );
 
   handleQuoteClick(serviceId: string | number): void {
     const whatsappUrl = buildWhatsAppUrl(

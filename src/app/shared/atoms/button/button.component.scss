@@ -1,113 +1,141 @@
 @use '../../../../assets/tokens/index.scss' as *;
 @use "sass:color";
 
-@mixin buttonConfig($display, $items, $content, $cont-size, $width, $height, $text-position, $cursor, $bg-color, $border, $border-radius, $color, $padding ) {
-    display: $display;
-    align-items: $items;
-    justify-content: $content;
-    box-sizing: $cont-size;
-    width: $width;
-    height: $height;
-    text-align: $text-position;
-    cursor: $cursor;
-    background: $bg-color;
-    border: $border;
-    border-radius: $border-radius;
-    color: $color;
-    padding: $padding;
+.app-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: auto;
+    height: $control-height-sm;
+    padding: 0 $control-padding-x;
+    text-align: center;
     text-decoration: none;
+    cursor: pointer;
+    border-radius: $radius-xs;
     transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
-}
 
-.button-primary {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, $blue-00, 1px solid $blue-00, 5px, $white-00, 0 1.25rem);
-    @include inter-button(1rem);
-
-    &:hover {
-        background: color.adjust($blue-00, $lightness: -10%);
-        border-color: color.adjust($blue-00, $lightness: -10%);
-    }
-}
-
-.button-dark-blue {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, $blue-01, 1px solid $blue-01, 5px, $white-00, 0 1.25rem);
-    @include inter-button(0.95rem); 
-
-    &:hover {
-        background: color.adjust($blue-01, $lightness: 10%);
-        border-color: color.adjust($blue-01, $lightness: 10%);
-    }
-}
-
-.button-whatsapp {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, linear-gradient(to right, #60e671, #40c252), none, 5px, $white-00, 0 1.25rem);
-    @include inter-button(1rem); // Tu fuente oficial
-
-    i {
+    &__icon {
         font-size: 1.2em;
-        margin-right: 0.5rem;
+        margin-right: $spacing-xs;
     }
 
-    &:hover {
-        transform: translateY(-2px);
-    }
-}
+    &--primary {
+        @include inter-button(1rem);
 
-.button-white-outline {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, transparent, 1px solid $blue-01, 5px, $blue-01, 0 1.25rem);
-    @include inter-button(0.95rem); // Tu fuente oficial
-
-    &:hover {
+        background: $blue-00;
+        border: 1px solid $blue-00;
         color: $white-00;
+
+        &:hover {
+            background: color.adjust($blue-00, $lightness: -10%);
+            border-color: color.adjust($blue-00, $lightness: -10%);
+        }
+    }
+
+    &--dark-blue {
+        @include inter-button(0.95rem);
+
         background: $blue-01;
+        border: 1px solid $blue-01;
+        color: $white-00;
+
+        &:hover {
+            background: color.adjust($blue-01, $lightness: 10%);
+            border-color: color.adjust($blue-01, $lightness: 10%);
+        }
     }
-}
 
-.button-inverse {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, transparent, 1px solid rgba(255, 255, 255, 0.45), 5px, $white-00, 0 1.25rem);
-    @include inter-button(0.95rem); // Tu fuente oficial
+    &--whatsapp {
+        @include inter-button(1rem);
 
-    &:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: linear-gradient(to right, $green-whatsapp-00, $green-whatsapp-01);
+        border: none;
+        color: $white-00;
+
+        &:hover {
+            transform: translateY(-2px);
+        }
     }
-}
 
-.button-gradient {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, linear-gradient(135deg, $green-00, $green-02), none, 5px, $blue-01, 0 1.25rem);
-    @include inter-button(1rem); // Tu fuente oficial
+    &--white-outline {
+        @include inter-button(0.95rem);
 
-    &:hover {
-        transform: translateY(-2px);
-        background: linear-gradient(135deg, color.adjust($green-00, $lightness: 5%), color.adjust($green-02, $lightness: 5%));
-    }
-}
-
-.button-ghost {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, transparent, 1px solid transparent, 5px, $blue-00, 0 1.25rem);
-    @include inter-button(0.95rem); // Tu fuente oficial
-
-    &:hover {
-        background: rgba($blue-00, 0.1);
+        background: transparent;
+        border: 1px solid $blue-01;
         color: $blue-01;
+
+        &:hover {
+            background: $blue-01;
+            color: $white-00;
+        }
+    }
+
+    &--inverse {
+        @include inter-button(0.95rem);
+
+        background: transparent;
+        border: 1px solid rgba($white-00, 0.45);
+        color: $white-00;
+
+        &:hover {
+            background: rgba($white-00, 0.08);
+        }
+    }
+
+    &--gradient {
+        @include inter-button(1rem);
+
+        background: linear-gradient(135deg, $green-00, $green-02);
+        border: none;
+        color: $blue-01;
+
+        &:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, color.adjust($green-00, $lightness: 5%), color.adjust($green-02, $lightness: 5%));
+        }
+    }
+
+    &--ghost {
+        @include inter-button(0.95rem);
+
+        background: transparent;
+        border: 1px solid transparent;
+        color: $blue-00;
+
+        &:hover {
+            background: rgba($blue-00, 0.1);
+            color: $blue-01;
+        }
+    }
+
+    &--danger {
+        @include inter-button(0.95rem);
+
+        background: $red-01;
+        border: 1px solid $red-01;
+        color: $white-00;
+
+        &:hover {
+            background: $red-00;
+            border-color: $red-00;
+        }
+    }
+
+    &--disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
+        transform: none;
+        box-shadow: none;
     }
 }
 
-.button-danger {
-    @include buttonConfig(inline-flex, center, center, border-box, auto, 40px, center, pointer, $red-01, 1px solid $red-01, 5px, $white-00, 0 1.25rem);
-    @include inter-button(0.95rem); // Tu fuente oficial
-
-    &:hover {
-        background: $red-00;
-        border-color: $red-00;
-    }
-}
-
-/* ========================================== 
-   ESTADO DESHABILITADO 
+/* ==========================================
+   ESTADO DESHABILITADO NATIVO
    ========================================== */
 button[disabled],
-a[disabled],
-.button-disabled {
+a[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
     pointer-events: none;

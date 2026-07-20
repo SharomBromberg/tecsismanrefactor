@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CartService } from 'src/app/core/services/cart.service';
-import { CartDrawerService } from 'src/app/core/services/cart-drawer.service';
-import { ToastService } from 'src/app/core/services/toast.service';
-import { Product } from 'src/app/core/interfaces/product';
-import { buildWhatsAppUrl } from 'src/app/core/constants/contact.constants';
+import { CartService } from '@core/services/cart.service';
+import { CartDrawerService } from '@core/services/cart-drawer.service';
+import { ToastService } from '@core/services/toast.service';
+import { Product } from '@core/interfaces/product';
+import { buildWhatsAppUrl } from '@core/constants/contact.constants';
 
 @Component({
   selector: 'app-purchase-info',
@@ -17,13 +17,11 @@ import { buildWhatsAppUrl } from 'src/app/core/constants/contact.constants';
 export class PurchaseInfoComponent {
   @Input({ required: true }) product!: Product;
 
-  quantity = 1;
+  private readonly cartService = inject(CartService);
+  private readonly cartDrawerService = inject(CartDrawerService);
+  private readonly toastService = inject(ToastService);
 
-  constructor(
-    private readonly cartService: CartService,
-    private readonly cartDrawerService: CartDrawerService,
-    private readonly toastService: ToastService,
-  ) {}
+  quantity = 1;
 
   addToCart(): void {
     this.cartService.addToCart(this.product, this.quantity);

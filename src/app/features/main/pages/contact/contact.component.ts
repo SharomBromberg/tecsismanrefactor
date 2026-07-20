@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ContactLeadService } from 'src/app/core/services/contact-lead.service';
+import { ContactLeadService } from '@core/services/contact-lead.service';
 
 @Component({
   selector: 'app-contact',
@@ -10,7 +10,10 @@ import { ContactLeadService } from 'src/app/core/services/contact-lead.service';
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss'],
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent {
+  private fb = inject(FormBuilder);
+  private readonly contactLeadService = inject(ContactLeadService);
+
   submitting = false;
   submitted = false;
   successMessage = '';
@@ -38,13 +41,6 @@ export class ContactComponent implements OnInit {
     ],
   });
 
-  constructor(
-    private fb: FormBuilder,
-    private readonly contactLeadService: ContactLeadService,
-  ) {}
-
-  ngOnInit(): void {}
-
   get f() {
     return this.form.controls;
   }
@@ -70,7 +66,7 @@ export class ContactComponent implements OnInit {
       this.successMessage =
         'Gracias. Recibimos tu solicitud y te contactaremos pronto.';
       this.submitted = false;
-    } catch (e) {
+    } catch {
       this.errorMsg = 'No pudimos enviar tu mensaje. Intenta más tarde.';
     } finally {
       this.submitting = false;

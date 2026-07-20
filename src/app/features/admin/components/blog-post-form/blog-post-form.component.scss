@@ -1,0 +1,95 @@
+@use '../../../../../assets/tokens/index.scss' as *;
+
+.admin-card {
+  background: $white-00;
+  border: 1px solid rgba($blue-01, 0.12);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-shadow: 0 16px 30px rgba($blue-01, 0.08);
+
+  &__title {
+    margin: 0 0 $spacing-md;
+    color: $blue-01;
+
+    @include inter-title(1.08rem);
+  }
+}
+
+.admin-form {
+  display: grid;
+  gap: $spacing-sm;
+
+  &--blog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: $spacing-2xs;
+    color: $blue-01;
+    font-size: 0.84rem;
+    font-weight: 700;
+  }
+
+  &__control {
+    width: 100%;
+    border: 1px solid rgba($blue-01, 0.16);
+    border-radius: $radius-sm;
+    padding: $spacing-sm;
+    color: $blue-01;
+    background: rgba($white-00, 0.98);
+    font: inherit;
+
+    &--textarea {
+      resize: vertical;
+      min-height: 6rem;
+    }
+  }
+
+  &__full {
+    grid-column: 1 / -1;
+  }
+
+  &__feedback {
+    margin: 0;
+    color: $admin-success;
+    font-weight: 700;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+  }
+
+  &__submit,
+  &__secondary {
+    border-radius: $radius-sm;
+    font-weight: 700;
+    padding: $spacing-sm $spacing-md;
+    cursor: pointer;
+  }
+
+  &__submit {
+    border: 0;
+    background: linear-gradient(135deg, $blue-00, $admin-teal-accent);
+    color: $white-00;
+  }
+
+  &__secondary {
+    border: 1px solid rgba($blue-01, 0.14);
+    background: rgba($white-01, 0.92);
+    color: $blue-01;
+  }
+}
+
+@media (max-width: $breakpoint-tablet-portrait) {
+  .admin-form--blog {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form__submit,
+  .admin-form__secondary {
+    width: 100%;
+  }
+}

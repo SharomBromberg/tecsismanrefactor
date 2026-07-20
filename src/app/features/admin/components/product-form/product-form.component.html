@@ -1,5 +1,5 @@
 <article class="admin-card admin-card--wide">
-  <h2 class="admin-card__title">Crear producto</h2>
+  <h2 class="admin-card__title">{{ title }}</h2>
   <form [formGroup]="form" (ngSubmit)="submit()" class="admin-form admin-form--grid">
     <div>
       <label class="admin-form__label" for="product-name">Nombre</label>
@@ -16,8 +16,8 @@
       <label class="admin-form__label" for="product-category">Categoría</label>
       <select class="admin-form__control" id="product-category" formControlName="categoryId">
         <option value="">Selecciona una categoría</option>
-        @for (category of categories; track trackByCategoryId($index, category)) {
-          <option [value]="category._id">{{ category.name }}</option>
+        @for (category of categoryOptions; track trackByCategoryId($index, category)) {
+          <option [value]="category._id">{{ resolveCategoryLabel(category) }}</option>
         }
       </select>
       @if (hasError('categoryId', 'required')) {
@@ -57,8 +57,8 @@
     </div>
 
     <div>
-      <label class="admin-form__label" for="product-image">Imagen (URL)</label>
-      <input class="admin-form__control" id="product-image" type="url" formControlName="imageUrl" />
+      <label class="admin-form__label" for="product-image">Imagenes (URL, separadas por coma)</label>
+      <input class="admin-form__control" id="product-image" type="text" formControlName="imageUrl" />
     </div>
 
     <div class="admin-form__span-2">
@@ -97,6 +97,11 @@
       Marcar como destacado
     </label>
 
-    <button class="admin-form__submit admin-form__span-2" type="submit" [disabled]="form.invalid">Guardar producto</button>
+    <div class="admin-form__actions admin-form__span-2">
+      <button class="admin-form__submit" type="submit" [disabled]="form.invalid">{{ submitLabel }}</button>
+      @if (isEditing) {
+        <button class="admin-form__secondary" type="button" (click)="handleCancelEdit()">Cancelar</button>
+      }
+    </div>
   </form>
 </article>

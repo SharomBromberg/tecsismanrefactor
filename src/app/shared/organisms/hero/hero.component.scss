@@ -2,7 +2,7 @@
 
 .hero {
   position: relative;
-  padding-top: 6rem;
+  padding-top: $spacing-5xl;
   background: $blue-01;
   color: $white-00;
   overflow: hidden;
@@ -27,23 +27,23 @@
     background:
       radial-gradient(circle at 12% 18%, rgba($green-02, 0.24), transparent 42%),
       radial-gradient(circle at 88% 8%, rgba($blue-00, 0.28), transparent 36%),
-      linear-gradient(120deg, rgba($blue-01, 0.92) 0%, rgba($blue-01, 0.82) 52%, rgba(9, 74, 117, 0.9) 100%);
+      linear-gradient(120deg, rgba($blue-01, 0.92) 0%, rgba($blue-01, 0.82) 52%, rgb(9 74 117 / 90%) 100%);
   }
 
   &__content {
     position: relative;
     z-index: 1;
-    padding: $spacing-2xl 0 $spacing-xl;
+    padding: $spacing-2xl 0;
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
     gap: $gap-lg;
-    align-items: stretch;
+    align-items: center;
   }
 
   &__copy {
     display: grid;
     gap: $spacing-md;
-    align-content: center;
+    align-content: start;
     min-width: 0;
     animation: hero-fade-up 520ms ease-out both;
   }
@@ -54,113 +54,128 @@
     letter-spacing: 0.09em;
     font-weight: 700;
     color: rgba($white-00, 0.88);
+
     @include inter-subtitle(0.82rem);
   }
 
   &__title {
     margin: 0;
-    @include poppins-cta(2.9rem);
-    line-height: 1.08;
-    max-width: 16ch;
+
+    @include poppins-cta(clamp(2rem, 4.2vw, 3rem));
+
+    line-height: 1.12;
+    max-width: 19ch;
     text-wrap: balance;
   }
 
   &__subtitle {
     margin: 0;
-    color: rgba($white-00, 0.9);
-    max-width: 58ch;
-    @include inter-subtitle(1.05rem);
+    color: rgba($white-00, 0.92);
+    max-width: 56ch;
+
+    @include inter-subtitle(1rem);
+
     line-height: 1.5;
-  }
-
-  &__highlights {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-xs;
-
-    li {
-      padding: $spacing-2xs $spacing-sm;
-      border-radius: 999px;
-      border: 1px solid rgba($white-00, 0.3);
-      background: rgba($white-00, 0.11);
-      @include inter-body(0.82rem);
-      font-weight: 700;
-      color: rgba($white-00, 0.95);
-      white-space: nowrap;
-    }
   }
 
   &__actions {
     display: flex;
     gap: $spacing-sm;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     animation: hero-fade-up 620ms ease-out both;
 
     a[app-button] {
-      min-height: 2.75rem;
+      min-height: 2.9rem;
       font-weight: 700;
       padding-inline: $spacing-md;
     }
   }
 
-  &__panel {
-    align-self: end;
+  &__cta-main {
+    color: $blue-01;
+  }
+
+  &__cta-secondary {
+    border-color: rgba($white-00, 0.55);
+  }
+
+  &__stats {
     display: grid;
-    gap: $spacing-sm;
-    padding: $spacing-md;
-    border-radius: $radius-lg;
-    background: linear-gradient(165deg, rgba($white-00, 0.2) 0%, rgba($white-00, 0.1) 100%);
-    border: 1px solid rgba($white-00, 0.26);
-    backdrop-filter: blur(4px);
-    box-shadow: 0 18px 36px rgba($blue-01, 0.22);
-    animation: hero-fade-up 720ms ease-out both;
-  }
-
-  &__metric {
-    border-radius: $radius-sm;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: $spacing-xs;
     padding: $spacing-sm;
+    border-radius: $radius-md;
     background: rgba($blue-01, 0.28);
-    border: 1px solid rgba($white-00, 0.18);
+    border: 1px solid rgba($white-00, 0.26);
+    backdrop-filter: blur(3px);
   }
 
-  &__metric-value {
+  &__stat {
+    border-radius: $radius-sm;
+    padding: $spacing-sm $spacing-xs;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: $spacing-2xs;
+    text-align: center;
+    background: rgba($white-00, 0.08);
+    border: 1px solid rgba($white-00, 0.18);
+
+    app-icon {
+      opacity: 0.95;
+    }
+  }
+
+  &__stat-value {
     margin: 0;
     font-weight: 800;
     color: $white-00;
-    @include poppins-cta(1.8rem);
+
+    @include poppins-cta(1.35rem);
+
     line-height: 1;
   }
 
-  &__metric-label {
-    margin: $spacing-2xs 0 0;
+  &__stat-label {
+    margin: 0;
     color: rgba($white-00, 0.88);
-    @include inter-body(0.86rem);
+
+    @include inter-body(0.74rem);
+
+    letter-spacing: 0.01em;
   }
 
-  &__bottom {
-    position: relative;
-    z-index: 1;
-    padding-bottom: $spacing-md;
-    animation: hero-fade-up 820ms ease-out both;
+  &__services {
+    display: grid;
+    gap: $spacing-sm;
+    animation: hero-fade-up 760ms ease-out both;
   }
 
-  &__ribbon {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-xs;
+  &__service-card {
+    padding: $spacing-md;
+    border-radius: $radius-md;
+    background: linear-gradient(160deg, rgba($white-00, 0.2) 0%, rgba($white-00, 0.1) 100%);
+    border: 1px solid rgba($white-00, 0.24);
+    box-shadow: 0 12px 28px rgba($blue-01, 0.22);
+    backdrop-filter: blur(3px);
+  }
 
-    span {
-      padding: $spacing-2xs $spacing-sm;
-      border-radius: 999px;
-      background: rgba($white-00, 0.14);
-      border: 1px solid rgba($white-00, 0.28);
-      color: rgba($white-00, 0.92);
-      @include inter-body(0.78rem);
-      font-weight: 700;
-    }
+  &__service-title {
+    margin: 0;
+
+    @include poppins-cta(1.05rem);
+
+    line-height: 1.25;
+    color: $white-00;
+  }
+
+  &__service-text {
+    margin: $spacing-xs 0 0;
+
+    @include inter-body(0.9rem);
+
+    line-height: 1.45;
+    color: rgba($white-00, 0.9);
   }
 }
 
@@ -174,19 +189,18 @@
 
     &__title {
       @include poppins-cta(2.3rem);
+
       max-width: 20ch;
     }
 
-    &__panel {
-      max-width: 34rem;
+    &__services {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 }
 
 @media (max-width: $breakpoint-tablet-portrait) {
   .hero {
-    padding-top: 5rem;
-
     &__content {
       padding: $spacing-lg 0 $spacing-md;
       width: min(100%, calc(100% - #{$spacing-md * 2}));
@@ -202,25 +216,24 @@
     }
 
     &__actions {
+      flex-wrap: wrap;
+
       a[app-button] {
         flex: 1 1 100%;
         justify-content: center;
       }
     }
 
-    &__panel {
-      padding: $spacing-sm;
-      box-shadow: none;
+    &__stats {
+      padding: $spacing-xs;
     }
 
-    &__metric {
-      padding: $spacing-xs $spacing-sm;
+    &__stat {
+      padding: $spacing-xs $spacing-2xs;
     }
 
-    &__bottom {
-      padding-bottom: $spacing-sm;
-      width: min(100%, calc(100% - #{$spacing-md * 2}));
-      margin-inline: auto;
+    &__services {
+      grid-template-columns: 1fr;
     }
   }
 }
@@ -231,27 +244,38 @@
       width: min(100%, calc(100% - #{$spacing-sm * 2}));
     }
 
-    &__bottom {
-      width: min(100%, calc(100% - #{$spacing-sm * 2}));
-    }
-
     &__title {
       @include poppins-cta(1.7rem);
+
+      max-width: 18ch;
     }
 
     &__eyebrow {
       @include inter-subtitle(0.75rem);
     }
 
-    &__highlights {
-      li {
-        width: 100%;
-        text-align: center;
-      }
+    &__subtitle {
+      @include inter-subtitle(0.92rem);
     }
 
-    &__metric-value {
-      @include poppins-cta(1.55rem);
+    &__stats {
+      gap: $spacing-2xs;
+    }
+
+    &__stat {
+      min-height: 5.75rem;
+    }
+
+    &__stat-value {
+      @include poppins-cta(1.1rem);
+    }
+
+    &__stat-label {
+      @include inter-body(0.68rem);
+    }
+
+    &__service-card {
+      padding: $spacing-sm;
     }
   }
 }
@@ -271,8 +295,7 @@
 @media (prefers-reduced-motion: reduce) {
   .hero__copy,
   .hero__actions,
-  .hero__panel,
-  .hero__bottom {
+  .hero__services {
     animation: none;
   }
 }

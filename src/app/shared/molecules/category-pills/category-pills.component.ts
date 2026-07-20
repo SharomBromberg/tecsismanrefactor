@@ -5,7 +5,7 @@ import {
   output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Category } from 'src/app/core/interfaces/categories';
+import { Category } from '@core/interfaces/categories';
 
 @Component({
   selector: 'app-category-pills',

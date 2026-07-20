@@ -21,10 +21,10 @@
   </div>
 
   <div class="review-form__field">
-    <label class="review-form__label">Calificacion</label>
+    <span class="review-form__label">Calificacion</span>
     <app-rating-stars
       [rating]="form.controls.rating.value"
-      (onRate)="form.controls.rating.setValue($event)"
+      (rated)="form.controls.rating.setValue($event)"
     ></app-rating-stars>
   </div>
 
@@ -46,7 +46,7 @@
     }
   </div>
 
-  <button app-button type="submit" class="button-primary review-form__button" [disabled]="form.invalid">
+  <button app-button type="submit" class="app-btn app-btn--primary review-form__button" [disabled]="form.invalid">
     Publicar opinion
   </button>
 </form>

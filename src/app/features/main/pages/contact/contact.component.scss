@@ -1,7 +1,8 @@
 @use '../../../../../assets/tokens/index.scss' as *;
 
 .contact {
-	margin-top:8rem;
+	// margin-top:8rem;
+	margin: 8rem 10% 0;
 	max-width: 100%;
 
 	h1 {
@@ -23,7 +24,7 @@
 	background: linear-gradient(180deg, rgba($white-00, 0.98) 0%, rgba($white-01, 0.98) 100%);
 	border: 1px solid rgba($blue-01, 0.12);
 	border-radius: $radius-lg;
-	box-shadow: 0 14px 30px rgba(4, 49, 76, 0.08);
+	box-shadow: 0 14px 30px rgb(4 49 76 / 8%);
 }
 
 .contact__grid {
@@ -42,7 +43,7 @@
 
 	label {
 		font-weight: 700;
-		color: #163765;
+		color: $form-heading-text;
 	}
 
 	.form-control {
@@ -50,20 +51,20 @@
 		border-radius: $radius-sm;
 		padding: $spacing-sm;
 		background: $white-00;
-		color: #1f3963;
+		color: $form-input-text;
 
 		&:focus {
-			outline: 2px solid rgba(31, 111, 235, 0.26);
-			border-color: #1f6feb;
+			outline: 2px solid rgb(31 111 235 / 26%);
+			border-color: $admin-accent;
 		}
 	}
 
 	.form-control.is-invalid {
-		border-color: #cc3434;
+		border-color: $contact-invalid-border;
 	}
 
 	.invalid-feedback {
-		color: #bb1d1d;
+		color: $form-error;
 		font-size: 0.85rem;
 		font-weight: 600;
 	}
@@ -99,12 +100,12 @@
 	}
 
 	.text-success {
-		color: #1d7a42;
+		color: $contact-success-text;
 		font-weight: 600;
 	}
 
 	.text-danger {
-		color: #bb1d1d;
+		color: $form-error;
 		font-weight: 600;
 	}
 }

@@ -9,22 +9,12 @@ html, body {
 
 body {
     margin: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
     background-color: $white-01;
     color: $gray-00;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: $inter-font;
-}
-
-/* Expose colors as CSS variables for easy use in components */
-:root {
-    --color-primary: #{$blue-00};
-    --color-primary-dark: #{$blue-01};
-    --color-accent: #{$green-02};
-    --color-text: #{$gray-00};
-    --color-bg: #{$white-01};
 }
 
 /* Utility container */
@@ -46,6 +36,7 @@ p { @include inter-body(1rem); line-height: 1.6; }
 .section {
     padding: $margin-large 0;
 }
+
 .section-sm {
     padding: $margin-medium 0;
 }
@@ -59,5 +50,5 @@ img, picture, video, canvas, svg {
 
 /* Prevent overflow for long words */
 * {
-    word-break: break-word;
+    overflow-wrap: break-word;
 }

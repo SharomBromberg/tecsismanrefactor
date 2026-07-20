@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 
 @Component({ 
-  selector: 'button[app-button], a[app-button]', 
+  selector: 'app-button, button[app-button], a[app-button]',
   standalone: true, 
   template: '<ng-content></ng-content>', 
   styleUrl: './button.component.scss', 

@@ -1,13 +1,14 @@
 @use '../../../../../assets/tokens' as *;
 
 .admin-page {
-  padding: 1.2rem;
+  padding: calc(#{$layout-header-clearance} + #{$spacing-md}) $spacing-md $spacing-xl;
   display: grid;
-  gap: 1rem;
+  gap: $spacing-md;
+  min-height: 100vh;
   background:
-    radial-gradient(circle at 8% 5%, rgba(29, 79, 159, 0.12), transparent 32%),
-    radial-gradient(circle at 90% 5%, rgba(12, 87, 203, 0.11), transparent 34%),
-    #f6faff;
+    radial-gradient(circle at 8% 5%, rgba($admin-accent-deep, 0.12), transparent 32%),
+    radial-gradient(circle at 90% 5%, rgba($admin-accent-strong, 0.11), transparent 34%),
+    $admin-surface-mist;
 }
 
 .admin-header {
@@ -15,10 +16,10 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  background: #ffffff;
-  border: 1px solid #d8e4f7;
-  border-radius: 0.95rem;
-  padding: 1rem;
+  background: $white-00;
+  border: 1px solid $admin-border;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
 
   &__identity {
     display: flex;
@@ -31,9 +32,9 @@
     place-items: center;
     width: 2.4rem;
     height: 2.4rem;
-    border-radius: 999px;
-    background: linear-gradient(145deg, #1f6feb, #0c57cb);
-    color: #fff;
+    border-radius: $radius-pill;
+    background: linear-gradient(145deg, $admin-accent, $admin-accent-strong);
+    color: $white-00;
     font-weight: 800;
   }
 
@@ -42,13 +43,13 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #4c6690;
+    color: $admin-text-soft;
     font-weight: 700;
   }
 
   &__title {
     margin: 0.2rem 0 0;
-    color: #1a365f;
+    color: $admin-text-strong;
     font-size: 1.45rem;
   }
 
@@ -62,33 +63,38 @@
 
   &__logout {
     border: 0;
-    border-radius: 0.7rem;
-    background: #173965;
-    color: #fff;
+    border-radius: $radius-md;
+    background: $admin-text-strong;
+    color: $white-00;
     font-weight: 700;
-    padding: 0.65rem 0.9rem;
+    padding: $spacing-sm $spacing-md;
     cursor: pointer;
   }
 }
 
 .admin-kpi {
   min-width: 6.6rem;
-  border: 1px solid #d6e3f8;
-  border-radius: 0.7rem;
-  padding: 0.5rem;
-  background: #f8fbff;
+  border: 1px solid $admin-border;
+  border-radius: $radius-md;
+  padding: $spacing-xs;
+  background: $admin-surface-mist;
 
   &__label {
     display: block;
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #49648f;
+    color: $admin-text-soft;
   }
 
   &__value {
-    color: #12345c;
+    color: $admin-text-strong;
     font-size: 1.15rem;
+  }
+
+  &--wide {
+    min-width: 0;
+    padding: $spacing-sm;
   }
 }
 
@@ -96,17 +102,31 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
+
+  &--top {
+    align-items: start;
+  }
+
+  &--forms {
+    align-items: start;
+  }
+}
+
+.admin-summary-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .admin-card {
-  background: #ffffff;
-  border: 1px solid #dbe6f7;
-  border-radius: 0.95rem;
-  padding: 1rem;
+  background: $white-00;
+  border: 1px solid $admin-border;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
 
   &__title {
-    margin: 0 0 0.9rem;
-    color: #173962;
+    margin: 0 0 $spacing-md;
+    color: $admin-text-strong;
     font-size: 1.08rem;
   }
 
@@ -130,19 +150,19 @@
 
   &__label {
     display: block;
-    margin-bottom: 0.35rem;
-    color: #173962;
+    margin-bottom: $spacing-2xs;
+    color: $admin-text-strong;
     font-size: 0.84rem;
     font-weight: 700;
   }
 
   &__control {
     width: 100%;
-    border: 1px solid #cfe0f7;
-    border-radius: 0.75rem;
-    padding: 0.75rem 0.85rem;
-    background: #fbfdff;
-    color: #173962;
+    border: 1px solid $admin-border;
+    border-radius: $radius-md;
+    padding: $spacing-sm;
+    background: $admin-surface-mist;
+    color: $admin-text-strong;
     font: inherit;
 
     &--textarea {
@@ -158,17 +178,17 @@
   &__feedback {
     grid-column: 1 / -1;
     margin: 0;
-    color: #0f6b37;
+    color: $admin-success;
     font-weight: 700;
   }
 
   &__submit {
     justify-self: start;
     border: 0;
-    border-radius: 0.75rem;
-    background: linear-gradient(135deg, #1c78d6, #21c2a4);
-    color: #fff;
-    padding: 0.75rem 1rem;
+    border-radius: $radius-md;
+    background: linear-gradient(135deg, $admin-accent, $admin-teal-accent);
+    color: $white-00;
+    padding: $spacing-sm $spacing-md;
     font-weight: 700;
     cursor: pointer;
   }
@@ -182,45 +202,87 @@
   width: 100%;
   border-collapse: collapse;
 
+  &__featured-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: $admin-text-medium;
+    font-weight: 700;
+
+    input {
+      width: 1rem;
+      height: 1rem;
+      accent-color: $admin-accent-strong;
+    }
+  }
+
+  &__action {
+    margin-right: $spacing-2xs;
+    background: $admin-info-bg;
+    color: $admin-info-text;
+  }
+
   th,
   td {
-    border-bottom: 1px solid #e3eaf8;
-    padding: 0.62rem 0.5rem;
+    border-bottom: 1px solid $admin-border;
+    padding: $spacing-sm $spacing-xs;
     text-align: left;
-    color: #21456f;
+    color: $admin-text-medium;
     font-size: 0.88rem;
   }
 
   th {
-    color: #1a3861;
+    color: $admin-text-strong;
     font-weight: 700;
-    background: #f7faff;
+    background: $admin-surface-mist;
   }
 
   button {
     border: 0;
-    background: #fde8e8;
-    color: #a22a2a;
-    border-radius: 0.45rem;
-    padding: 0.4rem 0.56rem;
+    background: $admin-danger-bg;
+    color: $admin-danger-strong;
+    border-radius: $radius-sm;
+    padding: $spacing-xs $spacing-xs;
     font-weight: 700;
     cursor: pointer;
   }
 }
 
-@media (min-width: 980px) {
+@include respond-to('desktop-medium') {
   .admin-grid {
-    grid-template-columns: 0.9fr 1.6fr;
+    &--top {
+      grid-template-columns: 1.15fr 1fr;
+    }
+
+    &--forms {
+      grid-template-columns: 1.2fr 1fr;
+    }
   }
 }
 
-@media (max-width: 768px) {
-  .admin-form--blog {
+@include respond-to('tablet-portrait', 'down') {
+  .admin-page {
+    padding: calc(#{$layout-header-clearance-sm} + #{$spacing-sm}) $spacing-sm $spacing-lg;
+  }
+
+  .admin-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include respond-to('mobile-large', 'down') {
+  .admin-summary-grid {
     grid-template-columns: 1fr;
   }
 
-  .admin-form__submit {
-    width: 100%;
-    justify-self: stretch;
+  .admin-header {
+    &__actions {
+      width: 100%;
+      justify-content: stretch;
+    }
+
+    &__logout {
+      width: 100%;
+    }
   }
 }

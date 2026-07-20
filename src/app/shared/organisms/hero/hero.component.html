@@ -6,46 +6,47 @@
 
   <div class="hero__content app-container">
     <div class="hero__copy">
-      <p class="hero__eyebrow">Soluciones tecnologicas seguras para crecer</p>
-      <h1 class="hero__title">Tu operacion digital lista para vender, registrar usuarios y escalar con confianza</h1>
-      <p class="hero__subtitle">Diseñamos experiencias modernas para ecommerce, contacto, registro y gestion de sesiones, preparadas para integrarse con una API segura sin rehacer tu frontend.</p>
-
-      <ul class="hero__highlights" aria-label="Beneficios">
-        <li>Implementacion agil</li>
-        <li>Formularios listos para backend</li>
-        <li>Escalable y segura para tu negocio</li>
-      </ul>
+      <p class="hero__eyebrow">Soluciones digitales para empresas que quieren crecer</p>
+      <h1 class="hero__title">Lleva tu negocio al siguiente nivel con una plataforma rapida, segura y pensada para convertir</h1>
+      <p class="hero__subtitle">Creamos experiencias web modernas con foco en resultados: mejor captacion, procesos confiables y una base tecnica lista para escalar.</p>
 
       <div class="hero__actions">
-        <a app-button routerLink="/Servicios" class="button-gradient">Ver servicios</a>
-        <a app-button routerLink="/Contacto" class="button-inverse">Solicita tu cotizacion</a>
+        <a app-button routerLink="/Servicios" class="app-btn app-btn--gradient hero__cta-main">Ver servicios</a>
+        <a app-button routerLink="/Contacto" class="app-btn app-btn--inverse hero__cta-secondary">Solicitar cotizacion</a>
+      </div>
+
+      <div class="hero__stats" aria-label="Indicadores de valor">
+        <article class="hero__stat">
+          <app-icon name="history" size="sm" ariaLabel="Tiempo de experiencia"></app-icon>
+          <p class="hero__stat-value">+120</p>
+          <p class="hero__stat-label">Proyectos</p>
+        </article>
+        <article class="hero__stat">
+          <app-icon name="user" size="sm" ariaLabel="Satisfaccion de clientes"></app-icon>
+          <p class="hero__stat-value">98%</p>
+          <p class="hero__stat-label">Satisfaccion</p>
+        </article>
+        <article class="hero__stat">
+          <app-icon name="lock" size="sm" ariaLabel="Soporte continuo"></app-icon>
+          <p class="hero__stat-value">24/7</p>
+          <p class="hero__stat-label">Soporte</p>
+        </article>
       </div>
     </div>
 
-    <aside class="hero__panel" aria-label="Indicadores de valor">
-      <article class="hero__metric">
-        <p class="hero__metric-value">+120</p>
-        <p class="hero__metric-label">proyectos entregados</p>
+    <aside class="hero__services" aria-label="Servicios clave">
+      <article class="hero__service-card">
+        <h3 class="hero__service-title">Ecommerce Profesional</h3>
+        <p class="hero__service-text">Tiendas optimizadas para vender mas, con checkout claro y experiencia fluida en cualquier dispositivo.</p>
       </article>
-      <article class="hero__metric">
-        <p class="hero__metric-value">98%</p>
-        <p class="hero__metric-label">clientes satisfechos</p>
+      <article class="hero__service-card">
+        <h3 class="hero__service-title">Plataformas a Medida</h3>
+        <p class="hero__service-text">Desarrollo de modulos y flujos personalizados segun el proceso real de tu empresa.</p>
       </article>
-      <article class="hero__metric">
-        <p class="hero__metric-value">24/7</p>
-        <p class="hero__metric-label">acompañamiento tecnico y continuidad operativa</p>
+      <article class="hero__service-card">
+        <h3 class="hero__service-title">Integracion y Seguridad</h3>
+        <p class="hero__service-text">Conexion con APIs, autenticacion segura y arquitectura preparada para crecimiento sostenido.</p>
       </article>
     </aside>
-  </div>
-
-  <div class="hero__bottom app-container" aria-hidden="true">
-    <div class="hero__ribbon">
-      <span>Ecommerce</span>
-      <span>Registro seguro</span>
-      <span>Sesiones protegidas</span>
-      <span>Integraciones</span>
-      <span>Analitica</span>
-      <span>Automatizacion</span>
-    </div>
   </div>
 </section>

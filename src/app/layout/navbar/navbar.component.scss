@@ -1,15 +1,16 @@
-@use "../../../assets//tokens/index.scss" as *;
+@use "../../../assets/tokens/index.scss" as *;
 
 .navbar {
   min-width: 100vw;
   position: fixed;
-  height: 8rem;
+  height: $spacing-5xl;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 8px 24px rgba(6, 22, 45, 0.14);
+  box-shadow: 0 8px 24px rgba($navbar-shadow-ambient, 0.14);
   background-color: $blue-01;
   overflow-x: clip;
   justify-content: center;
+  box-sizing: border-box;
 
   *,
   *::before,
@@ -24,23 +25,20 @@
     padding: 0 $spacing-lg;
     gap: $gap-md;
     position: relative;
-    min-width:100%;
+    min-width: 100%;
   }
 
   &__logo {
     display: flex;
-      place-content: center;
-      text-decoration: none;
-      flex-shrink: 0;
-      height: 100%;
-    
-      place-content: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    height: 100%;
+    place-content: center;
+  }
 
-    &__img {
-      height: 85%;
-      margin: 0 auto;
-      
-    }
+  &__logo-img {
+    height: 85%;
+    margin: 0 auto;
   }
 
   &__menu {
@@ -50,7 +48,6 @@
     padding: 0;
     gap: $gap-sm;
     align-items: center;
-    // flex: 1 1 auto;
     min-width: 0;
     justify-content: center;
   }
@@ -59,9 +56,9 @@
     display: none;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba($white-00, 0.35);
     border-radius: $radius-sm;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba($white-00, 0.08);
     color: $white-00;
     min-height: 2.3rem;
     width: 2.3rem;
@@ -95,10 +92,9 @@
 
   &__panel {
     display: flex;
-    width:80%;
+    width: 80%;
     align-items: center;
     gap: $gap-sm;
-    // flex: 1 1 auto;
     flex-shrink: 0;
     min-width: 0;
     justify-content: flex-end;
@@ -112,26 +108,26 @@
     width: 2.3rem;
     padding: 0;
     border-radius: $radius-md;
-    border: 1px solid rgba(255, 255, 255, 0.42);
+    border: 1px solid rgba($white-00, 0.42);
     color: $white-00;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba($white-00, 0.08);
     transition: background-color 0.2s ease, border-color 0.2s ease;
     position: relative;
     cursor: pointer;
 
     &:hover,
     &.active {
-      background: rgba(255, 255, 255, 0.16);
-      border-color: rgba(255, 255, 255, 0.65);
+      background: rgba($white-00, 0.16);
+      border-color: rgba($white-00, 0.65);
     }
   }
 
   &__cart-badge {
     min-width: 1.2rem;
     height: 1.2rem;
-    border-radius: 999px;
-    background: #ff8a2a;
-    color: #0a223f;
+    border-radius: $radius-pill;
+    background: $navbar-badge-bg;
+    color: $navbar-badge-text;
     font-size: 0.72rem;
     font-weight: 800;
     line-height: 1;
@@ -163,7 +159,7 @@
   }
 
   &__greeting {
-    color: #d7e8ff;
+    color: $navbar-greeting-text;
     font-weight: 600;
     font-size: 0.9rem;
   }
@@ -171,20 +167,18 @@
   &__auth {
     color: $white-00;
     text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba($white-00, 0.45);
     border-radius: $radius-md;
     padding: $spacing-xs $spacing-md;
     font-weight: 700;
     transition: background-color 0.2s ease;
     background: transparent;
     cursor: pointer;
-    box-shadow: -0.56rem 0.56rem 0rem -0.18rem rgba(4, 49, 76, 0.37);
-
+    box-shadow: -0.56rem 0.56rem 0 -0.18rem rgba($blue-01, 0.37);
 
     &:hover,
     &.active {
       background: rgba($blue-06, 0.12);
-
     }
 
     &--ghost {
@@ -192,11 +186,11 @@
     }
 
     &--danger {
-      border-color: rgba(255, 149, 149, 0.75);
-      color: #ffd6d6;
+      border-color: rgba($navbar-danger-border, 0.75);
+      color: $navbar-danger-text;
 
       &:hover {
-        background: rgba(194, 45, 45, 0.28);
+        background: rgba($navbar-danger-hover-bg, 0.28);
       }
     }
   }
@@ -212,11 +206,14 @@
       align-items: center;
       width: 100%;
       justify-content: center;
-      padding: $spacing-xs $spacing-sm;
+
+      // padding: $spacing-xs $spacing-sm;
       z-index: 2;
 
-      .navbar__logo_img {
-        width: auto;
+      .navbar__logo-img {
+        // width: auto;
+        height:80%;
+        margin: 0 auto;
       }
 
       .navbar__logo,
@@ -234,18 +231,18 @@
         position: fixed;
         overflow: hidden;
         z-index: 4;
-        top: 8rem;
+        top: $spacing-5xl;
         left: 0;
         right: 0;
         width: 100vw;
-        height: calc(100vh - 8rem);
+        height: calc(100vh - #{$spacing-5xl});
         background:
           linear-gradient(180deg, rgba($blue-06, 0.98) 0%, rgba($blue-00, 0.98) 100%);
         opacity: 1;
         border-top: 1px solid rgba($white-00, 0.08);
         border-radius: 0;
         padding: $spacing-xs;
-        box-shadow: 0 18px 40px rgba(6, 22, 45, 0.18);
+        box-shadow: 0 18px 40px rgba($navbar-shadow-ambient, 0.18);
 
         &--open {
           display: flex;
@@ -261,11 +258,7 @@
         height: 50%;
         width: 100%;
         flex-direction: column;
-        gap: $gap-md;
         margin-top: 10%;
-
-
-
       }
 
       .navbar__menu li {
@@ -279,14 +272,13 @@
         line-height: 1.6;
         text-align: center;
         color: $white-00;
-        border: 0;
         font-size: 1.08rem;
         font-weight: 600;
         letter-spacing: 0.01em;
         background: $blue-01;
         border: 0.15rem solid rgba($blue-01, 0.12);
         border-radius: $radius-sm;
-        box-shadow: -0.56rem 0.56rem 0rem -0.18rem rgba($blue-01, 0.37);
+        box-shadow: -0.56rem 0.56rem 0 -0.18rem rgba($blue-01, 0.37);
 
         &:hover,
         &.active {
@@ -299,23 +291,20 @@
 
       .navbar__auth-actions {
         width: 100%;
-        height: 30%;
+        height: 25%;
         margin-top: auto;
-        margin-bottom: 10%;
+        margin-bottom: 5%;
         display: flex;
         flex-direction: column;
-        align-items: stretch;
+        place-items: stretch center;
         justify-content: center;
-        justify-items: center;
         gap: $spacing-sm;
         padding: 0 $spacing-md;
         border-radius: $radius-lg;
         background: $blue-06;
-
       }
 
       .navbar__mobile-actions {
-        gap: $gap-xs;
         gap: $gap-2xs;
       }
 
@@ -365,13 +354,12 @@
         letter-spacing: 0.01em;
         text-decoration: none;
 
-
         &:hover,
         &.active {
           background: rgba($white-00, 0.16);
           border-color: rgba($white-00, 0.34);
           transform: translateY(-1px);
-          box-shadow: 0 0.7rem 1.6rem rgba(6, 22, 45, 0.22);
+          box-shadow: 0 0.7rem 1.6rem rgba($navbar-shadow-ambient, 0.22);
         }
 
         &--ghost {
@@ -379,13 +367,13 @@
         }
 
         &--danger {
-          color: #ffe8e8;
-          border-color: rgba(255, 175, 175, 0.28);
-          background: rgba(255, 255, 255, 0.06);
+          color: $navbar-danger-text-mobile;
+          border-color: rgba($navbar-danger-border-mobile, 0.28);
+          background: rgba($white-00, 0.06);
 
           &:hover {
-            background: rgba(194, 45, 45, 0.24);
-            border-color: rgba(255, 175, 175, 0.42);
+            background: rgba($navbar-danger-hover-bg, 0.24);
+            border-color: rgba($navbar-danger-border-mobile, 0.42);
             color: $white-00;
           }
         }
@@ -416,7 +404,7 @@
   }
 }
 
-@media (min-width: calc(#{$breakpoint-tablet-portrait} + 1px)) {
+@media (width >= calc(#{$breakpoint-tablet-portrait} + 1px)) {
   .navbar {
     &__mobilebutton {
       display: none;

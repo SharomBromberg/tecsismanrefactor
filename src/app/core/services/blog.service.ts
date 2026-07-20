@@ -5,6 +5,7 @@ import {
   BlogCommentCreateInput,
   BlogPost,
   BlogPostCreateInput,
+  BlogReactionInput,
 } from '../interfaces/blog';
 
 @Injectable({ providedIn: 'root' })
@@ -47,6 +48,7 @@ export class BlogService {
       createdAt: new Date().toISOString(),
       authorDisplayName: authorDisplayName.trim() || 'Administrador',
       comments: [],
+      reactions: { likes: [], dislikes: [] },
     };
 
     const nextPosts = [nextPost, ...this.postsSubject.value];
@@ -59,6 +61,44 @@ export class BlogService {
       (post) => post.id !== postId,
     );
     this.writePosts(nextPosts);
+  }
+
+  updatePost(
+    postId: string,
+    input: BlogPostCreateInput,
+  ): { ok: boolean; message?: string } {
+    const normalizedTitle = input.title.trim();
+    const normalizedExcerpt = input.excerpt.trim();
+    const normalizedContent = input.content.trim();
+    const normalizedCategory = input.category.trim();
+    const normalizedCoverImage = input.coverImage.trim();
+
+    if (
+      !normalizedTitle ||
+      !normalizedExcerpt ||
+      !normalizedContent ||
+      !normalizedCategory ||
+      !normalizedCoverImage
+    ) {
+      return { ok: false, message: 'Completa todos los campos del post.' };
+    }
+
+    const nextPosts = this.postsSubject.value.map((post) =>
+      post.id === postId
+        ? {
+            ...post,
+            slug: this.buildSlug(normalizedTitle),
+            title: normalizedTitle,
+            excerpt: normalizedExcerpt,
+            content: normalizedContent,
+            category: normalizedCategory,
+            coverImage: normalizedCoverImage,
+          }
+        : post,
+    );
+
+    this.writePosts(nextPosts);
+    return { ok: true, message: 'Publicacion actualizada correctamente.' };
   }
 
   addComment(
@@ -90,6 +130,52 @@ export class BlogService {
     return { ok: true };
   }
 
+  reactToPost(
+    postId: string,
+    input: BlogReactionInput,
+  ): { ok: boolean; activeReaction: 'like' | 'dislike' | null } {
+    const normalizedUsername = input.username.trim().toLowerCase();
+    if (!normalizedUsername) {
+      return { ok: false, activeReaction: null };
+    }
+
+    let activeReaction: 'like' | 'dislike' | null = null;
+
+    const nextPosts = this.postsSubject.value.map((post) => {
+      if (post.id !== postId) {
+        return post;
+      }
+
+      const currentReactions = post.reactions ?? { likes: [], dislikes: [] };
+      const likes = currentReactions.likes.filter(
+        (username) => username !== normalizedUsername,
+      );
+      const dislikes = currentReactions.dislikes.filter(
+        (username) => username !== normalizedUsername,
+      );
+
+      const isSameReactionActive =
+        (input.reaction === 'like' && currentReactions.likes.includes(normalizedUsername)) ||
+        (input.reaction === 'dislike' && currentReactions.dislikes.includes(normalizedUsername));
+
+      const nextReactions = isSameReactionActive
+        ? { likes, dislikes }
+        : input.reaction === 'like'
+          ? { likes: [...likes, normalizedUsername], dislikes }
+          : { likes, dislikes: [...dislikes, normalizedUsername] };
+
+      activeReaction = isSameReactionActive ? null : input.reaction;
+
+      return {
+        ...post,
+        reactions: nextReactions,
+      };
+    });
+
+    this.writePosts(nextPosts);
+    return { ok: true, activeReaction };
+  }
+
   private readPosts(): BlogPost[] {
     const raw = localStorage.getItem(this.storageKey);
     if (!raw) {
@@ -102,7 +188,10 @@ export class BlogService {
         return this.seedPosts();
       }
 
-      return parsed;
+      return parsed.map((post) => ({
+        ...post,
+        reactions: post.reactions ?? { likes: [], dislikes: [] },
+      }));
     } catch {
       return this.seedPosts();
     }
@@ -137,6 +226,7 @@ export class BlogService {
         createdAt: new Date('2026-06-18').toISOString(),
         authorDisplayName: 'Tecsisman',
         comments: [],
+        reactions: { likes: [], dislikes: [] },
       },
       {
         id: 'seed-2',
@@ -151,6 +241,7 @@ export class BlogService {
         createdAt: new Date('2026-06-22').toISOString(),
         authorDisplayName: 'Tecsisman',
         comments: [],
+        reactions: { likes: [], dislikes: [] },
       },
       {
         id: 'seed-3',
@@ -165,6 +256,7 @@ export class BlogService {
         createdAt: new Date('2026-06-25').toISOString(),
         authorDisplayName: 'Tecsisman',
         comments: [],
+        reactions: { likes: [], dislikes: [] },
       },
     ];
   }

@@ -45,19 +45,21 @@
 					}
 				</div>
 
-				<aside class="cart-summary" *ngIf="summary$ | async as summary">
-					<h2>Resumen</h2>
-					<p><span>Items</span><strong>{{ summary.itemsCount }}</strong></p>
-					<p><span>Subtotal</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
-					<p><span>IVA</span><strong>{{ summary.tax | currency:'COP':'symbol':'1.0-0' }}</strong></p>
-					<p class="cart-summary__total">
-						<span>Total</span>
-						<strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong>
-					</p>
+				@if (summary$ | async; as summary) {
+					<aside class="cart-summary">
+						<h2>Resumen</h2>
+						<p><span>Items</span><strong>{{ summary.itemsCount }}</strong></p>
+						<p><span>Subtotal</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+						<p><span>IVA</span><strong>{{ summary.tax | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+						<p class="cart-summary__total">
+							<span>Total</span>
+							<strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+						</p>
 
-					<button type="button" class="cart-summary__primary" (click)="checkout(items)">Finalizar compra</button>
-					<button type="button" class="cart-summary__ghost" (click)="clear()">Vaciar carrito</button>
-				</aside>
+						<button type="button" class="cart-summary__primary" (click)="checkout(items)">Finalizar compra</button>
+						<button type="button" class="cart-summary__ghost" (click)="clear()">Vaciar carrito</button>
+					</aside>
+				}
 			</div>
 		}
 	}

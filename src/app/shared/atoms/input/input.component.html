@@ -1,15 +1,16 @@
-<div class="input-wrapper">
+<div class="app-input__wrapper">
   @if (label) {
-    <label [ngClass]="customLabelStyle">{{ label }}</label>
+    <label class="app-input__label" [ngClass]="customLabelStyle" [for]="inputId">{{ label }}</label>
   }
-  
+
   <input
-    class="input"
+    [id]="inputId"
+    class="app-input"
     [ngClass]="customStyle"
     [type]="type"
     [(ngModel)]="inputValue"
     (input)="getTextInput($event)"
     [placeholder]="placeholder"
-    [disabled]="isDisabled" 
+    [disabled]="isDisabled"
   />
 </div>

@@ -1,0 +1,118 @@
+@use '../../../../../assets/tokens/index.scss' as *;
+
+.admin-card {
+  display: grid;
+  gap: $spacing-md;
+  background: linear-gradient(180deg, rgba($white-00, 0.98), rgba($white-01, 0.96));
+  border: 1px solid rgba($blue-01, 0.12);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-shadow: 0 18px 32px rgba($blue-01, 0.08);
+
+  &__heading {
+    display: flex;
+    justify-content: space-between;
+    gap: $spacing-sm;
+    align-items: start;
+  }
+
+  &__eyebrow {
+    margin: 0 0 $spacing-2xs;
+    color: rgba($blue-01, 0.64);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    margin: 0;
+    color: $blue-01;
+
+    @include inter-title(1.15rem);
+  }
+
+  &__role {
+    padding: $spacing-2xs $spacing-sm;
+    border-radius: $radius-pill;
+    background: rgba($green-00, 0.14);
+    color: $blue-01;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+}
+
+.admin-profile-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $spacing-sm;
+
+  &__label {
+    display: block;
+    color: rgba($blue-01, 0.62);
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    color: $blue-01;
+
+    @include inter-body(0.98rem);
+  }
+}
+
+.admin-form {
+  display: grid;
+  gap: $spacing-xs;
+
+  &__label {
+    color: $blue-01;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  &__control {
+    width: 100%;
+    border: 1px solid rgba($blue-01, 0.16);
+    border-radius: $radius-sm;
+    padding: $spacing-sm;
+    font: inherit;
+    color: $blue-01;
+    background: rgba($white-00, 0.96);
+  }
+
+  &__feedback {
+    margin: 0;
+    color: $admin-success;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  &__submit {
+    justify-self: start;
+    border: 0;
+    border-radius: $radius-sm;
+    background: linear-gradient(135deg, $blue-00, $admin-accent-strong);
+    color: $white-00;
+    font-weight: 700;
+    padding: $spacing-sm $spacing-md;
+    cursor: pointer;
+
+    &--secondary {
+      background: linear-gradient(135deg, $admin-navy, $blue-01);
+    }
+  }
+}
+
+@media (max-width: $breakpoint-mobile-large) {
+  .admin-profile-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form__submit {
+    width: 100%;
+    justify-self: stretch;
+  }
+}

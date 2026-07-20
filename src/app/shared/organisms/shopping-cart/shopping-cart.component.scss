@@ -14,7 +14,7 @@
 
 	&__eyebrow {
 		margin: 0;
-		color: #3a628f;
+		color: $cart-eyebrow-text;
 		font-size: 0.78rem;
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
@@ -23,12 +23,12 @@
 
 	h1 {
 		margin: $spacing-xs 0;
-		color: #12355e;
+		color: $cart-heading-text;
 	}
 
 	&__subtitle {
 		margin: 0;
-		color: #446583;
+		color: $cart-subtitle-text;
 	}
 
 	&__back {
@@ -69,13 +69,13 @@
 	&--success {
 		background: #e8f8ef;
 		border: 1px solid #9ad5b1;
-		color: #0f6b37;
+		color: $admin-success;
 	}
 
 	&--error {
 		background: #fff1f1;
 		border: 1px solid #f0b4b4;
-		color: #a22828;
+		color: $red-02;
 	}
 }
 
@@ -111,12 +111,12 @@
 	&__meta {
 		h3 {
 			margin: 0 0 $spacing-xs;
-			color: #153a67;
+			color: $cart-section-heading-text;
 		}
 
 		p {
 			margin: 0;
-			color: #35608f;
+			color: $cart-item-price-text;
 			font-weight: 700;
 		}
 	}
@@ -130,7 +130,7 @@
 		button {
 			border: 0;
 			background: #f0f5ff;
-			color: #184274;
+			color: $cart-control-button-text;
 			width: 32px;
 			font-weight: 700;
 			cursor: pointer;
@@ -141,7 +141,7 @@
 			display: grid;
 			place-items: center;
 			font-weight: 700;
-			color: #143b6a;
+			color: $cart-quantity-text;
 		}
 	}
 
@@ -149,7 +149,7 @@
 		border: 0;
 		border-radius: $radius-sm;
 		background: #ffe8e8;
-		color: #a22828;
+		color: $red-02;
 		padding: $spacing-xs $spacing-sm;
 		font-weight: 700;
 		cursor: pointer;
@@ -168,21 +168,21 @@
 
 	h2 {
 		margin: 0 0 $spacing-sm;
-		color: #153a67;
+		color: $cart-section-heading-text;
 	}
 
 	p {
 		margin: 0;
 		display: flex;
 		justify-content: space-between;
-		color: #355f8e;
+		color: $cart-summary-row-text;
 	}
 
 	&__total {
 		margin-top: $spacing-xs;
 		padding-top: $spacing-sm;
 		border-top: 1px solid #d8e5f8;
-		color: #11345d;
+		color: $cart-summary-total-text;
 	}
 
 	&__primary,
@@ -196,7 +196,7 @@
 
 	&__primary {
 		background: $blue-01;
-		color: #fff;
+		color: $white-00;
 	}
 
 	&__ghost {
