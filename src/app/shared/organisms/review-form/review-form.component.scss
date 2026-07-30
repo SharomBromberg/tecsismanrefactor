@@ -28,7 +28,7 @@
 	&__control,
 	&__textarea {
 		width: 100%;
-		border: 1px solid #c4d8fc;
+		border: 1px solid $navy-200;
 		border-radius: $radius-sm;
 		background: $white-00;
 		color: $form-input-text;
@@ -45,7 +45,7 @@
 	&__control--invalid,
 	&__textarea--invalid {
 		border-color: $form-error;
-		background: #fff7f7;
+		background: $error-surface-bg;
 	}
 
 	&__textarea {

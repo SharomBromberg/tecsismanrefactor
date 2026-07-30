@@ -4,8 +4,9 @@ $breakpoint-desktop-hd: 1280px; // Para pantallas de escritorio medianas
 $breakpoint-desktop-large: 1200px; // Para pantallas de escritorio grandes
 $breakpoint-tablet-landscape: 1024px; // Para tabletas en orientación horizontal
 $breakpoint-desktop-medium: 992px; // Para pantallas de escritorio medianas
-$breakpoint-480p: 854px;
+$breakpoint-tablet-wide: 854px; // Tableta grande / laptop pequeña (fue "$breakpoint-480p")
 $breakpoint-tablet-portrait: 768px; // Para tabletas en orientación vertical
+$breakpoint-mobile-xl: 640px; // Móvil grande / phablet en landscape
 $breakpoint-mobile-large: 480px; // Para teléfonos móviles de pantalla grande
 $breakpoint-mobile-medium: 360px; // Para teléfonos móviles de pantalla mediana
 $breakpoint-mobile-small: 240px;

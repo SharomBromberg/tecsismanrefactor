@@ -13,6 +13,12 @@ $shadow-primary: 0 4px 8px rgba(colors.$blue-00, 0.3); // Sombra con color prima
 $shadow-secondary: 0 4px 8px rgba(colors.$green-00, 0.3); // Sombra con color secundario
 $shadow-accent: 0 4px 8px rgba(colors.$red-00, 0.3); // Sombra con color de acento
 
+// Elevation scale — navy-tinted (brand) instead of neutral black/gray, used for
+// the two elevation states that repeat across the app: resting surfaces
+// (cards, inputs) and raised/interactive surfaces (hover, focus, drawers, modals).
+$elevation-1: 0 2px 8px rgba(colors.$navy-900, 0.08), 0 1px 2px rgba(colors.$navy-900, 0.06);
+$elevation-2: 0 12px 28px rgba(colors.$navy-900, 0.14), 0 4px 10px rgba(colors.$navy-900, 0.08);
+
 // Mixin para aplicar sombras a elementos
 @mixin box-shadow($shadow) {
     box-shadow: $shadow;

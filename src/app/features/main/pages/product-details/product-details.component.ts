@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { combineLatest, filter, map, of, shareReplay, switchMap } from 'rxjs';
 import { ProductService } from '@core/services/product.service';
 import { Product } from '@core/interfaces/product';
+import { Category } from '@core/interfaces/categories';
 import { AuthService } from '@core/services/auth.service';
 import { PurchaseHistoryService } from '@core/services/purchase-history.service';
 import { UserFavoritesService } from '@core/services/user-favorites.service';
@@ -51,6 +52,8 @@ export class ProductDetailsComponent {
     ? this.userFavoritesService.getFavoriteIds$(this.currentUsername)
     : of([] as string[]);
 
+  readonly categories$ = this.productService.getCategories();
+
   readonly product$ = this.route.paramMap.pipe(
     map((params) => params.get('id')),
     filter((id): id is string => !!id),
@@ -58,8 +61,15 @@ export class ProductDetailsComponent {
     filter((product): product is Product => !!product),
   );
 
-  readonly viewModel$ = combineLatest([this.product$, this.favoriteIds$]).pipe(
-    map(([product, favoriteIds]) => ({
+  readonly viewModel$ = combineLatest([
+    this.product$,
+    this.favoriteIds$,
+    this.categories$,
+  ]).pipe(
+    map(([product, favoriteIds, categories]) => ({
+      categoryName:
+        categories.find((category: Category) => category._id === product.categoryId)
+          ?.name ?? 'Sin categoría',
       product: {
         ...product,
         _id: product._id ?? '',

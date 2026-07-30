@@ -6,7 +6,7 @@
   background:
     radial-gradient(circle at top left, rgba($green-00, 0.12), transparent 30%),
     radial-gradient(circle at bottom right, rgba($blue-00, 0.1), transparent 32%),
-    linear-gradient(180deg, #f8fbff 0%, #fff 100%);
+    linear-gradient(180deg, $navy-050 0%, $white-00 100%);
 
   &__container {
     display: grid;
@@ -114,7 +114,7 @@
     &:hover:not(:disabled) {
       transform: translateY(-1px);
       box-shadow: 0 14px 28px rgba($blue-01, 0.14);
-      background: #fff;
+      background: $white-00;
     }
 
     &:disabled {

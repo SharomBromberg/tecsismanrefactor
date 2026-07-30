@@ -12,15 +12,18 @@ import {
   switchMap,
 } from 'rxjs';
 
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { ProductService } from '@core/services/product.service';
 import { CatalogCardVm, Product } from '@core/interfaces/product';
 import { Category } from '@core/interfaces/categories';
 import { UserFavoritesService } from '@core/services/user-favorites.service';
 import { ToastService } from '@core/services/toast.service';
-import { IconComponent } from '@shared/atoms/icon/icon.component';
+import { CartService } from '@core/services/cart.service';
+import { CartDrawerService } from '@core/services/cart-drawer.service';
+import { SearchBoxComponent } from '@shared/molecules/search-box/search-box.component';
+import { CategoryPillsComponent } from '@shared/molecules/category-pills/category-pills.component';
+import { ProductCardComponent } from '@shared/molecules/product-card/product-card.component';
 
 interface ProductCardFavoriteVm extends CatalogCardVm {
   isFavorite: boolean;
@@ -32,10 +35,10 @@ interface ProductCardFavoriteVm extends CatalogCardVm {
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    RouterLink,
     AsyncPipe,
-    CurrencyPipe,
-    IconComponent,
+    SearchBoxComponent,
+    CategoryPillsComponent,
+    ProductCardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './products.component.html',
@@ -46,6 +49,8 @@ export class ProductsComponent {
   private readonly authService = inject(AuthService);
   private readonly favoritesService = inject(UserFavoritesService);
   private readonly toastService = inject(ToastService);
+  private readonly cartService = inject(CartService);
+  private readonly cartDrawerService = inject(CartDrawerService);
 
   private readonly currentUsername =
     this.authService.currentSession()?.username ?? '';
@@ -247,10 +252,7 @@ export class ProductsComponent {
     return item.product._id ?? `${index}`;
   }
 
-  toggleFavorite(event: Event, productId: string): void {
-    event.preventDefault();
-    event.stopPropagation();
-
+  toggleFavorite(productId: string): void {
     if (!this.currentUsername) {
       this.toastService.show(
         'Inicia sesion para agregar productos a favoritos.',
@@ -266,6 +268,12 @@ export class ProductsComponent {
         : 'Producto eliminado de favoritos.',
       'success',
     );
+  }
+
+  addToCart(product: Product): void {
+    this.cartService.addToCart(product, 1);
+    this.toastService.show(`${product.name} agregado al carrito.`, 'success');
+    this.cartDrawerService.open();
   }
 
   private toCardViewModel(

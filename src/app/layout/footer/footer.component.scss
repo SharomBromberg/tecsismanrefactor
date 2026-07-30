@@ -1,7 +1,7 @@
 @use "../../../assets/tokens/index.scss" as *;
 
 
-@media (min-width: $breakpoint-480p) {
+@media (min-width: $breakpoint-tablet-wide) {
   footer {
     background-color: $blue-01;
     color: $white-00;

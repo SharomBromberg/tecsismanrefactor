@@ -1,13 +1,20 @@
 @use '../../../../assets/tokens/index.scss' as *;
 
-.featured-product-card {
+.product-card {
   display: grid;
   height: 100%;
   overflow: hidden;
   border: 1px solid rgba($blue-01, 0.1);
   border-radius: $radius-lg;
-  background: linear-gradient(180deg, #fff 0%, #f7fbff 100%);
-  box-shadow: 0 18px 34px rgba($blue-01, 0.08);
+  background: linear-gradient(180deg, $white-00 0%, $navy-050 100%);
+  box-shadow: $elevation-1;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+
+  &:hover {
+    transform: translateY(-0.35rem);
+    box-shadow: $elevation-2;
+    border-color: rgba($blue-00, 0.35);
+  }
 
   &__media {
     position: relative;
@@ -27,12 +34,17 @@
 
   &__image {
     object-fit: cover;
+    transition: transform 320ms ease;
+
+    .product-card:hover & {
+      transform: scale(1.04);
+    }
   }
 
   &__placeholder {
     background:
       linear-gradient(135deg, rgba($blue-00, 0.12), rgba($green-00, 0.1)),
-      #eef5ff;
+      $navy-050;
   }
 
   &__badge {
@@ -47,6 +59,35 @@
     @include inter-body(0.75rem);
 
     font-weight: 700;
+  }
+
+  &__favorite {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    z-index: 2;
+    width: 2rem;
+    height: 2rem;
+    border-radius: $radius-pill;
+    border: 1px solid rgba($blue-01, 0.16);
+    background: rgba($white-00, 0.94);
+    color: rgba($blue-01, 0.9);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: $elevation-1;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+
+    &:hover {
+      transform: scale(1.06);
+    }
+
+    &--active {
+      color: $catalog-favorite-active;
+      background: $catalog-favorite-active-bg;
+      border-color: rgba($catalog-favorite-active, 0.3);
+    }
   }
 
   &__body {
@@ -120,10 +161,25 @@
   &__action--primary {
     color: $blue-01;
   }
+
+  &--grid {
+    .product-card__title,
+    .product-card__description {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-card__body {
+      padding: $spacing-md;
+      gap: $spacing-sm;
+    }
+  }
 }
 
 @media (max-width: $breakpoint-mobile-large) {
-  .featured-product-card {
+  .product-card {
     &__body {
       padding: $spacing-md;
     }

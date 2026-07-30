@@ -34,7 +34,7 @@
           >
             @for (item of featuredCards; track trackByProductId($index, item)) {
               <div class="featured-products__slide">
-                <app-featured-product-card
+                <app-product-card
                   [product]="item.product"
                   [categoryName]="item.categoryName"
                   (addToCart)="addToCart($event)"

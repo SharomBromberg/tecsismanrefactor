@@ -39,9 +39,9 @@
 }
 
 .cart-empty {
-	border: 1px solid #dbe7f8;
+	border: 1px solid $navy-100;
 	border-radius: $radius-lg;
-	background: #fff;
+	background: $white-00;
 	padding: $spacing-xl;
 	text-align: center;
 
@@ -67,14 +67,14 @@
 	font-weight: 600;
 
 	&--success {
-		background: #e8f8ef;
-		border: 1px solid #9ad5b1;
+		background: $cart-feedback-success-bg;
+		border: 1px solid $cart-feedback-success-border;
 		color: $admin-success;
 	}
 
 	&--error {
-		background: #fff1f1;
-		border: 1px solid #f0b4b4;
+		background: $cart-feedback-error-bg;
+		border: 1px solid $cart-feedback-error-border;
 		color: $red-02;
 	}
 }
@@ -89,9 +89,9 @@
 	grid-template-columns: 96px 1fr auto auto;
 	align-items: center;
 	gap: $gap-md;
-	border: 1px solid #dbe7f8;
+	border: 1px solid $navy-100;
 	border-radius: $radius-md;
-	background: #fff;
+	background: $white-00;
 	padding: $spacing-md;
 	transition: transform 180ms ease, box-shadow 180ms ease;
 
@@ -105,7 +105,7 @@
 		height: 96px;
 		border-radius: $radius-sm;
 		object-fit: cover;
-		border: 1px solid #d4e3f8;
+		border: 1px solid $navy-100;
 	}
 
 	&__meta {
@@ -123,13 +123,13 @@
 
 	&__controls {
 		display: inline-flex;
-		border: 1px solid #bed1f0;
+		border: 1px solid $navy-200;
 		border-radius: $radius-sm;
 		overflow: hidden;
 
 		button {
 			border: 0;
-			background: #f0f5ff;
+			background: $navy-050;
 			color: $cart-control-button-text;
 			width: 32px;
 			font-weight: 700;
@@ -148,7 +148,7 @@
 	&__remove {
 		border: 0;
 		border-radius: $radius-sm;
-		background: #ffe8e8;
+		background: $admin-danger-bg;
 		color: $red-02;
 		padding: $spacing-xs $spacing-sm;
 		font-weight: 700;
@@ -157,9 +157,9 @@
 }
 
 .cart-summary {
-	border: 1px solid #dbe7f8;
+	border: 1px solid $navy-100;
 	border-radius: $radius-md;
-	background: #fff;
+	background: $white-00;
 	padding: $spacing-lg;
 	height: fit-content;
 	display: grid;
@@ -181,7 +181,7 @@
 	&__total {
 		margin-top: $spacing-xs;
 		padding-top: $spacing-sm;
-		border-top: 1px solid #d8e5f8;
+		border-top: 1px solid $navy-100;
 		color: $cart-summary-total-text;
 	}
 
@@ -200,7 +200,7 @@
 	}
 
 	&__ghost {
-		background: #f4f8ff;
+		background: $navy-050;
 		color: $blue-01;
 	}
 }

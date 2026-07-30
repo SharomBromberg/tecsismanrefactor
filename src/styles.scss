@@ -21,7 +21,7 @@ body {
 .app-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 $margin-small;
+    padding: 0 $spacing-md;
 }
 
 /* Headings scale using mixins from tokens */
@@ -34,11 +34,11 @@ p { @include inter-body(1rem); line-height: 1.6; }
 
 /* Generic Section Spacing */
 .section {
-    padding: $margin-large 0;
+    padding: $spacing-2xl 0;
 }
 
 .section-sm {
-    padding: $margin-medium 0;
+    padding: $spacing-xl 0;
 }
 
 /* Media defaults to avoid overflow */

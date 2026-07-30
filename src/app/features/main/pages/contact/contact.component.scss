@@ -47,7 +47,7 @@
 	}
 
 	.form-control {
-		border: 1px solid #c4d8fc;
+		border: 1px solid $navy-200;
 		border-radius: $radius-sm;
 		padding: $spacing-sm;
 		background: $white-00;
@@ -91,7 +91,7 @@
 	}
 
 	.btn-primary {
-		background: linear-gradient(90deg, #1f6feb 0%, #0c57cb 100%);
+		background: linear-gradient(90deg, $accent-600 0%, $accent-700 100%);
 		color: $white-00;
 
 		&:hover:not(:disabled) {

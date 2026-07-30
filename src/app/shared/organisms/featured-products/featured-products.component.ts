@@ -15,7 +15,7 @@ import { CartService } from '@core/services/cart.service';
 import { ProductService } from '@core/services/product.service';
 import { ToastService } from '@core/services/toast.service';
 import { ButtonComponent } from '../../atoms/button/button.component';
-import { FeaturedProductCardComponent } from '../../molecules/featured-product-card/featured-product-card.component';
+import { ProductCardComponent } from '../../molecules/product-card/product-card.component';
 
 interface FeaturedProductCardVm {
   product: Product;
@@ -29,7 +29,7 @@ interface FeaturedProductCardVm {
     AsyncPipe,
     RouterLink,
     ButtonComponent,
-    FeaturedProductCardComponent,
+    ProductCardComponent,
   ],
   templateUrl: './featured-products.component.html',
   styleUrls: ['./featured-products.component.scss'],

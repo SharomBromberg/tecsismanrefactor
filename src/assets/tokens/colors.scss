@@ -14,40 +14,66 @@ $green-01: #121712;
 $green-02: #9BCB3C;
 $green-whatsapp-00: #60e671;
 $green-whatsapp-01: #40c252;
+$whatsapp-brand-bg: #25d366; // official WhatsApp brand green (purchase-info CTA — distinct from the button-atom gradient above)
 $orange-00: #F7941D;
 $pink-00: #F387AF;
 $red-00: #f00;
 $red-01: #c00;
 $red-02: #a22828; // shared danger/error accent (shopping cart feedback, product review gate)
+$error-surface-bg: #fff7f7; // soft red error surface (form invalid state, review-gate error) — shared across login/register/product-details
 $white-00: #fff;
 $white-01: #f5f5f5;
 $white-02: #fcfcfc;
 
+// =========================================================================
+// Tonal scale — governs the navy/accent aliases below (Fase 0.1). Higher
+// number = darker. Domain aliases keep their existing names/consumers and
+// simply re-point to the nearest rung, so this is the single source of
+// truth for "how dark is this navy" going forward instead of one-off hex.
+// =========================================================================
+$navy-050: #f7faff;
+$navy-100: #d8e4f7;
+$navy-200: #c9dced;
+$navy-300: #a3c2d8;
+$navy-400: #6f97b8;
+$navy-500: #4c6690;
+$navy-600: #325782;
+$navy-700: #1a4874;
+$navy-800: #123a63;
+$navy-900: $blue-01; // brand anchor
+$navy-950: #06162d;
+
+// Accent scale — brighter interactive blue (CTAs/links), distinct from the
+// neutral navy text scale above.
+$accent-500: #4d8ff0;
+$accent-600: #1f6feb;
+$accent-700: #0c57cb;
+
 // Admin dashboard palette - scoped to the /admin surfaces (light control-panel theme)
-$admin-surface-mist: #f7faff;
-$admin-border: #d8e4f7;
-$admin-text-strong: #173962;
-$admin-text-medium: #21456f;
-$admin-text-soft: #4c6690;
-$admin-accent: #1f6feb;
-$admin-accent-strong: #0c57cb;
-$admin-accent-deep: #1d4f9f;
+$admin-surface-mist: $navy-050; // was #f7faff
+$admin-border: $navy-100; // was #d8e4f7
+$admin-text-strong: $navy-800; // was #173962
+$admin-text-medium: $navy-700; // was #21456f
+$admin-text-soft: $navy-500; // was #4c6690
+$admin-accent: $accent-600; // was #1f6feb
+$admin-accent-strong: $accent-700; // was #0c57cb
+$admin-accent-deep: #1d4f9f; // distinct accent tier, revisited in Fase 5 admin re-palette
 $admin-teal-accent: #21c2a4;
-$admin-navy: #113b66;
+$admin-navy: $navy-800; // was #113b66
 $admin-success: #0f6b37;
 $admin-danger: #c02020;
 $admin-danger-soft: #cf4b4b;
 $admin-danger-strong: #a22a2a;
 $admin-danger-bg: #fde8e8;
 $admin-info-bg: #eaf1ff;
-$admin-info-text: #244f96;
+$admin-info-text: $navy-600; // was #244f96
 
 // Navbar palette - scoped to the fixed navigation surface (accents with no
 // equivalent in the base palette above)
-$navbar-shadow-ambient: #06162d; // elevation shadow tint (box-shadow only)
+$navbar-shadow-ambient: $navy-950; // elevation shadow tint (box-shadow only) — was #06162d
 $navbar-badge-bg: #ff8a2a; // cart item-count badge background
-$navbar-badge-text: #0a223f; // cart item-count badge text
-$navbar-greeting-text: #d7e8ff; // "Hola, {name}" greeting text
+$navbar-badge-text: $navy-900; // cart item-count badge text — was #0a223f
+$navbar-greeting-text: $navy-100; // "Hola, {name}" greeting text — was #d7e8ff
 $navbar-danger-border: #ff9595; // logout/danger action border (desktop panel)
 $navbar-danger-text: #ffd6d6; // logout/danger action text (desktop panel)
 $navbar-danger-hover-bg: #c22d2d; // logout/danger action hover background
@@ -63,34 +89,39 @@ $catalog-favorite-active-border: rgb(216 48 91 / 28%); // filled heart border (a
 // Auth/form palette - scoped to shared auth & contact-form UI (login, register,
 // contact, review-form, and the purchase-info label — identical values reused
 // verbatim across these components)
-$form-heading-text: #163765; // form label / section-heading text
-$form-input-text: #1f3963; // form control (input/textarea) text
+$form-heading-text: $navy-800; // form label / section-heading text — was #163765
+$form-input-text: $navy-800; // form control (input/textarea) text — was #1f3963
 $form-error: #bb1d1d; // validation error text & invalid-field border
-$form-title-text: #0f2449; // card title text (login/register)
-$form-subtle-text: #49638d; // subtitle / hint muted text (login/register)
-$form-link-text: #265fb6; // footer link text (login/register)
-$auth-demo-text: #20457e; // login demo-credentials note text
+$form-title-text: $navy-900; // card title text (login/register) — was #0f2449
+$form-subtle-text: $navy-500; // subtitle / hint muted text (login/register) — was #49638d
+$form-link-text: $accent-700; // footer link text (login/register) — was #265fb6
+$auth-demo-text: $navy-700; // login demo-credentials note text — was #20457e
+$auth-accent-cyan: #0abde3; // decorative background glow (login/register hero radial)
 $contact-invalid-border: #cc3434; // contact form invalid-field border
 $contact-success-text: #1d7a42; // contact form success message text
 
 // Product detail palette - scoped to the /products/:id page and its organisms
 // (product-description, purchase-info, and the product-details review gate)
 $product-description-text: #4a4a4a; // product-description body copy
-$purchase-info-heading: #036; // purchase panel title & price
-$purchase-info-stock: #2b507e; // purchase panel stock-status text
-$product-review-gate-text: #1c4f89; // "sign in to review" gate prompt text
+$purchase-info-heading: $navy-800; // purchase panel title & price — was #036
+$purchase-info-stock: $navy-600; // purchase panel stock-status text — was #2b507e
+$product-review-gate-text: $navy-600; // "sign in to review" gate prompt text — was #1c4f89
 $product-review-gate-error-border: #efb8b8; // review gate error-state border
 
 // Shopping cart palette - scoped to the /cart page
-$cart-eyebrow-text: #3a628f; // page eyebrow text
-$cart-heading-text: #12355e; // page h1
-$cart-subtitle-text: #446583; // page subtitle
-$cart-section-heading-text: #153a67; // item title & summary heading
-$cart-item-price-text: #35608f; // line-item price text
-$cart-control-button-text: #184274; // quantity +/- button text
-$cart-quantity-text: #143b6a; // quantity value text
-$cart-summary-row-text: #355f8e; // summary line-item text
-$cart-summary-total-text: #11345d; // summary total text
+$cart-eyebrow-text: $navy-600; // page eyebrow text — was #3a628f
+$cart-heading-text: $navy-800; // page h1 — was #12355e
+$cart-subtitle-text: $navy-500; // page subtitle — was #446583
+$cart-section-heading-text: $navy-800; // item title & summary heading — was #153a67
+$cart-item-price-text: $navy-600; // line-item price text — was #35608f
+$cart-control-button-text: $navy-700; // quantity +/- button text — was #184274
+$cart-quantity-text: $navy-800; // quantity value text — was #143b6a
+$cart-summary-row-text: $navy-600; // summary line-item text — was #355f8e
+$cart-summary-total-text: $navy-800; // summary total text — was #11345d
+$cart-feedback-success-bg: #e8f8ef; // checkout success message background
+$cart-feedback-success-border: #9ad5b1; // checkout success message border
+$cart-feedback-error-bg: #fff1f1; // checkout error message background
+$cart-feedback-error-border: #f0b4b4; // checkout error message border
 
 // Rating stars palette - scoped to the star-rating control (shared by
 // rating-stars and product-details)
@@ -99,13 +130,17 @@ $rating-star-active: #f8bf2e; // filled/hover star color
 
 // Services palette - scoped to the /services hero & CTA sections (light text
 // set over dark gradient backgrounds)
-$services-hero-text: #f7fbff; // hero heading/body text
-$services-cta-text: #f6fbff; // CTA card text
+$services-hero-text: $navy-050; // hero heading/body text — was #f7fbff
+$services-hero-glow: #78d7ff; // decorative radial glow accent (hero background)
+$services-hero-gradient-mid: #0f5fa8; // hero background gradient — middle stop
+$services-hero-gradient-end: #1696c7; // hero background gradient — end stop
+$services-cta-text: $navy-050; // CTA card text — was #f6fbff
+$services-cta-gradient-start: #0b2744; // CTA card background gradient — start stop
 
 // Services showcase palette - scoped to the services-showcase organism
-$services-showcase-eyebrow-text: #375c8b; // eyebrow text
-$services-showcase-heading-text: #14365f; // h2/h3 text
-$services-showcase-lead-text: #365678; // lead paragraph text
+$services-showcase-eyebrow-text: $navy-600; // eyebrow text — was #375c8b
+$services-showcase-heading-text: $navy-800; // h2/h3 text — was #14365f
+$services-showcase-lead-text: $navy-600; // lead paragraph text — was #365678
 
 // Review list palette - scoped to the review-card hover state
 $review-list-border-shadow: rgb(0 0 0 / 15%); // review-card hover border
@@ -113,3 +148,11 @@ $review-list-border-shadow: rgb(0 0 0 / 15%); // review-card hover border
 // User panel palette - scoped to the /user account forms
 $user-form-error: #c94a4a; // invalid input border & error text
 $user-form-success: #1f7a46; // success message text
+
+// Toast palette - scoped to the global toast notification (dark gradient chips)
+$toast-success-start: #167a49;
+$toast-success-end: #114b31;
+$toast-error-start: #a52f2f;
+$toast-error-end: #6a1818;
+$toast-info-start: #155aa8;
+$toast-info-end: #0f3a70;

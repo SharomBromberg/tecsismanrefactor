@@ -4,7 +4,7 @@
       <p class="product-header__breadcrumb">Inicio / Productos / {{ vm.product.name }}</p>
 
       <div class="product-header__meta-row">
-        <span class="product-chip">Categoria: {{ vm.product.categoryId }}</span>
+        <span class="product-chip">Categoria: {{ vm.categoryName }}</span>
         <span class="product-chip">SKU: {{ getSku(vm.product._id) }}</span>
         @if (vm.product.featured) {
           <span class="product-chip product-chip--highlight">Producto destacado</span>

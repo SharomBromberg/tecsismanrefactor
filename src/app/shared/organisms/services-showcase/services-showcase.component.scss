@@ -8,10 +8,10 @@
   &__group {
     display: grid;
     gap: $gap-md;
-    border: 1px solid #d8e5f8;
+    border: 1px solid $navy-100;
     border-radius: $radius-lg;
     padding: $spacing-lg;
-    background: linear-gradient(180deg, $white-00, #f8fbff);
+    background: linear-gradient(180deg, $white-00, $navy-050);
   }
 
   &__eyebrow {
@@ -58,10 +58,10 @@
     gap: $gap-xs;
 
     li {
-      border: 1px solid #dbe4f4;
+      border: 1px solid $navy-100;
       border-radius: $radius-pill;
       padding: $spacing-xs $spacing-sm;
-      background: #f9fbff;
+      background: $navy-050;
       font-weight: 600;
       color: $admin-text-medium;
       font-size: 0.86rem;

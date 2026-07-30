@@ -7,13 +7,13 @@
   height: 100%; 
   background-color: $white-00;
   border-radius: $radius-lg;
-  box-shadow: $shadow-gray-s;
+  box-shadow: $elevation-1;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: $shadow-medium;
+    box-shadow: $elevation-2;
   }
 
   /* MODIFIER: Destacado (Ej: Servicio estrella) */

@@ -18,15 +18,15 @@
   animation: toast-in 220ms ease-out;
 
   &--success {
-    background: linear-gradient(135deg, #167a49 0%, #114b31 100%);
+    background: linear-gradient(135deg, $toast-success-start 0%, $toast-success-end 100%);
   }
 
   &--error {
-    background: linear-gradient(135deg, #a52f2f 0%, #6a1818 100%);
+    background: linear-gradient(135deg, $toast-error-start 0%, $toast-error-end 100%);
   }
 
   &--info {
-    background: linear-gradient(135deg, #155aa8 0%, #0f3a70 100%);
+    background: linear-gradient(135deg, $toast-info-start 0%, $toast-info-end 100%);
   }
 
   &__message {

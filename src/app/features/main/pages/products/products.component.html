@@ -7,13 +7,12 @@
     </div>
 
     <div class="prod-catalog__topbar-actions">
-      <div class="prod-catalog__search">
-        <svg class="prod-catalog__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="search" [formControl]="searchControl" class="prod-catalog__search-input" placeholder="Buscar productos, marcas y más..." aria-label="Buscar productos" />
-      </div>
+      <app-search-box
+        class="prod-catalog__search"
+        [control]="searchControl"
+        variant="light-00"
+        placeholder="Buscar productos, marcas y más..."
+      />
 
       @if (isUserLoggedIn) {
         <button
@@ -104,26 +103,11 @@
       }
     </div>
 
-    <ul class="prod-catalog__pills">
-      <li class="prod-catalog__pill"
-          role="button"
-          tabindex="0"
-          [class.prod-catalog__pill--active]="(selectedCategory$ | async) === ''"
-          (click)="selectCategory('')"
-          (keydown.enter)="selectCategory('')"
-          (keydown.space)="selectCategory('')">Todos</li>
-      @for (category of categories$ | async; track trackByCategoryId($index, category)) {
-        <li class="prod-catalog__pill"
-            role="button"
-            tabindex="0"
-            [class.prod-catalog__pill--active]="(selectedCategory$ | async) === category._id"
-            (click)="selectCategory(category._id)"
-            (keydown.enter)="selectCategory(category._id)"
-            (keydown.space)="selectCategory(category._id)">
-          {{ category.name }}
-        </li>
-      }
-    </ul>
+    <app-category-pills
+      [categories]="categories$ | async"
+      [selectedCategoryId]="selectedCategory$ | async"
+      (categorySelected)="selectCategory($event)"
+    />
   </div>
 
   <div class="prod-catalog__layout">
@@ -174,16 +158,6 @@
             </section>
           }
 
-          <section class="prod-catalog__filter-group">
-            <h3>Categorías</h3>
-            <div class="prod-catalog__filter-chip-list">
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedCategory$ | async) === 'c1'" (click)="selectCategory('c1')">Cloud Computing</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedCategory$ | async) === 'c2'" (click)="selectCategory('c2')">Seguridad</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedCategory$ | async) === 'c3'" (click)="selectCategory('c3')">Redes</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedCategory$ | async) === 'c4'" (click)="selectCategory('c4')">Accesorios</button>
-            </div>
-          </section>
-
           <div class="prod-catalog__sidebar-footer">
             <button type="button" class="prod-catalog__clear-btn" (click)="clearFilters()">Limpiar filtros</button>
             <span class="prod-catalog__sidebar-note">Los filtros se aplican al instante.</span>
@@ -200,33 +174,15 @@
       }
 
       @for (item of cards$ | async; track trackByProductId($index, item)) {
-        <a class="prod-catalog__card"
-           [routerLink]="['/Productos', item.product._id]">
-
-          <div class="prod-catalog__card-image">
-            <button
-              type="button"
-              class="prod-catalog__card-favorite"
-              [class.prod-catalog__card-favorite--active]="item.isFavorite"
-              (click)="toggleFavorite($event, item.product._id)"
-              [attr.aria-label]="item.isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'"
-            >
-              <app-icon [name]="item.isFavorite ? 'heart-filled' : 'heart'" size="sm"></app-icon>
-            </button>
-            @if (item.product.images.length) {
-              <img [src]="item.product.images[0]" [alt]="item.product.name" loading="lazy">
-            } @else {
-              <div class="prod-catalog__card-image-placeholder"></div>
-            }
-          </div>
-
-          <div class="prod-catalog__card-info">
-            <h3 class="prod-catalog__card-title">{{ item.product.name }}</h3>
-            <p class="prod-catalog__card-desc">{{ item.product.description }}</p>
-            <span class="prod-catalog__card-price">{{ item.product.price | currency:'USD':'symbol':'1.0-0' }}</span>
-            <button class="prod-catalog__card-btn">Ver detalles</button>
-          </div>
-        </a>
+        <app-product-card
+          variant="grid"
+          [product]="item.product"
+          [categoryName]="item.categoryName"
+          [showFavorite]="isUserLoggedIn"
+          [isFavorite]="item.isFavorite"
+          (addToCart)="addToCart($event)"
+          (favoriteToggle)="toggleFavorite($event)"
+        />
       }
     </main>
   </div>

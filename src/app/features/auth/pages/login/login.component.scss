@@ -6,9 +6,9 @@
   place-items: center;
   padding: 2rem 1rem;
   background:
-    radial-gradient(circle at 12% 20%, rgb(31 111 235 / 20%), transparent 32%),
-    radial-gradient(circle at 88% 10%, rgb(10 189 227 / 20%), transparent 28%),
-    linear-gradient(160deg, #f7fbff 0%, #eef5ff 40%, #f5fbff 100%);
+    radial-gradient(circle at 12% 20%, rgba($accent-600, 0.2), transparent 32%),
+    radial-gradient(circle at 88% 10%, rgba($auth-accent-cyan, 0.2), transparent 28%),
+    $navy-050;
 
   &__backdrop {
     display: none;
@@ -18,9 +18,9 @@
 .login-card {
   width: min(100%, 28rem);
   border-radius: 1rem;
-  background: #fff;
-  border: 1px solid #dbe8ff;
-  box-shadow: 0 18px 40px rgb(16 58 125 / 16%);
+  background: $white-00;
+  border: 1px solid $navy-100;
+  box-shadow: 0 18px 40px rgba($navy-800, 0.16);
   padding: 1.4rem;
 
   &__header {
@@ -49,8 +49,8 @@
   }
 
   &__demo {
-    background: #f4f8ff;
-    border: 1px dashed #acc7f2;
+    background: $navy-050;
+    border: 1px dashed $navy-200;
     border-radius: 0.75rem;
     padding: 0.7rem 0.8rem;
     margin-bottom: 1rem;
@@ -95,21 +95,21 @@
   &__control {
     width: 100%;
     border-radius: 0.62rem;
-    border: 1px solid #c4d8fc;
-    background: #fff;
+    border: 1px solid $navy-200;
+    background: $white-00;
     color: $form-input-text;
     padding: 0.64rem 0.7rem;
     font-size: 0.95rem;
   }
 
   &__control:focus {
-    outline: 2px solid rgb(31 111 235 / 28%);
+    outline: 2px solid rgba($accent-600, 0.28);
     border-color: $admin-accent;
   }
 
   &__control--invalid {
     border-color: $form-error;
-    background: #fff7f7;
+    background: $error-surface-bg;
   }
 
   &__hint {
@@ -134,7 +134,7 @@
     margin-top: 0.35rem;
     border: 0;
     border-radius: 0.7rem;
-    background: linear-gradient(90deg, #1f6feb 0%, #0c57cb 100%);
+    background: linear-gradient(90deg, $accent-600 0%, $accent-700 100%);
     color: $white-00;
     font-weight: 700;
     padding: 0.72rem;

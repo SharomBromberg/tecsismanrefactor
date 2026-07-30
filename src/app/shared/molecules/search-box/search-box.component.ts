@@ -17,4 +17,8 @@ export class SearchBoxComponent {
 
   // Hacemos el placeholder dinámico por si quieres reusarlo en otro lado
   placeholder = input<string>('Buscar productos, marcas y más...');
+
+  // Variante del átomo app-input a usar ('dark-00' para fondos oscuros,
+  // 'light-00' para fondos blancos como el topbar del catálogo)
+  variant = input<'dark-00' | 'light-00'>('dark-00');
 }

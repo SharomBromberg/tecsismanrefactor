@@ -3,11 +3,11 @@
     <app-icon name="search"></app-icon>
   </div>
   
-  <app-input 
-    type="search" 
-    customStyle="app-input--dark-00 search-box__input"
+  <app-input
+    type="search"
+    [customStyle]="'app-input--' + variant() + ' search-box__input'"
     [formControl]="control()"
-    [placeholder]="placeholder()" 
+    [placeholder]="placeholder()"
     aria-label="Buscar productos">
   </app-input>
 </div>

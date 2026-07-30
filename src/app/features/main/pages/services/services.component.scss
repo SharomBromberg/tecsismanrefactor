@@ -7,9 +7,9 @@
 	padding: $spacing-3xl 0 $spacing-2xl;
 	color: $services-hero-text;
 	background:
-		radial-gradient(circle at 12% 20%, rgb(255 255 255 / 17%), transparent 36%),
-		radial-gradient(circle at 88% 12%, rgb(120 215 255 / 22%), transparent 32%),
-		linear-gradient(135deg, $blue-01, #0f5fa8 45%, #1696c7);
+		radial-gradient(circle at 12% 20%, rgba($white-00, 0.17), transparent 36%),
+		radial-gradient(circle at 88% 12%, rgba($services-hero-glow, 0.22), transparent 32%),
+		linear-gradient(135deg, $blue-01, $services-hero-gradient-mid 45%, $services-hero-gradient-end);
 
 	&__content {
 		position: relative;
@@ -95,7 +95,7 @@
 		gap: $gap-md;
 		align-items: center;
 		padding: $spacing-lg;
-		background: linear-gradient(125deg, #0b2744, $blue-01);
+		background: linear-gradient(125deg, $services-cta-gradient-start, $blue-01);
 		border-radius: $radius-lg;
 		color: $services-cta-text;
 		border: 1px solid rgb(176 216 255 / 28%);
