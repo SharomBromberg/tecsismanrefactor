@@ -1,12 +1,16 @@
-<section class="quote">
-    <h2 class="quote__title">Cotiza tu sitio web</h2>
-    
-    <div class="quote__grid">
-        @for (service of servicesList(); track service.id) {
-            <app-card 
-                [data]="service"
-                (actionClick)="handleQuoteClick(service.id)">
-            </app-card>
-        }
+<section class="quote" aria-labelledby="quote-title">
+  <div class="app-container quote__container">
+    <h2 id="quote-title" class="quote__title">Cotiza tu sitio web</h2>
+
+    <div class="quote__grid" role="list">
+      @for (service of servicesList(); track service.id) {
+        <div class="quote__item" role="listitem">
+          <app-card
+            [data]="service"
+            (actionClick)="handleQuoteClick(service.id)">
+          </app-card>
+        </div>
+      }
     </div>
+  </div>
 </section>

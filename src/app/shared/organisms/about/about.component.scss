@@ -1,46 +1,44 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
 .about {
-    background: $white-01;
-    padding: 4rem 0;
+  background: $white-01;
+  padding: $spacing-2xl 0;
 
-    h2 {
-        @include poppins-cta(2rem);
+  &__container {
+    display: grid;
+    gap: $spacing-xl;
+  }
 
-        color: $blue-01;
-        text-align: center;
-        margin: 0 0 2rem;
-    }
+  &__title {
+    margin: 0;
+    color: $blue-01;
+    text-align: center;
 
-    &__items {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
+    @include poppins-cta(2rem);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+
+  &__item {
+    display: flex;
+  }
 }
 
-@media (min-width: $breakpoint-tablet-wide) {
-    .about {
-        padding: 6rem 2rem;
+@include respond-to('tablet-wide') {
+  .about {
+    padding: $spacing-4xl 0;
 
-        h2 {
-            @include poppins-cta(2.25rem);
-        }
-
-        &__items {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 2rem;
-        }
+    &__title {
+      @include poppins-cta(2.25rem);
     }
-}
 
-@media (max-width: $breakpoint-tablet-portrait) {
-    .about {
-        padding: 3rem 0;
-
-        &__items {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-        }
+    &__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: $spacing-xl;
     }
+  }
 }

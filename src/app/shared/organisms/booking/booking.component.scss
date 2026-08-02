@@ -1,49 +1,44 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
 .booking {
-    background: $white-00; // Mantenemos el fondo original que tenías
-    padding: 4rem 0;
+  background: $white-00;
+  padding: $spacing-2xl 0;
+
+  &__container {
+    display: grid;
+    gap: $spacing-xl;
+  }
+
+  &__title {
+    margin: 0;
+    color: $blue-01;
+    text-align: center;
+
+    @include poppins-cta(2rem);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+
+  &__item {
+    display: flex;
+  }
+}
+
+@include respond-to('tablet-wide') {
+  .booking {
+    padding: $spacing-4xl 0;
 
     &__title {
-        @include poppins-cta(2rem);
-
-        color: $blue-01;
-        text-align: center;
-        margin: 0 0 2rem;
+      @include poppins-cta(2.25rem);
     }
 
-    &__items {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+    &__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: $spacing-xl;
     }
-}
-
-// ==========================================
-// RESPONSIVE
-// ==========================================
-@media (min-width: $breakpoint-tablet-wide) {
-    .booking {
-        padding: 6rem 2rem;
-
-        &__title {
-            @include poppins-cta(2.25rem);
-        }
-
-        &__items {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 2rem;
-        }
-    }
-}
-
-@media (max-width: $breakpoint-tablet-portrait) {
-    .booking {
-        padding: 3rem 0;
-
-        &__items {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-        }
-    }
+  }
 }
