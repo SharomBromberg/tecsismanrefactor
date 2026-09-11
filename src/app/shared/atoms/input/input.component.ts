@@ -34,6 +34,7 @@ export class InputComponent implements ControlValueAccessor {
   @Input() customStyle = '';
   @Input() customLabelStyle = '';
   @Input() isDisabled = false; // Corregido: Propiedad declarada para el [disabled]
+  @Input() hasError = false; // Permite marcar el control como inválido desde el formulario padre
 
   @Input() inputValue = '';
   @Output() inputValueChange = new EventEmitter<string>();

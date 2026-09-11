@@ -20,7 +20,7 @@
   <main class="user-content" [class.user-content--hidden-mobile]="!shouldShowContent">
     @if (panelVm$ | async; as vm) {
       @if (isMobileViewport && hasMobileSelection) {
-        <button type="button" class="user-content__menu-bar" (click)="showMobileMenu()" aria-label="Volver al menu de cuenta">
+        <button app-button type="button" class="app-btn app-btn--ghost user-content__menu-bar" (click)="showMobileMenu()" aria-label="Volver al menu de cuenta">
           Abrir menu de cuenta
         </button>
       }
@@ -73,7 +73,7 @@
           </section>
 
           @if (!profileEditMode) {
-            <button type="button" class="user-card__action" (click)="profileEditMode = true">Editar perfil</button>
+            <button app-button type="button" class="app-btn app-btn--ghost user-card__action" (click)="profileEditMode = true">Editar perfil</button>
           }
 
           @if (profileEditMode) {
@@ -119,8 +119,8 @@
               }
 
               <div class="user-form__actions">
-                <button type="submit" class="user-form__submit" [disabled]="profileForm.invalid">Guardar cambios</button>
-                <button type="button" class="user-form__cancel" (click)="profileEditMode = false">Cancelar</button>
+                <button app-button type="submit" class="app-btn app-btn--dark-blue user-form__submit" [disabled]="profileForm.invalid">Guardar cambios</button>
+                <button app-button type="button" class="app-btn app-btn--ghost user-form__cancel" (click)="profileEditMode = false">Cancelar</button>
               </div>
             </form>
           }
@@ -132,7 +132,7 @@
           <h2 class="user-card__title">Direcciones de envio</h2>
 
           @if (!addressEditMode) {
-            <button type="button" class="user-card__action" (click)="addressEditMode = true">Agregar direccion</button>
+            <button app-button type="button" class="app-btn app-btn--ghost user-card__action" (click)="addressEditMode = true">Agregar direccion</button>
           }
 
           @if (addressEditMode) {
@@ -183,14 +183,14 @@
               }
 
               <div class="user-form__actions">
-                <button type="submit" class="user-form__submit" [disabled]="addressForm.invalid">
+                <button app-button type="submit" class="app-btn app-btn--dark-blue user-form__submit" [disabled]="addressForm.invalid">
                   @if (editingAddressId) {
                     Actualizar direccion
                   } @else {
                     Guardar direccion
                   }
                 </button>
-                <button type="button" class="user-form__cancel" (click)="cancelAddressEdit()">Cancelar</button>
+                <button app-button type="button" class="app-btn app-btn--ghost user-form__cancel" (click)="cancelAddressEdit()">Cancelar</button>
               </div>
             </form>
           }
@@ -207,11 +207,11 @@
                   }
                 </div>
                 <div class="address-item__actions">
-                  <button type="button" (click)="editAddress(address.id)">Editar</button>
+                  <button app-button type="button" class="app-btn app-btn--ghost" (click)="editAddress(address.id)">Editar</button>
                   @if (!address.isDefault) {
-                    <button type="button" (click)="setDefaultAddress(address.id)">Usar por defecto</button>
+                    <button app-button type="button" class="app-btn app-btn--primary" (click)="setDefaultAddress(address.id)">Usar por defecto</button>
                   }
-                  <button type="button" class="danger" (click)="removeAddress(address.id)">Eliminar</button>
+                  <button app-button type="button" class="app-btn app-btn--danger" (click)="removeAddress(address.id)">Eliminar</button>
                 </div>
               </article>
             }
@@ -231,7 +231,7 @@
               </article>
             </section>
 
-            <button type="button" class="user-card__action" (click)="securityEditMode = true">Cambiar contraseña</button>
+            <button app-button type="button" class="app-btn app-btn--ghost user-card__action" (click)="securityEditMode = true">Cambiar contraseña</button>
           }
 
           @if (securityEditMode) {
@@ -259,8 +259,8 @@
               }
 
               <div class="user-form__actions">
-                <button type="submit" class="user-form__submit" [disabled]="passwordForm.invalid">Actualizar contraseña</button>
-                <button type="button" class="user-form__cancel" (click)="securityEditMode = false">Cancelar</button>
+                <button app-button type="submit" class="app-btn app-btn--dark-blue user-form__submit" [disabled]="passwordForm.invalid">Actualizar contraseña</button>
+                <button app-button type="button" class="app-btn app-btn--ghost user-form__cancel" (click)="securityEditMode = false">Cancelar</button>
               </div>
             </form>
           }
@@ -301,7 +301,7 @@
                     </div>
                     <div class="purchase-item__price">
                       <a [routerLink]="['/Productos', item.productId]">Ver</a>
-                      <button type="button" (click)="removeFavorite(item.productId)">Quitar</button>
+                      <button app-button type="button" class="app-btn app-btn--danger" (click)="removeFavorite(item.productId)">Quitar</button>
                     </div>
                   </article>
                 }

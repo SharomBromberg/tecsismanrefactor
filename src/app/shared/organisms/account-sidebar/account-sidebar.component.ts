@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+import { ButtonComponent } from '@shared/atoms/button/button.component';
 import { IconComponent } from '@shared/atoms/icon/icon.component';
 
 @Component({
   selector: 'app-account-sidebar',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, ButtonComponent, IconComponent],
   templateUrl: './account-sidebar.component.html',
   styleUrls: ['./account-sidebar.component.scss'],
 })

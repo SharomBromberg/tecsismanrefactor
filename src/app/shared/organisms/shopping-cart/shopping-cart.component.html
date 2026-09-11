@@ -35,12 +35,12 @@
 							</div>
 
 							<div class="cart-item__controls">
-								<button type="button" (click)="decrease(item)">-</button>
+								<button app-button type="button" class="cart-item__qty-btn" (click)="decrease(item)">-</button>
 								<span>{{ item.quantity }}</span>
-								<button type="button" (click)="increase(item)">+</button>
+								<button app-button type="button" class="cart-item__qty-btn" (click)="increase(item)">+</button>
 							</div>
 
-							<button class="cart-item__remove" type="button" (click)="remove(item)">Eliminar</button>
+							<button app-button class="app-btn app-btn--danger cart-item__remove" type="button" (click)="remove(item)">Eliminar</button>
 						</article>
 					}
 				</div>
@@ -56,8 +56,8 @@
 							<strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong>
 						</p>
 
-						<button type="button" class="cart-summary__primary" (click)="checkout(items)">Finalizar compra</button>
-						<button type="button" class="cart-summary__ghost" (click)="clear()">Vaciar carrito</button>
+						<button app-button type="button" class="app-btn app-btn--dark-blue cart-summary__primary" (click)="checkout(items)">Finalizar compra</button>
+						<button app-button type="button" class="app-btn app-btn--ghost cart-summary__ghost" (click)="clear()">Vaciar carrito</button>
 					</aside>
 				}
 			</div>

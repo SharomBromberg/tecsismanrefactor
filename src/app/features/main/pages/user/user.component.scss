@@ -139,14 +139,8 @@
 		min-width: 0;
 	}
 
+	// Estilo provisto por ButtonComponent (app-btn app-btn--ghost)
 	&__action {
-		border: 0;
-		border-radius: $radius-sm;
-		background: rgba($blue-00, 0.16);
-		color: $blue-01;
-		font-weight: 700;
-		padding: $spacing-sm $spacing-md;
-		cursor: pointer;
 		margin-bottom: $spacing-md;
 	}
 }

@@ -1,5 +1,5 @@
 <aside class="account-sidebar" [class.is-open]="mobile || open" [class.is-collapsed]="!mobile && !open" [class.is-mobile]="mobile" aria-label="Opciones de cuenta">
-  <button type="button" class="account-sidebar__toggle" (click)="!mobile && toggleSidebar.emit()" [attr.aria-expanded]="mobile || open">
+  <button app-button type="button" class="account-sidebar__toggle" (click)="!mobile && toggleSidebar.emit()" [attr.aria-expanded]="mobile || open">
       <app-icon [name]="open ? 'close' : 'menu'" size="sm" ariaLabel="Menu de cuenta"></app-icon>
       @if (mobile || open) {
         <span>Mi cuenta</span>
@@ -17,31 +17,31 @@
   }
 
   <nav class="account-sidebar__nav">
-    <button type="button" [class.active]="activeSection === 'profile'" (click)="selectSection('profile')">
+    <button app-button type="button" [class.active]="activeSection === 'profile'" (click)="selectSection('profile')">
       <app-icon name="user" size="sm"></app-icon>
       @if (mobile || open) {
         <span>Perfil</span>
       }
     </button>
-    <button type="button" [class.active]="activeSection === 'security'" (click)="selectSection('security')">
+    <button app-button type="button" [class.active]="activeSection === 'security'" (click)="selectSection('security')">
       <app-icon name="lock" size="sm"></app-icon>
       @if (mobile || open) {
         <span>Seguridad</span>
       }
     </button>
-    <button type="button" [class.active]="activeSection === 'addresses'" (click)="selectSection('addresses')">
+    <button app-button type="button" [class.active]="activeSection === 'addresses'" (click)="selectSection('addresses')">
       <app-icon name="location" size="sm"></app-icon>
       @if (mobile || open) {
         <span>Direcciones</span>
       }
     </button>
-    <button type="button" [class.active]="activeSection === 'favorites'" (click)="selectSection('favorites')">
+    <button app-button type="button" [class.active]="activeSection === 'favorites'" (click)="selectSection('favorites')">
       <app-icon name="heart" size="sm"></app-icon>
       @if (mobile || open) {
         <span>Favoritos</span>
       }
     </button>
-    <button type="button" [class.active]="activeSection === 'history'" (click)="selectSection('history')">
+    <button app-button type="button" [class.active]="activeSection === 'history'" (click)="selectSection('history')">
       <app-icon name="history" size="sm"></app-icon>
       @if (mobile || open) {
         <span>Compras</span>
@@ -49,7 +49,7 @@
     </button>
   </nav>
 
-  <button type="button" class="account-sidebar__logout" (click)="logoutRequested.emit()">
+  <button app-button type="button" class="account-sidebar__logout" (click)="logoutRequested.emit()">
     <app-icon name="logout" size="sm"></app-icon>
     @if (mobile || open) {
       <span>Cerrar sesion</span>

@@ -6,11 +6,12 @@ import { CartService } from '@core/services/cart.service';
 import { CartItem } from '@core/interfaces/cart-item.interface';
 import { AuthService } from '@core/services/auth.service';
 import { PurchaseHistoryService } from '@core/services/purchase-history.service';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, AsyncPipe, CurrencyPipe],
+  imports: [CommonModule, RouterLink, AsyncPipe, CurrencyPipe, ButtonComponent],
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.scss'],
 })

@@ -3,20 +3,32 @@
   <p class="product-info__price">{{ product.price | currency:'COP':'symbol':'1.0-0' }}</p>
   <span class="product-info__stock">Stock disponible: {{ product.stock }}</span>
 
-  <label class="product-info__label" for="quantity">Cantidad</label>
-  <input
-    id="quantity"
-    class="product-info__quantity"
-    type="number"
-    min="1"
-    [max]="product.stock || 99"
-    [(ngModel)]="quantity"
-  />
+  <div class="product-info__qty-wrapper">
+    <label class="product-info__label" for="product-quantity">Cantidad</label>
+    <input
+      id="product-quantity"
+      class="app-input app-input--light-00 product-info__quantity"
+      type="number"
+      min="1"
+      [max]="product.stock || 99"
+      [(ngModel)]="quantity"
+    />
+  </div>
 
-  <button class="product-info__button product-info__button--primary" (click)="addToCart()">
+  <button
+    app-button
+    type="button"
+    class="app-btn app-btn--dark-blue product-info__cta"
+    (click)="addToCart()"
+  >
     Agregar al carrito
   </button>
-  <button class="product-info__button product-info__button--whatsapp" (click)="buyByWhatsApp()">
+  <button
+    app-button
+    type="button"
+    class="app-btn app-btn--whatsapp product-info__cta"
+    (click)="buyByWhatsApp()"
+  >
     Comprar por WhatsApp
   </button>
 </aside>

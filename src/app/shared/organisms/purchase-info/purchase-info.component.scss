@@ -37,6 +37,12 @@
     font-size: 0.9rem;
   }
 
+  &__qty-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2xs;
+  }
+
   &__label {
     font-weight: 700;
     color: $form-heading-text;
@@ -44,32 +50,11 @@
 
   &__quantity {
     width: 100%;
-    border-radius: $radius-sm;
-    border: 1px solid $navy-200;
-    padding: $spacing-sm;
   }
 
-  &__button {
-    color: $white-00;
-    border: none;
-    padding: 12px;
-    border-radius: $radius-sm;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
-
-    &:hover {
-      transform: translateY(-0.125rem);
-      box-shadow: $elevation-1;
-      filter: brightness(1.05);
-    }
-
-    &--primary {
-      background: $blue-01;
-    }
-
-    &--whatsapp {
-      background: $whatsapp-brand-bg;
-    }
+  // Los estilos de los botones CTA son provistos por ButtonComponent (app-btn)
+  &__cta {
+    width: 100%;
+    justify-content: center;
   }
 }

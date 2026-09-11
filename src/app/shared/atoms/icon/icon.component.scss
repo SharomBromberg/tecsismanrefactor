@@ -16,21 +16,21 @@ app-icon {
     color: inherit;
 
     &.size-sm {
-      width: 1rem;
-      height: 1rem;
-      font-size: 1rem;
+      width: $size-xs;
+      height: $size-xs;
+      font-size: $size-xs;
     }
 
     &.size-md {
-      width: 1.25rem;
-      height: 1.25rem;
-      font-size: 1.25rem;
+      width: $size-sm;
+      height: $size-sm;
+      font-size: $size-sm;
     }
 
     &.size-lg {
-      width: 1.75rem;
-      height: 1.75rem;
-      font-size: 1.75rem;
+      width: $size-md;
+      height: $size-md;
+      font-size: $size-md;
     }
 
     svg {

@@ -18,8 +18,9 @@
       @if (featuredCards.length > 0) {
         <div class="featured-products__carousel-shell">
           <button
+            app-button
             type="button"
-            class="featured-products__control featured-products__control--prev"
+            class="app-btn app-btn--ghost featured-products__control featured-products__control--prev"
             [disabled]="!canScrollPrev"
             (click)="scrollCarousel(-1)"
             aria-label="Ver productos destacados anteriores"
@@ -44,8 +45,9 @@
           </div>
 
           <button
+            app-button
             type="button"
-            class="featured-products__control featured-products__control--next"
+            class="app-btn app-btn--ghost featured-products__control featured-products__control--next"
             [disabled]="!canScrollNext"
             (click)="scrollCarousel(1)"
             aria-label="Ver mas productos destacados"

@@ -9,13 +9,14 @@ import { IconComponent } from '../../atoms/icon/icon.component';
   styleUrls: ['./rating-stars.component.scss'],
 })
 export class RatingStarsComponent {
-  // Recibe la calificación actual
   rating = input<number>(0);
+  readOnly = input<boolean>(false);
+  size = input<'sm' | 'md' | 'lg'>('lg');
 
-  // Emite el cambio al componente padre (el formulario)
   rated = output<number>();
 
   selectRating(value: number): void {
+    if (this.readOnly()) return;
     this.rated.emit(value);
   }
 }

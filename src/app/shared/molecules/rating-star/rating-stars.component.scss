@@ -36,4 +36,9 @@
     color: inherit;
     line-height: 1;
   }
+
+  .rating-stars--readonly .rating-stars__button {
+    cursor: default;
+    pointer-events: none;
+  }
 }

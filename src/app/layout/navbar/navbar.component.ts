@@ -4,14 +4,17 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subscription, filter, map } from 'rxjs';
 import { MenuElement } from '../../core/interfaces/menu';
 import { AuthService } from '../../core/services/auth.service';
+import { ButtonComponent } from '../../shared/atoms/button/button.component';
 import { IconComponent } from '../../shared/atoms/icon/icon.component';
+
 import { CartService } from '../../core/services/cart.service';
 import { CartDrawerService } from '../../core/services/cart-drawer.service';
+import { LogoComponent } from '@shared/atoms/logo/logo.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, IconComponent],
+  imports: [CommonModule, RouterModule, ButtonComponent, IconComponent, LogoComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })

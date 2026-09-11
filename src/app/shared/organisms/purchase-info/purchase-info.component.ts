@@ -6,11 +6,12 @@ import { CartDrawerService } from '@core/services/cart-drawer.service';
 import { ToastService } from '@core/services/toast.service';
 import { Product } from '@core/interfaces/product';
 import { buildWhatsAppUrl } from '@core/constants/contact.constants';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
 
 @Component({
   selector: 'app-purchase-info',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule],
+  imports: [CurrencyPipe, FormsModule, ButtonComponent],
   templateUrl: './purchase-info.component.html',
   styleUrls: ['./purchase-info.component.scss'],
 })

@@ -10,6 +10,7 @@ import { ProductService } from '@core/services/product.service';
 import { UserFavoritesService } from '@core/services/user-favorites.service';
 import { ShippingAddress } from '@core/interfaces/user-profile';
 import { PurchaseEntry } from '@core/interfaces/purchase-history';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
 import { AccountSidebarComponent } from '../../../../shared/organisms/account-sidebar/account-sidebar.component';
 
 interface PurchaseHistoryItemVm {
@@ -51,6 +52,7 @@ type AccountSection =
     CommonModule,
     RouterLink,
     ReactiveFormsModule,
+    ButtonComponent,
     AccountSidebarComponent,
   ],
   templateUrl: './user.component.html',

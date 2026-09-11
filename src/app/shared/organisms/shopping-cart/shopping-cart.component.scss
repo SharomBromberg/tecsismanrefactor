@@ -121,38 +121,40 @@
 		}
 	}
 
+	/* Contenedor de los botones de cantidad — solo layout, los estilos
+	   de botón los provee ButtonComponent (app-btn) */
 	&__controls {
 		display: inline-flex;
 		border: 1px solid $navy-200;
 		border-radius: $radius-sm;
 		overflow: hidden;
-
-		button {
-			border: 0;
-			background: $navy-050;
-			color: $cart-control-button-text;
-			width: 32px;
-			font-weight: 700;
-			cursor: pointer;
-		}
-
-		span {
-			min-width: 34px;
-			display: grid;
-			place-items: center;
-			font-weight: 700;
-			color: $cart-quantity-text;
-		}
 	}
 
-	&__remove {
+	/* Botón +/- de cantidad: override de layout específico del carrito */
+	&__qty-btn {
 		border: 0;
-		border-radius: $radius-sm;
-		background: $admin-danger-bg;
-		color: $red-02;
-		padding: $spacing-xs $spacing-sm;
+		background: $navy-050;
+		color: $cart-control-button-text;
+		width: $size-lg;
+		height: $control-height-sm;
 		font-weight: 700;
 		cursor: pointer;
+		border-radius: 0; // dentro del contenedor con border-radius propio
+	}
+
+	&__controls span {
+		min-width: 34px;
+		display: grid;
+		place-items: center;
+		font-weight: 700;
+		color: $cart-quantity-text;
+	}
+
+	// app-btn--danger ya provee background/color; solo override de forma
+	&__remove {
+		border-radius: $radius-sm;
+		padding: $spacing-xs $spacing-sm;
+		height: auto;
 	}
 }
 
@@ -185,23 +187,11 @@
 		color: $cart-summary-total-text;
 	}
 
+	// Los estilos de botón son provistos por app-btn; solo override de anchura
 	&__primary,
 	&__ghost {
-		border: 0;
-		border-radius: $radius-sm;
-		padding: $spacing-sm;
-		font-weight: 700;
-		cursor: pointer;
-	}
-
-	&__primary {
-		background: $blue-01;
-		color: $white-00;
-	}
-
-	&__ghost {
-		background: $navy-050;
-		color: $blue-01;
+		width: 100%;
+		justify-content: center;
 	}
 }
 
@@ -228,13 +218,13 @@
 	}
 }
 
-@media (max-width: $breakpoint-desktop-medium) {
+@include respond-to('desktop-medium', 'down') {
 	.cart-layout {
 		grid-template-columns: 1fr;
 	}
 }
 
-@media (max-width: $breakpoint-tablet-portrait) {
+@include respond-to('tablet-portrait', 'down') {
 	.cart-item {
 		grid-template-columns: 1fr;
 
