@@ -1,292 +1,123 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  BehaviorSubject,
-  combineLatest,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  of,
-  shareReplay,
-  startWith,
-  switchMap,
-} from 'rxjs';
-
-import { AsyncPipe } from '@angular/common';
-import { AuthService } from '@core/services/auth.service';
-import { ProductService } from '@core/services/product.service';
-import { CatalogCardVm, Product } from '@core/interfaces/product';
-import { Category } from '@core/interfaces/categories';
-import { UserFavoritesService } from '@core/services/user-favorites.service';
-import { ToastService } from '@core/services/toast.service';
-import { CartService } from '@core/services/cart.service';
-import { CartDrawerService } from '@core/services/cart-drawer.service';
+import { Component, computed, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { PageHeaderComponent } from '@shared/organisms/page-header/page-header.component';
 import { SearchBoxComponent } from '@shared/molecules/search-box/search-box.component';
-import { CategoryPillsComponent } from '@shared/molecules/category-pills/category-pills.component';
+import { RatingStarsComponent } from '@shared/molecules/rating-star/rating-stars.component';
 import { ProductCardComponent } from '@shared/molecules/product-card/product-card.component';
+import { CATEGORIES, PRODUCTS } from '@core/constants/products.constants';
+import { Product } from '@core/interfaces/product';
 
-interface ProductCardFavoriteVm extends CatalogCardVm {
-  isFavorite: boolean;
-}
+type SortKey = 'featured' | 'rating' | 'price-asc' | 'price-desc' | 'name-asc';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    AsyncPipe,
-    SearchBoxComponent,
-    CategoryPillsComponent,
-    ProductCardComponent,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, SearchBoxComponent, RatingStarsComponent, ProductCardComponent],
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss'],
+  styleUrl: './products.component.scss',
 })
 export class ProductsComponent {
-  private readonly productService = inject(ProductService);
-  private readonly authService = inject(AuthService);
-  private readonly favoritesService = inject(UserFavoritesService);
-  private readonly toastService = inject(ToastService);
-  private readonly cartService = inject(CartService);
-  private readonly cartDrawerService = inject(CartDrawerService);
+  readonly categories = CATEGORIES;
+  readonly maxPrice: number = Math.max(...PRODUCTS.map((p: Product) => p.price));
 
-  private readonly currentUsername =
-    this.authService.currentSession()?.username ?? '';
-  readonly isUserLoggedIn = !!this.currentUsername;
+  searchControl = new FormControl<string>('', { nonNullable: true });
+  expandedCats = signal<string[]>(this.categories.map((c) => c.id));
+  activeSubs = signal<string[]>([]);
+  priceMax = signal<number>(this.maxPrice);
+  minRating = signal(0);
+  inStockOnly = signal(false);
+  sort = signal<SortKey>('featured');
+  filtersOpen = signal(false);
 
-  readonly categoryControl = new FormControl<string>('', { nonNullable: true });
-  readonly searchControl = new FormControl<string>('', { nonNullable: true });
-  readonly activeSubcategory = new BehaviorSubject<string>('');
-  readonly selectedBrands = new BehaviorSubject<string[]>([]);
-  readonly selectedPriceRange = new BehaviorSubject<string>('');
-  readonly showOnlyFavorites = new BehaviorSubject<boolean>(false);
-  filtersVisible = false;
-  mobileFilterOpen = false;
+  filtered = computed<Product[]>(() => {
+    const q = this.searchControl.value.trim().toLowerCase();
+    const subs = this.activeSubs();
+    let list = PRODUCTS.filter((p: Product) => {
+      if (q && !p.name.toLowerCase().includes(q) && !p.description.toLowerCase().includes(q)) return false;
+      if (subs.length && !subs.includes(p.subcategoryId ?? '')) return false;
+      if (p.price > this.priceMax()) return false;
+      if (this.inStockOnly() && (p.stock ?? 0) <= 0) return false;
+      if (this.minRating() && p.rating < this.minRating()) return false;
+      return true;
+    });
 
-  readonly brandFilters = ['Cisco', 'Fortinet', 'Hikvision', 'Dell', 'TP-Link'];
+    switch (this.sort()) {
+      case 'rating': list = [...list].sort((a, b) => b.rating - a.rating); break;
+      case 'price-asc': list = [...list].sort((a, b) => a.price - b.price); break;
+      case 'price-desc': list = [...list].sort((a, b) => b.price - a.price); break;
+      case 'name-asc': list = [...list].sort((a, b) => a.name.localeCompare(b.name)); break;
+      default: list = [...list].sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
+    }
+    return list;
+  });
 
-  readonly categories$ = this.productService
-    .getCategories()
-    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
-
-  readonly selectedCategory$ = this.categoryControl.valueChanges.pipe(
-    startWith(this.categoryControl.value),
-    distinctUntilChanged(),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
-
-  readonly selectedBrands$ = this.selectedBrands.asObservable();
-  readonly selectedPriceRange$ = this.selectedPriceRange.asObservable();
-  readonly showOnlyFavorites$ = this.showOnlyFavorites.asObservable();
-
-  readonly filteredProducts$ = combineLatest([
-    this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300)),
-    this.selectedCategory$,
-    this.activeSubcategory,
-    this.selectedPriceRange$,
-    this.selectedBrands$,
-  ]).pipe(
-    switchMap(([query, categoryId, subcategory, priceRange, brands]) => {
-      const base$ = query
-        ? this.productService.searchProducts(query)
-        : this.productService.getProducts();
-      return base$.pipe(
-        map((products: Product[]) =>
-          products.filter((product: Product) => {
-            const normalizedName = product.name.toLowerCase();
-            const normalizedTags = (product.tags ?? []).map((tag) =>
-              tag.toLowerCase(),
-            );
-
-            if (categoryId && product.categoryId !== categoryId) return false;
-
-            if (subcategory) {
-              const hasTag = normalizedTags.some(
-                (t) => t === subcategory.toLowerCase(),
-              );
-              const inName = normalizedName.includes(subcategory.toLowerCase());
-              if (!hasTag && !inName) return false;
-            }
-
-            if (brands.length > 0) {
-              const brandMatch = brands.some((brand) => {
-                const normalizedBrand = brand.toLowerCase();
-                return (
-                  normalizedName.includes(normalizedBrand) ||
-                  normalizedTags.some((tag) => tag.includes(normalizedBrand))
-                );
-              });
-              if (!brandMatch) return false;
-            }
-
-            if (priceRange) {
-              if (priceRange === 'below-500' && product.price > 500)
-                return false;
-              if (
-                priceRange === 'mid-500-1500' &&
-                (product.price < 500 || product.price > 1500)
-              )
-                return false;
-              if (priceRange === 'above-1500' && product.price <= 1500)
-                return false;
-            }
-
-            return true;
-          }),
-        ),
-      );
-    }),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
-
-  readonly featuredProducts$ = this.productService
-    .getFeaturedProducts()
-    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
-
-  readonly favoriteIds$ = this.currentUsername
-    ? this.favoritesService.getFavoriteIds$(this.currentUsername)
-    : of([] as string[]);
-
-  readonly cards$ = combineLatest([
-    this.filteredProducts$,
-    this.categories$,
-    this.favoriteIds$,
-    this.showOnlyFavorites$,
-  ]).pipe(
-    map(([products, categories, favoriteIds, showOnlyFavorites]) =>
-      this.toCardViewModel(
-        showOnlyFavorites
-          ? products.filter((product) => favoriteIds.includes(product._id))
-          : products,
-        categories,
-        favoriteIds,
-      ),
-    ),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
-
-  readonly featuredCards$ = combineLatest([
-    this.featuredProducts$,
-    this.categories$,
-    this.favoriteIds$,
-  ]).pipe(
-    map(([products, categories, favoriteIds]) =>
-      this.toCardViewModel(products, categories, favoriteIds),
-    ),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
-
-  readonly emptyMessage$ = combineLatest([
-    this.cards$,
-    this.selectedCategory$,
-    this.selectedPriceRange$,
-    this.selectedBrands$,
-    this.showOnlyFavorites$,
-  ]).pipe(
-    map(([cards, categoryId, priceRange, brands, showOnlyFavorites]) => {
-      if (cards.length > 0) {
-        return '';
+  activeChips = computed<{ key: string; label: string; clear: () => void }[]>(() => {
+    const chips: { key: string; label: string; clear: () => void }[] = [];
+    for (const c of this.categories) {
+      for (const s of c.subcategories) {
+        if (this.activeSubs().includes(s.id)) {
+          chips.push({ key: 'sub-' + s.id, label: s.name, clear: () => this.toggleSub(s.id) });
+        }
       }
-
-      if (showOnlyFavorites) {
-        return 'No tienes productos favoritos en este resultado.';
-      }
-
-      return categoryId || priceRange || brands.length
-        ? 'No se encontraron productos que coincidan con los filtros seleccionados.'
-        : 'Aún no hay productos disponibles.';
-    }),
-  );
-
-  selectCategory(categoryId: string): void {
-    if (
-      this.categoryControl.value === categoryId &&
-      !this.activeSubcategory.value
-    ) {
-      this.categoryControl.setValue('');
-    } else {
-      this.categoryControl.setValue(categoryId);
-      this.activeSubcategory.next('');
     }
-  }
-
-  selectPriceRange(range: string): void {
-    this.selectedPriceRange.next(
-      this.selectedPriceRange.value === range ? '' : range,
-    );
-  }
-
-  toggleBrand(brand: string): void {
-    const current = this.selectedBrands.value;
-    const updated = current.includes(brand)
-      ? current.filter((item) => item !== brand)
-      : [...current, brand];
-    this.selectedBrands.next(updated);
-  }
-
-  clearFilters(): void {
-    this.categoryControl.setValue('');
-    this.activeSubcategory.next('');
-    this.selectedPriceRange.next('');
-    this.selectedBrands.next([]);
-    this.showOnlyFavorites.next(false);
-    this.mobileFilterOpen = false;
-    this.filtersVisible = false;
-  }
-
-  toggleOnlyFavorites(): void {
-    if (!this.isUserLoggedIn) {
-      return;
+    if (this.priceMax() < this.maxPrice) {
+      chips.push({ key: 'price', label: `Hasta ${this.money(this.priceMax())}`, clear: () => this.priceMax.set(this.maxPrice) });
     }
-
-    this.showOnlyFavorites.next(!this.showOnlyFavorites.value);
-  }
-
-  trackByCategoryId(index: number, category: Category): string {
-    return category._id ?? `${index}`;
-  }
-
-  trackByProductId(index: number, item: ProductCardFavoriteVm): string {
-    return item.product._id ?? `${index}`;
-  }
-
-  toggleFavorite(productId: string): void {
-    if (!this.currentUsername) {
-      this.toastService.show(
-        'Inicia sesion para agregar productos a favoritos.',
-        'info',
-      );
-      return;
+    if (this.inStockOnly()) {
+      chips.push({ key: 'stock', label: 'Solo en stock', clear: () => this.inStockOnly.set(false) });
     }
+    if (this.minRating()) {
+      chips.push({ key: 'rating', label: `${this.minRating()}★ y más`, clear: () => this.minRating.set(0) });
+    }
+    return chips;
+  });
 
-    const added = this.favoritesService.toggle(this.currentUsername, productId);
-    this.toastService.show(
-      added
-        ? 'Producto agregado a favoritos.'
-        : 'Producto eliminado de favoritos.',
-      'success',
-    );
+  money(v: number): string {
+    return v.toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
   }
 
-  addToCart(product: Product): void {
-    this.cartService.addToCart(product, 1);
-    this.toastService.show(`${product.name} agregado al carrito.`, 'success');
-    this.cartDrawerService.open();
+  toggleExpand(catId: string): void {
+    this.expandedCats.update((prev: string[]) => (prev.includes(catId) ? prev.filter((x: string) => x !== catId) : [...prev, catId]));
   }
 
-  private toCardViewModel(
-    products: Product[],
-    categories: Category[],
-    favoriteIds: string[],
-  ): ProductCardFavoriteVm[] {
-    return products.map((product) => ({
-      product,
-      isFavorite: favoriteIds.includes(product._id),
-      categoryName:
-        categories.find((category) => category._id === product.categoryId)
-          ?.name ?? 'Sin categoría',
-    }));
+  toggleSub(subId: string): void {
+    this.activeSubs.update((prev: string[]) => (prev.includes(subId) ? prev.filter((x: string) => x !== subId) : [...prev, subId]));
+  }
+
+  toggleCategoryAll(catId: string): void {
+    const cat = this.categories.find((c) => c.id === catId);
+    if (!cat) return;
+    const ids = cat.subcategories.map((s) => s.id);
+    const allOn = ids.every((id: string) => this.activeSubs().includes(id));
+    this.activeSubs.update((prev: string[]) => (allOn ? prev.filter((id: string) => !ids.includes(id)) : [...new Set([...prev, ...ids])]));
+  }
+
+  isCategoryChecked(catId: string): boolean {
+    const cat = this.categories.find((c) => c.id === catId);
+    if (!cat) return false;
+    return cat.subcategories.every((s) => this.activeSubs().includes(s.id));
+  }
+
+  isCategoryIndeterminate(catId: string): boolean {
+    const cat = this.categories.find((c) => c.id === catId);
+    if (!cat) return false;
+    const some = cat.subcategories.some((s) => this.activeSubs().includes(s.id));
+    return some && !this.isCategoryChecked(catId);
+  }
+
+  subCount(subId: string): number {
+    return PRODUCTS.filter((p: Product) => p.subcategoryId === subId).length;
+  }
+
+  clearAll(): void {
+    this.searchControl.setValue('');
+    this.activeSubs.set([]);
+    this.priceMax.set(this.maxPrice);
+    this.inStockOnly.set(false);
+    this.minRating.set(0);
+  }
+  categoryLabel(catId: string): string {
+    return this.categories.find((c) => c.id === catId)?.name ?? '';
   }
 }

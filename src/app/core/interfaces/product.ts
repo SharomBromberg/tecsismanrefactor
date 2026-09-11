@@ -6,6 +6,22 @@ export interface ProductComment {
   createdAt?: string | Date;
 }
 
+// export interface Product {
+//   _id: string;
+//   name: string;
+//   description: string;
+//   technicalDescription?: string;
+//   price: number;
+//   stock?: number;
+//   categoryId: string;
+//   images: string[];
+//   rating: number;
+//   comments: ProductComment[];
+//   featured?: boolean;
+//   tags?: string[];
+//   filenames?: string[];
+// }
+
 export interface Product {
   _id: string;
   name: string;
@@ -14,6 +30,7 @@ export interface Product {
   price: number;
   stock?: number;
   categoryId: string;
+  subcategoryId?: string;
   images: string[];
   rating: number;
   comments: ProductComment[];

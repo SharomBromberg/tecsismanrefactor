@@ -1,189 +1,102 @@
-<section class="prod-catalog app-container" aria-labelledby="catalog-title">
-  <div class="prod-catalog__topbar">
-    <div class="prod-catalog__topbar-meta">
-      <span class="prod-catalog__eyebrow">Marketplace Tecsisman</span>
-      <h1 id="catalog-title" class="prod-catalog__title">Catalogo</h1>
-      <p class="prod-catalog__subtitle">Filtra y encuentra productos especializados para infraestructura, seguridad y servicios en la nube.</p>
-    </div>
+<div class="prod-page">
+  <app-page-header eyebrow="Catálogo" title="Equipos, redes y servicios cloud."
+    subtitle="Precios en pesos colombianos, IVA incluido. Te asesoramos y cerramos tu pedido por WhatsApp."></app-page-header>
 
-    <div class="prod-catalog__topbar-actions">
-      <app-search-box
-        class="prod-catalog__search"
-        [control]="searchControl"
-        variant="light-00"
-        placeholder="Buscar productos, marcas y más..."
-      />
+  <div class="app-container prod-page__body">
+    <button type="button" class="prod-page__filters-toggle" (click)="filtersOpen.set(!filtersOpen())">
+      {{ filtersOpen() ? 'Ocultar filtros' : 'Buscar y filtrar' }}
+    </button>
 
-      @if (isUserLoggedIn) {
-        <button
-          type="button"
-          class="prod-catalog__favorite-filter"
-          [class.prod-catalog__favorite-filter--active]="(showOnlyFavorites$ | async)"
-          (click)="toggleOnlyFavorites()"
-        >
-          Solo favoritos
-        </button>
-      }
+    <aside class="prod-page__sidebar" [class.prod-page__sidebar--open]="filtersOpen()">
+      <app-search-box [control]="searchControl" variant="light-00" placeholder="Buscar producto"></app-search-box>
 
-      <button type="button" class="prod-catalog__filters-toggle prod-catalog__filters-toggle--desktop" (click)="filtersVisible = !filtersVisible" [attr.aria-expanded]="filtersVisible">
-        Filtros
-      </button>
-    </div>
-  </div>
-
-  @if (categories$ | async; as categories) {
-    <div class="prod-catalog__mobile-filters">
-      <div class="prod-catalog__mobile-filters-row">
-        <div class="prod-catalog__mobile-filters-group">
-          <label for="mobile-category-select" class="prod-catalog__mobile-filters-label">Categoría</label>
-          <select id="mobile-category-select" class="prod-catalog__mobile-filters-select" [formControl]="categoryControl" aria-label="Seleccionar categoría">
-            <option value="">Todas</option>
-            @for (category of categories; track trackByCategoryId($index, category)) {
-              <option [value]="category._id">{{ category.name }}</option>
+      <div class="prod-filter-group">
+        <p class="prod-filter-group__label">Categoría</p>
+        @for (cat of categories; track cat.id) {
+        <div class="prod-cat">
+          <div class="prod-cat__row">
+            <label class="prod-cat__check">
+              <input type="checkbox" [checked]="isCategoryChecked(cat.id)"
+                [indeterminate]="isCategoryIndeterminate(cat.id)" (change)="toggleCategoryAll(cat.id)" />
+              <span>{{ cat.name }}</span>
+            </label>
+            <button type="button" class="prod-cat__chevron"
+              [class.prod-cat__chevron--open]="expandedCats().includes(cat.id)" (click)="toggleExpand(cat.id)"
+              aria-label="Expandir categoría">⌄</button>
+          </div>
+          @if (expandedCats().includes(cat.id)) {
+          <div class="prod-subcat-list">
+            @for (sub of cat.subcategories; track sub.id) {
+            <label class="prod-subcat">
+              <input type="checkbox" [checked]="activeSubs().includes(sub.id)" (change)="toggleSub(sub.id)" />
+              <span>{{ sub.name }}</span>
+              <span class="prod-subcat__count">({{ subCount(sub.id) }})</span>
+            </label>
             }
-          </select>
+          </div>
+          }
         </div>
-        <button type="button" class="prod-catalog__filters-toggle prod-catalog__filters-toggle--mobile" (click)="mobileFilterOpen = !mobileFilterOpen" [attr.aria-expanded]="mobileFilterOpen">
-          Filtros
-        </button>
+        }
       </div>
 
-      @if (mobileFilterOpen) {
-        <div class="prod-catalog__mobile-filters-panel">
-          <section class="prod-catalog__filter-group">
-            <h3>Precio</h3>
-            <div class="prod-catalog__filter-chip-list">
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedPriceRange$ | async) === 'below-500'" (click)="selectPriceRange('below-500')">Hasta $500</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedPriceRange$ | async) === 'mid-500-1500'" (click)="selectPriceRange('mid-500-1500')">$500 - $1500</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedPriceRange$ | async) === 'above-1500'" (click)="selectPriceRange('above-1500')">Más de $1500</button>
-            </div>
-          </section>
-
-          <section class="prod-catalog__filter-group">
-            <h3>Marcas</h3>
-            <div class="prod-catalog__filter-chip-list">
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Cisco')" (click)="toggleBrand('Cisco')">Cisco</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Fortinet')" (click)="toggleBrand('Fortinet')">Fortinet</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Hikvision')" (click)="toggleBrand('Hikvision')">Hikvision</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Dell')" (click)="toggleBrand('Dell')">Dell</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('TP-Link')" (click)="toggleBrand('TP-Link')">TP-Link</button>
-            </div>
-          </section>
-
-          @if (isUserLoggedIn) {
-            <section class="prod-catalog__filter-group">
-              <h3>Favoritos</h3>
-              <div class="prod-catalog__filter-chip-list">
-                <button
-                  type="button"
-                  class="prod-catalog__chip"
-                  [class.prod-catalog__chip--active]="(showOnlyFavorites$ | async)"
-                  (click)="toggleOnlyFavorites()"
-                >
-                  Solo favoritos
-                </button>
-              </div>
-            </section>
-          }
-
-          <div class="prod-catalog__sidebar-footer">
-            <button type="button" class="prod-catalog__clear-btn" (click)="clearFilters()">Limpiar filtros</button>
-            <span class="prod-catalog__sidebar-note">Los filtros se aplican al instante.</span>
-          </div>
-        </div>
-      }
-    </div>
-  }
-
-  <div class="prod-catalog__pills-wrapper">
-    <div class="prod-catalog__pills-header">
-      <p class="prod-catalog__pills-label">Categorías</p>
-      @if (cards$ | async; as cards) {
-        <p class="prod-catalog__pills-count">{{ cards.length }} resultados</p>
-      }
-    </div>
-
-    <app-category-pills
-      [categories]="categories$ | async"
-      [selectedCategoryId]="selectedCategory$ | async"
-      (categorySelected)="selectCategory($event)"
-    />
-  </div>
-
-  <div class="prod-catalog__layout">
-    <aside class="prod-catalog__sidebar" [class.prod-catalog__sidebar--open]="filtersVisible" aria-labelledby="filter-title">
-      <div class="prod-catalog__sidebar-panel">
-        <div class="prod-catalog__sidebar-head">
-          <div>
-            <h2 id="filter-title" class="prod-catalog__sidebar-title">Refina tu búsqueda</h2>
-            <p class="prod-catalog__sidebar-subtitle">Activa los filtros que necesites para encontrar el producto ideal.</p>
-          </div>
-          <button type="button" class="prod-catalog__sidebar-close" (click)="filtersVisible = false" aria-label="Cerrar filtros">×</button>
-        </div>
-
-        <div class="prod-catalog__sidebar-content">
-          <section class="prod-catalog__filter-group">
-            <h3>Precio</h3>
-            <div class="prod-catalog__filter-chip-list">
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedPriceRange$ | async) === 'below-500'" (click)="selectPriceRange('below-500')">Hasta $500</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedPriceRange$ | async) === 'mid-500-1500'" (click)="selectPriceRange('mid-500-1500')">$500 - $1500</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedPriceRange$ | async) === 'above-1500'" (click)="selectPriceRange('above-1500')">Más de $1500</button>
-            </div>
-          </section>
-
-          <section class="prod-catalog__filter-group">
-            <h3>Marcas</h3>
-            <div class="prod-catalog__filter-chip-list">
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Cisco')" (click)="toggleBrand('Cisco')">Cisco</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Fortinet')" (click)="toggleBrand('Fortinet')">Fortinet</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Hikvision')" (click)="toggleBrand('Hikvision')">Hikvision</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('Dell')" (click)="toggleBrand('Dell')">Dell</button>
-              <button type="button" class="prod-catalog__chip" [class.prod-catalog__chip--active]="(selectedBrands$ | async)?.includes('TP-Link')" (click)="toggleBrand('TP-Link')">TP-Link</button>
-            </div>
-          </section>
-
-          @if (isUserLoggedIn) {
-            <section class="prod-catalog__filter-group">
-              <h3>Favoritos</h3>
-              <div class="prod-catalog__filter-chip-list">
-                <button
-                  type="button"
-                  class="prod-catalog__chip"
-                  [class.prod-catalog__chip--active]="(showOnlyFavorites$ | async)"
-                  (click)="toggleOnlyFavorites()"
-                >
-                  Solo favoritos
-                </button>
-              </div>
-            </section>
-          }
-
-          <div class="prod-catalog__sidebar-footer">
-            <button type="button" class="prod-catalog__clear-btn" (click)="clearFilters()">Limpiar filtros</button>
-            <span class="prod-catalog__sidebar-note">Los filtros se aplican al instante.</span>
-          </div>
-        </div>
+      <div class="prod-filter-group">
+        <p class="prod-filter-group__label">Precio máximo</p>
+        <input type="range" class="prod-range" min="0" [max]="maxPrice" step="10000" [value]="priceMax()"
+          (input)="priceMax.set(+$any($event.target).value)" />
+        <span class="prod-filter-group__value">{{ money(priceMax()) }}</span>
       </div>
+
+      <div class="prod-filter-group">
+        <p class="prod-filter-group__label">Calificación</p>
+        @for (r of [4, 3]; track r) {
+        <label class="prod-radio">
+          <input type="radio" name="rating" [checked]="minRating() === r" (change)="minRating.set(r)" />
+          <app-rating-stars [rating]="r" [readOnly]="true" size="sm"></app-rating-stars>
+          <span>y más</span>
+        </label>
+        }
+        <label class="prod-radio">
+          <input type="radio" name="rating" [checked]="minRating() === 0" (change)="minRating.set(0)" />
+          <span>Todas</span>
+        </label>
+      </div>
+
+      <label class="prod-checkbox">
+        <input type="checkbox" [checked]="inStockOnly()" (change)="inStockOnly.set(!inStockOnly())" />
+        <span>Solo mostrar en stock</span>
+      </label>
     </aside>
 
-    <main class="prod-catalog__grid" aria-labelledby="catalog-title">
-      @if (emptyMessage$ | async; as emptyMessage) {
-        <p class="app-feedback" aria-live="polite">
-          {{ emptyMessage }}
-        </p>
+    <main class="prod-page__main">
+      @if (activeChips().length) {
+      <div class="prod-chips">
+        @for (chip of activeChips(); track chip.key) {
+        <button type="button" class="prod-chip" (click)="chip.clear()">{{ chip.label }} ✕</button>
+        }
+        <button type="button" class="prod-chips__clear" (click)="clearAll()">Limpiar todos los filtros</button>
+      </div>
       }
 
-      @for (item of cards$ | async; track trackByProductId($index, item)) {
-        <app-product-card
-          variant="grid"
-          [product]="item.product"
-          [categoryName]="item.categoryName"
-          [showFavorite]="isUserLoggedIn"
-          [isFavorite]="item.isFavorite"
-          (addToCart)="addToCart($event)"
-          (favoriteToggle)="toggleFavorite($event)"
-        />
-      }
+      <div class="prod-page__toolbar">
+        <span class="prod-page__count">{{ filtered().length }} productos</span>
+        <select class="prod-sort" [value]="sort()" (change)="sort.set($any($event.target).value)">
+          <option value="featured">Destacados</option>
+          <option value="rating">Mejor calificados</option>
+          <option value="price-asc">Precio: menor a mayor</option>
+          <option value="price-desc">Precio: mayor a menor</option>
+          <option value="name-asc">Nombre A-Z</option>
+        </select>
+      </div>
+
+      <div class="prod-grid">
+        @for (p of filtered(); track p._id) {
+        <app-product-card [product]="p" [categoryName]="p.featured ? 'Destacado' : categoryLabel(p.categoryId)"
+          variant="grid"></app-product-card>
+        }
+        @if (!filtered().length) {
+        <p class="prod-page__empty">No hay productos con estos filtros.</p>
+        }
+      </div>
     </main>
   </div>
-</section>
+</div>
