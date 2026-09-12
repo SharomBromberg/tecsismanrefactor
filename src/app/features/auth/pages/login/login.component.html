@@ -2,61 +2,162 @@
   <div class="login-page__backdrop" aria-hidden="true"></div>
 
   <article class="login-card">
-    <header class="login-card__header">
-      <p class="login-card__eyebrow">Panel de acceso</p>
-      <h1 class="login-card__title">Iniciar sesión</h1>
-      <p class="login-card__subtitle">
-        Ingresa con tus credenciales. El sistema detecta tu perfil automaticamente.
-      </p>
-    </header>
+    @if (!twoFactorChallenge && !verificationChallenge) {
+      <header class="login-card__header">
+        <p class="login-card__eyebrow">Panel de acceso</p>
+        <h1 class="login-card__title">Iniciar sesión</h1>
+        <p class="login-card__subtitle">
+          Ingresa con tus credenciales. El sistema detecta tu perfil automaticamente.
+        </p>
+      </header>
 
-    <div class="login-card__demo">
-      <p><strong>Admin:</strong> admin / password123</p>
-      <p><strong>Usuario:</strong> usuario / user123</p>
-    </div>
+      <div class="login-card__demo">
+        <p><strong>Admin:</strong> admin / tecsisman2026 (o password123)</p>
+        <p><strong>Gestor de productos:</strong> inventario / gestor123</p>
+        <p><strong>Editor de blog:</strong> editorial / editor123</p>
+        <p><strong>Usuario:</strong> usuario / user123</p>
+      </div>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
-      <label class="login-form__label" for="username">Usuario</label>
-      <input
-        id="username"
-        class="login-form__control"
-        [class.login-form__control--invalid]="form.controls.username.touched && form.controls.username.invalid"
-        type="text"
-        placeholder="Ingresa tu usuario"
-        formControlName="username"
-        autocomplete="username"
-      />
-      @if (form.controls.username.touched && form.controls.username.hasError('required')) {
-        <small class="login-form__hint login-form__hint--error">El usuario es obligatorio.</small>
-      }
+      <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+        <app-input
+          label="Usuario"
+          type="text"
+          customLabelStyle="app-input__label--light"
+          placeholder="Ingresa tu usuario"
+          formControlName="username"
+          [hasError]="form.controls.username.touched && form.controls.username.invalid"
+        ></app-input>
+        @if (form.controls.username.touched && form.controls.username.hasError('required')) {
+          <small class="login-form__hint login-form__hint--error">El usuario es obligatorio.</small>
+        }
 
-      <label class="login-form__label" for="password">Contraseña</label>
-      <input
-        id="password"
-        class="login-form__control"
-        [class.login-form__control--invalid]="form.controls.password.touched && form.controls.password.invalid"
-        type="password"
-        placeholder="Ingresa tu contraseña"
-        formControlName="password"
-        autocomplete="current-password"
-      />
-      @if (form.controls.password.touched && form.controls.password.hasError('required')) {
-        <small class="login-form__hint login-form__hint--error">La contraseña es obligatoria.</small>
-      }
+        <app-input
+          label="Contraseña"
+          type="password"
+          customLabelStyle="app-input__label--light"
+          placeholder="Ingresa tu contraseña"
+          formControlName="password"
+          [hasError]="form.controls.password.touched && form.controls.password.invalid"
+        ></app-input>
+        @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+          <small class="login-form__hint login-form__hint--error">La contraseña es obligatoria.</small>
+        }
 
-      @if (errorMessage) {
-        <p class="login-form__error">{{ errorMessage }}</p>
-      }
+        @if (errorMessage) {
+          <p class="login-form__error">{{ errorMessage }}</p>
+        }
 
-      <button type="submit" class="login-form__submit" [disabled]="loading || form.invalid">
-        {{ loading ? 'Validando...' : 'Ingresar' }}
-      </button>
-    </form>
+        <button
+          app-button
+          type="submit"
+          class="app-btn app-btn--dark-blue login-form__submit"
+          [disabled]="loading || form.invalid"
+        >
+          {{ loading ? 'Validando...' : 'Ingresar' }}
+        </button>
+      </form>
 
-    <footer class="login-card__footer">
-      <a routerLink="/register">Crear cuenta</a>
-      <span aria-hidden="true">•</span>
-      <a routerLink="/Inicio">Volver al inicio</a>
-    </footer>
+      <footer class="login-card__footer">
+        <a routerLink="/register">Crear cuenta</a>
+        <span aria-hidden="true">•</span>
+        <a routerLink="/Inicio">Volver al inicio</a>
+      </footer>
+    } @else if (twoFactorChallenge) {
+      <header class="login-card__header">
+        <p class="login-card__eyebrow">Verificación en dos pasos</p>
+        <h1 class="login-card__title">Hola, {{ twoFactorChallenge.displayName }}</h1>
+        <p class="login-card__subtitle">
+          Tu rol requiere un código de verificación adicional. En un entorno real este código
+          llegaría por SMS o correo; aquí se muestra para poder probar el flujo sin backend.
+        </p>
+      </header>
+
+      <div class="login-card__demo">
+        <p><strong>Código de verificación (demo):</strong> {{ twoFactorChallenge.demoCode }}</p>
+      </div>
+
+      <form [formGroup]="twoFactorForm" (ngSubmit)="submitTwoFactor()" class="login-form">
+        <app-input
+          label="Código de 6 dígitos"
+          type="text"
+          customLabelStyle="app-input__label--light"
+          placeholder="000000"
+          formControlName="code"
+          [hasError]="twoFactorForm.controls.code.touched && twoFactorForm.controls.code.invalid"
+        ></app-input>
+        @if (twoFactorForm.controls.code.touched && twoFactorForm.controls.code.invalid) {
+          <small class="login-form__hint login-form__hint--error">Ingresa el código de 6 dígitos.</small>
+        }
+
+        @if (twoFactorError) {
+          <p class="login-form__error">{{ twoFactorError }}</p>
+        }
+
+        <button
+          app-button
+          type="submit"
+          class="app-btn app-btn--dark-blue login-form__submit"
+          [disabled]="twoFactorForm.invalid"
+        >
+          Verificar código
+        </button>
+        <button
+          app-button
+          type="button"
+          class="app-btn app-btn--ghost login-form__submit"
+          (click)="cancelTwoFactor()"
+        >
+          Cancelar
+        </button>
+      </form>
+    } @else if (verificationChallenge) {
+      <header class="login-card__header">
+        <p class="login-card__eyebrow">Cuenta sin verificar</p>
+        <h1 class="login-card__title">Verifica tu cuenta</h1>
+        <p class="login-card__subtitle">
+          Enviamos un nuevo código a {{ verificationChallenge.email }}. En un entorno real
+          llegaría por correo; aquí se muestra para poder probar el flujo sin backend.
+        </p>
+      </header>
+
+      <div class="login-card__demo">
+        <p><strong>Código de verificación (demo):</strong> {{ verificationChallenge.demoCode }}</p>
+      </div>
+
+      <form [formGroup]="verifyForm" (ngSubmit)="submitAccountVerification()" class="login-form">
+        <app-input
+          label="Código de 6 dígitos"
+          type="text"
+          customLabelStyle="app-input__label--light"
+          placeholder="000000"
+          formControlName="code"
+          [hasError]="verifyForm.controls.code.touched && verifyForm.controls.code.invalid"
+        ></app-input>
+        @if (verifyForm.controls.code.touched && verifyForm.controls.code.invalid) {
+          <small class="login-form__hint login-form__hint--error">Ingresa el código de 6 dígitos.</small>
+        }
+
+        @if (verifyError) {
+          <p class="login-form__error">{{ verifyError }}</p>
+        }
+
+        <button
+          app-button
+          type="submit"
+          class="app-btn app-btn--dark-blue login-form__submit"
+          [disabled]="verifyForm.invalid"
+        >
+          Verificar cuenta
+        </button>
+        <button
+          app-button
+          type="button"
+          class="app-btn app-btn--ghost login-form__submit"
+          (click)="cancelAccountVerification()"
+        >
+          Cancelar
+        </button>
+      </form>
+    }
   </article>
 </section>

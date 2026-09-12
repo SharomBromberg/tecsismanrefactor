@@ -1,40 +1,35 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { CardComponent } from '../../molecules/card/card.component';
-import { CardData } from '../../../core/interfaces/card-data.interface';
+
+interface AboutValuePoint {
+  title: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [],
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent {
-  aboutItems: CardData[] = [
+  readonly imageUrl = '../../../../assets/pictures/team.webp';
+  readonly imageAlt = 'Equipo Tecsisman';
+
+  readonly valuePoints: AboutValuePoint[] = [
     {
-      id: 'team',
-      title: 'Nuestro equipo',
+      title: 'Experiencia real',
       description:
-        'Contamos con un equipo altamente capacitado y comprometido, listo para abordar tus necesidades de manera ágil y eficiente. Nuestra prioridad es brindarte soluciones efectivas y satisfactorias.',
-      imageUrl: '../../../../assets/pictures/team.webp',
-      imageAlt: 'Equipo de TECSISMAN',
+        'Tres años resolviendo infraestructura, redes y seguridad para empresas en Colombia.',
     },
     {
-      id: 'history',
-      title: '¿Por qué elegirnos?',
-      description:
-        'Somos apasionados por la tecnología y la excelencia. Con una visión centrada en el cliente, elevamos tu presencia digital al siguiente nivel con soluciones a medida.',
-      imageUrl: '../../../../assets/pictures/history.webp',
-      imageAlt: 'Razones para elegir TECSISMAN',
+      title: 'A la medida',
+      description: 'Cada solución se adapta a tu proceso, no al revés.',
     },
     {
-      id: 'skills',
-      title: 'Nuestras Especialidades',
+      title: 'Trato directo',
       description:
-        'Desarrollo web a medida, instalación de redes y sistemas de seguridad, y venta de tecnología. Todo lo que necesitas en un solo lugar.',
-      imageUrl: '../../../../assets/pictures/skills.webp',
-      imageAlt: 'Especialidades de TECSISMAN',
+        'Hablas con quien ejecuta, sin intermediarios ni tickets perdidos.',
     },
   ];
 }

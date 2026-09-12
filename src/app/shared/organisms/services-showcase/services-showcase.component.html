@@ -1,29 +1,57 @@
-<section class="services-showcase">
-  <article class="services-showcase__tech">
-    <p class="services-showcase__eyebrow">Base tecnica</p>
-    <h2>Tecnologia pensada para vender, crecer y mantenerse</h2>
-    <p class="services-showcase__lead">
-      Seleccionamos herramientas segun tus objetivos de negocio para reducir riesgos y acelerar resultados.
-    </p>
+@if (variant === 'home-teaser') {
+  <section class="services-showcase services-showcase--teaser" aria-labelledby="services-teaser-title">
+    <div class="app-container services-showcase__teaser">
+      <div class="services-showcase__teaser-intro">
+        <p class="services-showcase__eyebrow">Qué hacemos</p>
+        <h2 id="services-teaser-title" class="services-showcase__teaser-title">Tres frentes, un mismo estándar.</h2>
+        <p class="services-showcase__lead">Cada proyecto se documenta, se prueba y se entrega con acompañamiento directo.</p>
+        <a app-button routerLink="/Servicios" class="app-btn app-btn--line-navy services-showcase__teaser-cta">Ver servicios</a>
+      </div>
 
-    <ul class="services-showcase__chips">
-      @for (item of stack(); track item) {
-        <li>{{ item }}</li>
-      }
-    </ul>
-  </article>
-
-  @for (group of serviceGroups(); track group.id) {
-    <article class="services-showcase__group">
-      <p class="services-showcase__eyebrow">{{ group.eyebrow }}</p>
-      <h3>{{ group.title }}</h3>
-      <p class="services-showcase__lead">{{ group.lead }}</p>
-
-      <div class="services-showcase__cards">
-        @for (service of group.cards; track service.id) {
-          <app-card [data]="service" />
+      <div class="services-showcase__teaser-list">
+        @for (item of homeTeaserServices(); track item.id) {
+          <article class="services-showcase__teaser-item">
+            <div class="services-showcase__teaser-thumb">
+              <img [src]="item.thumbnailUrl" [alt]="item.thumbnailAlt" loading="lazy" />
+            </div>
+            <div class="services-showcase__teaser-copy">
+              <span class="services-showcase__teaser-number">{{ item.number }}</span>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.text }}</p>
+            </div>
+          </article>
         }
       </div>
+    </div>
+  </section>
+} @else {
+  <section class="services-showcase">
+    <article class="services-showcase__tech">
+      <p class="services-showcase__eyebrow">Base tecnica</p>
+      <h2>Tecnologia pensada para vender, crecer y mantenerse</h2>
+      <p class="services-showcase__lead">
+        Seleccionamos herramientas segun tus objetivos de negocio para reducir riesgos y acelerar resultados.
+      </p>
+
+      <ul class="services-showcase__chips">
+        @for (item of stack(); track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
     </article>
-  }
-</section>
+
+    @for (group of serviceGroups(); track group.id) {
+      <article class="services-showcase__group">
+        <p class="services-showcase__eyebrow">{{ group.eyebrow }}</p>
+        <h3>{{ group.title }}</h3>
+        <p class="services-showcase__lead">{{ group.lead }}</p>
+
+        <div class="services-showcase__cards">
+          @for (service of group.cards; track service.id) {
+            <app-card [data]="service" />
+          }
+        </div>
+      </article>
+    }
+  </section>
+}

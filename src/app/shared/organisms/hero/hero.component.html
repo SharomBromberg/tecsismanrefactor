@@ -1,52 +1,23 @@
 <section class="hero" aria-label="Hero principal">
-  <div class="hero__bg" aria-hidden="true">
-    <img src="assets/pictures/headerBackground.png" alt="" />
-    <div class="hero__overlay"></div>
-  </div>
-
-  <div class="hero__content app-container">
+  <div class="app-container hero__content">
     <div class="hero__copy">
-      <p class="hero__eyebrow">Soluciones digitales para empresas que quieren crecer</p>
-      <h1 class="hero__title">Lleva tu negocio al siguiente nivel con una plataforma rapida, segura y pensada para convertir</h1>
-      <p class="hero__subtitle">Creamos experiencias web modernas con foco en resultados: mejor captacion, procesos confiables y una base tecnica lista para escalar.</p>
+      <p class="hero__eyebrow">Infraestructura · Software · Soporte</p>
+      <h1 class="hero__title">La base técnica de tu empresa, bien hecha.</h1>
+      <p class="hero__subtitle">Desarrollamos plataformas, instalamos redes y protegemos operaciones. Un solo proveedor para todo lo que sostiene tu negocio.</p>
 
       <div class="hero__actions">
-        <a app-button routerLink="/Servicios" class="app-btn app-btn--gradient hero__cta-main">Ver servicios</a>
-        <a app-button routerLink="/Contacto" class="app-btn app-btn--inverse hero__cta-secondary">Solicitar cotizacion</a>
-      </div>
-
-      <div class="hero__stats" aria-label="Indicadores de valor">
-        <article class="hero__stat">
-          <app-icon name="history" size="sm" ariaLabel="Tiempo de experiencia"></app-icon>
-          <p class="hero__stat-value">+120</p>
-          <p class="hero__stat-label">Proyectos</p>
-        </article>
-        <article class="hero__stat">
-          <app-icon name="user" size="sm" ariaLabel="Satisfaccion de clientes"></app-icon>
-          <p class="hero__stat-value">98%</p>
-          <p class="hero__stat-label">Satisfaccion</p>
-        </article>
-        <article class="hero__stat">
-          <app-icon name="lock" size="sm" ariaLabel="Soporte continuo"></app-icon>
-          <p class="hero__stat-value">24/7</p>
-          <p class="hero__stat-label">Soporte</p>
-        </article>
+        <a app-button routerLink="/Productos" class="app-btn app-btn--lime hero__cta-main">Ver catálogo</a>
+        <a app-button routerLink="/Contacto" class="app-btn app-btn--line-inverse hero__cta-secondary">Hablar con un asesor</a>
       </div>
     </div>
 
-    <aside class="hero__services" aria-label="Servicios clave">
-      <article class="hero__service-card">
-        <h3 class="hero__service-title">Ecommerce Profesional</h3>
-        <p class="hero__service-text">Tiendas optimizadas para vender mas, con checkout claro y experiencia fluida en cualquier dispositivo.</p>
-      </article>
-      <article class="hero__service-card">
-        <h3 class="hero__service-title">Plataformas a Medida</h3>
-        <p class="hero__service-text">Desarrollo de modulos y flujos personalizados segun el proceso real de tu empresa.</p>
-      </article>
-      <article class="hero__service-card">
-        <h3 class="hero__service-title">Integracion y Seguridad</h3>
-        <p class="hero__service-text">Conexion con APIs, autenticacion segura y arquitectura preparada para crecimiento sostenido.</p>
-      </article>
-    </aside>
+    <div class="hero__facts" aria-label="Compromisos verificables">
+      @for (fact of facts; track fact.value) {
+        <article class="hero__fact">
+          <span class="hero__fact-value">{{ fact.value }}</span>
+          <span class="hero__fact-label">{{ fact.label }}</span>
+        </article>
+      }
+    </div>
   </div>
 </section>

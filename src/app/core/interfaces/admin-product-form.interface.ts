@@ -1,3 +1,5 @@
+import { ProductAttributes } from './product';
+
 export interface SelectedLocalImage {
   name: string;
   dataUrl: string;
@@ -13,6 +15,7 @@ export interface AdminProductCreatePayload {
   filenames: string[];
   featured: boolean;
   tags: string[];
+  attributes: ProductAttributes;
 }
 
 export interface AdminProductUpdatePayload extends AdminProductCreatePayload {

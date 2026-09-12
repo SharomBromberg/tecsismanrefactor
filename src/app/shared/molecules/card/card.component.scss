@@ -1,31 +1,41 @@
-// Ajusta esta ruta a donde tengas guardado tu index.scss de tokens
 @use "../../../../assets/tokens/index.scss" as *;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
 
 .m-card {
   display: flex;
   flex-direction: column;
-  height: 100%; 
+  height: 100%;
+  width: 100%;
   background-color: $white-00;
-  border-radius: $radius-lg;
-  box-shadow: $elevation-1;
+  border-radius: 2px;
+  border: 1px solid rgba($blue-01, 0.12);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, border-color 0.22s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: $elevation-2;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba($blue-01, 0.08);
+    border-color: rgba($blue-01, 0.28);
   }
 
-  /* MODIFIER: Destacado (Ej: Servicio estrella) */
+  /* MODIFIER: Destacado */
   &--highlighted {
-    border: 2px solid $blue-00;
-    box-shadow: $shadow-primary;
+    border: 2px solid $blue-01;
+    position: relative;
   }
 
   &__image-container {
     position: relative;
     width: 100%;
-    height: 200px; // Altura fija para mantener consistencia
+    height: 200px;
+    background-color: $navy-050;
+    border-bottom: 1px solid rgba($blue-01, 0.08);
     overflow: hidden;
   }
 
@@ -33,87 +43,88 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
-    // Efecto zoom sutil al hacer hover en toda la tarjeta
     .m-card:hover & {
-      transform: scale(1.05);
+      transform: scale(1.04);
     }
 
     &--contain {
       object-fit: contain;
-      padding: $spacing-md; // Un poco de padding para que no toque los bordes
+      padding: $spacing-md;
     }
   }
 
   &__badge {
     position: absolute;
-    top: $spacing-sm;
-    right: $spacing-sm;
+    top: 12px;
+    right: 12px;
     background-color: $green-00;
     color: $blue-01;
-    padding: $spacing-2xs $spacing-sm;
-    border-radius: $radius-pill;
-
-    @include inter-body(0.75rem);
-
-    font-weight: $font-weight-bold;
-    z-index: 1;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 800;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
   }
 
   &__content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: $spacing-lg;
-    gap: $gap-sm;
+    padding: clamp(18px, 2.5vw, 24px);
+    gap: 8px;
   }
 
   &__title {
     margin: 0;
+    font-family: $poppins-font;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.28;
+    letter-spacing: -0.015em;
     color: $blue-01;
-
-    @include inter-title(1.25rem);
   }
 
   &__description {
     margin: 0;
-    color: $gray-00;
-
-    @include inter-body(1rem);
-
-    line-height: $line-height-normal;
-    flex-grow: 1; // Empuja el footer hacia abajo si el texto es corto
+    color: rgba($blue-01, 0.78);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    flex-grow: 1;
   }
 
   &__footer {
     display: flex;
-    margin: 0 auto;
-    padding: 0 $spacing-lg $spacing-lg;
+    justify-content: center;
+    width: 100%;
+    padding: 0 clamp(18px, 2.5vw, 24px) clamp(18px, 2.5vw, 24px);
     margin-top: auto;
-  }
 
-  @media (max-width: $breakpoint-tablet-portrait) {
-    &__image-container {
-      height: 180px;
-    }
-    
-    &__content {
-      padding: $spacing-md;
-    }
+    button[app-button],
+    .app-btn {
+      width: auto;
+      min-width: 160px;
+      height: 42px;
+      padding: 0 26px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 2px;
+      justify-content: center;
+      white-space: nowrap;
+      background: $blue-01;
+      color: $white-00;
+      border: 1px solid $blue-01;
+      cursor: pointer;
+      transition: background-color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
 
-    &__footer {
-      padding: 0 $spacing-md $spacing-md;
-    }
-  }
-
-  @media (max-width: $breakpoint-mobile-large) {
-    &__title {
-      @include inter-title(1.125rem);
-    }
-    
-    &__description {
-      @include inter-body(0.875rem);
+      &:hover {
+        background-color: $blue-06;
+        border-color: $blue-06;
+      }
     }
   }
 }

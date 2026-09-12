@@ -1,53 +1,72 @@
-<nav class="navbar" role="navigation" aria-label="Principal">
-  <div class="navbar__content app-container">
+<header class="navbar" role="navigation" aria-label="Principal">
+  <div class="navbar__container">
     <a class="navbar__logo" [routerLink]="'/Inicio'" aria-label="Inicio">
       <app-logo class="navbar__logo-img"></app-logo>
     </a>
 
-    <div class="navbar__mobile-actions">
-      <button app-button type="button" class="navbar__mobilebutton" [attr.aria-expanded]="isMenuOpen"
-        aria-controls="navbar-panel" [attr.aria-label]="isMenuOpen ? 'Cerrar menu' : 'Abrir menu'"
-        (click)="toggleMenu()">
-        <span class="navbar__mobileicon" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </button>
+    <!-- Desktop Menu -->
+    <nav class="navbar__menu--desktop" aria-label="Secciones publicas">
+      @for (element of menuElements; track element.route) {
+        <a [routerLink]="element.route" routerLinkActive="active" class="navbar__menu-link">{{ element.title }}</a>
+      }
+    </nav>
 
+    <!-- Actions -->
+    <div class="navbar__actions">
+      <app-locale-stub class="navbar__locale--desktop" tone="inverse"></app-locale-stub>
+      
       <button app-button type="button" class="navbar__cart" aria-label="Abrir carrito" (click)="openCartDrawer()">
-        <app-icon name="cart" size="md" customClass="navbar__cart-icon" ariaLabel="Carrito"></app-icon>
+        <app-icon name="cart" size="sm" customClass="navbar__cart-icon" ariaLabel="Carrito"></app-icon>
+        <span class="navbar__cart-label">Carrito</span>
         @if (cartItemsCount$ | async; as cartCount) {
-        @if (cartCount > 0) {
-        <span class="navbar__cart-badge" aria-label="{{ cartCount }} productos en carrito">{{ cartCount }}</span>
-        }
+          @if (cartCount > 0) {
+            <span class="navbar__cart-badge" [attr.aria-label]="cartCount + ' productos en carrito'">{{ cartCount }}</span>
+          }
         }
       </button>
-    </div>
 
-    <div id="navbar-panel" class="navbar__panel" [class.navbar__panel--open]="isMenuOpen"
-      [attr.aria-hidden]="!isMenuOpen">
-      <ul class="navbar__menu" aria-label="Secciones publicas">
-        @for (element of menuElements; track element.route) {
-        <li>
-          <a [routerLink]="element.route" routerLinkActive="active" class="navbar__menu-link" (click)="closeMenu()">{{
-            element.title }}</a>
-        </li>
-        }
-      </ul>
-
-      <div class="navbar__auth-actions">
+      <!-- Desktop Auth -->
+      <div class="navbar__auth--desktop">
         @if (!isAuthenticated) {
-        <a class="navbar__auth navbar__auth--ghost" [routerLink]="'/login'" routerLinkActive="active"
-          (click)="closeMenu()">Login</a>
-        <a class="navbar__auth" [routerLink]="'/register'" routerLinkActive="active" (click)="closeMenu()">Register</a>
+          <a app-button class="navbar__btn-login" [routerLink]="'/cuenta'">Ingresar</a>
         } @else {
-        <span class="navbar__greeting">Hola, {{ greetingName }}</span>
-        <a class="navbar__auth navbar__auth--ghost" [routerLink]="accountRoute" (click)="closeMenu()">Mi cuenta</a>
-        <button app-button class="navbar__auth navbar__auth--danger" type="button" (click)="logout()">Cerrar
-          sesion</button>
+          <a app-button class="navbar__btn-login" [routerLink]="accountRoute">Mi cuenta</a>
         }
       </div>
+
+      <!-- Mobile Hamburger -->
+      <button app-button type="button" class="navbar__burger" [attr.aria-expanded]="isMenuOpen" aria-controls="menu-movil" [attr.aria-label]="isMenuOpen ? 'Cerrar menú' : 'Abrir menú'" (click)="toggleMenu()">
+        <span class="navbar__burger-icon">
+          <span class="navbar__burger-bar" [class.navbar__burger-bar--open]="isMenuOpen"></span>
+          <span class="navbar__burger-bar" [class.navbar__burger-bar--open]="isMenuOpen"></span>
+          <span class="navbar__burger-bar" [class.navbar__burger-bar--open]="isMenuOpen"></span>
+        </span>
+      </button>
     </div>
   </div>
-</nav>
+
+  <!-- Mobile Panel Overlay -->
+  <div class="navbar__overlay" [class.navbar__overlay--open]="isMenuOpen" aria-hidden="true" (click)="closeMenu()"></div>
+
+  <!-- Mobile Panel -->
+  <div id="menu-movil" class="navbar__mobile-panel" [class.navbar__mobile-panel--open]="isMenuOpen" [attr.aria-hidden]="!isMenuOpen">
+    <nav class="navbar__mobile-nav">
+      @for (element of menuElements; track element.route) {
+        <a [routerLink]="element.route" routerLinkActive="active" class="navbar__mobile-link" (click)="closeMenu()">
+          {{ element.title }}
+          <span aria-hidden="true" class="navbar__mobile-arrow">›</span>
+        </a>
+      }
+      
+      <div class="navbar__mobile-auth-wrapper">
+        @if (!isAuthenticated) {
+          <a app-button class="navbar__mobile-btn-login" [routerLink]="'/cuenta'" (click)="closeMenu()">Ingresar o registrarme</a>
+        } @else {
+          <a app-button class="navbar__mobile-btn-login" [routerLink]="accountRoute" (click)="closeMenu()">Mi cuenta</a>
+          <button app-button class="navbar__mobile-btn-logout" type="button" (click)="logout()">Cerrar sesión</button>
+        }
+        <app-locale-stub tone="inverse" [block]="true"></app-locale-stub>
+      </div>
+    </nav>
+  </div>
+</header>

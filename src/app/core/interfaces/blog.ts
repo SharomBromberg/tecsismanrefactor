@@ -11,6 +11,8 @@ export interface BlogReactions {
   dislikes: string[];
 }
 
+export type BlogPostStatus = 'draft' | 'in-review' | 'scheduled' | 'published';
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -21,6 +23,8 @@ export interface BlogPost {
   category: string;
   createdAt: string;
   authorDisplayName: string;
+  authorUsername?: string;
+  status: BlogPostStatus;
   comments: BlogComment[];
   reactions: BlogReactions;
 }
@@ -31,6 +35,12 @@ export interface BlogPostCreateInput {
   content: string;
   coverImage: string;
   category: string;
+  status: BlogPostStatus;
+}
+
+export interface BlogPostAuthor {
+  username: string;
+  displayName: string;
 }
 
 export interface BlogCommentCreateInput {

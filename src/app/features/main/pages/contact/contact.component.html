@@ -1,76 +1,104 @@
-<section class="section app-container contact">
-  <h1>Hablemos de tu proyecto</h1>
-  <p class="muted">Comparte tu necesidad y te enviaremos una propuesta inicial.</p>
-
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="contact__form">
-    <div class="contact__grid">
-      <div class="form-group">
-        <label for="name">Nombre</label>
-        <input id="name" type="text" class="form-control" formControlName="name" [class.is-invalid]="submitted && f.name.invalid" />
-        @if (submitted && f.name.errors) {
-          <div class="invalid-feedback">
-            Ingresa un nombre valido entre 2 y 80 caracteres.
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input id="email" type="email" class="form-control" formControlName="email" [class.is-invalid]="submitted && f.email.invalid" />
-        @if (submitted && f.email.errors) {
-          <div class="invalid-feedback">
-            Ingresa un email valido.
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Telefono</label>
-        <input id="phone" type="tel" class="form-control" formControlName="phone" [class.is-invalid]="submitted && f.phone.invalid" />
-        @if (submitted && f.phone.errors) {
-          <div class="invalid-feedback">
-            Ingresa un telefono valido de 7 a 20 caracteres.
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="company">Empresa (opcional)</label>
-        <input id="company" type="text" class="form-control" formControlName="company" />
-      </div>
-
-      <div class="form-group contact__grid--full">
-        <label for="serviceType">Tipo de servicio</label>
-        <select id="serviceType" class="form-control" formControlName="serviceType" [class.is-invalid]="submitted && f.serviceType.invalid">
-          <option value="">Selecciona una opcion</option>
-          <option value="Desarrollo web">Desarrollo web</option>
-          <option value="E-commerce">E-commerce</option>
-          <option value="Redes y seguridad">Redes y seguridad</option>
-          <option value="Soporte tecnico">Soporte tecnico</option>
-        </select>
-      </div>
-
-      <div class="form-group contact__grid--full">
-        <label for="message">Mensaje</label>
-        <textarea id="message" rows="5" class="form-control" formControlName="message" [class.is-invalid]="submitted && f.message.invalid"></textarea>
-        @if (submitted && f.message.errors) {
-          <div class="invalid-feedback">
-            Describe tu necesidad entre 20 y 1200 caracteres.
-          </div>
-        }
-      </div>
+<main class="contact-page">
+  <!-- Hero Section -->
+  <section class="contact-page__hero">
+    <div class="app-container">
+      <p class="contact-page__eyebrow">Contacto</p>
+      <h1 class="contact-page__title">Cuéntanos qué necesitas.</h1>
+      <p class="contact-page__subtitle">Asesoría técnica directa, alcance del proyecto y cotización sin compromiso.</p>
     </div>
+  </section>
 
-    <div class="contact__actions">
-      <button class="btn btn-primary" type="submit" [disabled]="submitting || form.invalid">
-        {{ submitting ? 'Enviando...' : 'Enviar solicitud' }}
-      </button>
-      @if (successMessage) {
-        <span class="text-success">{{ successMessage }}</span>
-      }
-      @if (errorMsg) {
-        <span class="text-danger">{{ errorMsg }}</span>
-      }
+  <!-- Main Content -->
+  <section class="contact-page__content app-container">
+    <div class="contact-page__layout">
+
+      <!-- Left Column: Form -->
+      <div class="contact-page__form-wrapper">
+        <form [formGroup]="form" novalidate class="contact-page__form">
+          <div class="contact-page__grid">
+            <div class="contact-page__field">
+              <app-input formControlName="name" label="Nombre completo" placeholder="Ana Silva Moreno"
+                customStyle="app-input--premium" customLabelStyle="app-input__label--premium"
+                [hasError]="submitted && !!f.name.invalid"></app-input>
+            </div>
+
+            <div class="contact-page__field">
+              <app-input formControlName="company" label="Empresa (opcional)" customStyle="app-input--premium"
+                customLabelStyle="app-input__label--premium"></app-input>
+            </div>
+
+            <div class="contact-page__field">
+              <app-input formControlName="email" label="Correo" type="email" placeholder="ana@empresa.com"
+                customStyle="app-input--premium" customLabelStyle="app-input__label--premium"
+                [hasError]="submitted && !!f.email.invalid"></app-input>
+            </div>
+
+            <div class="contact-page__field">
+              <app-input formControlName="phone" label="Teléfono" type="tel" placeholder="316 320 2647"
+                customStyle="app-input--premium" customLabelStyle="app-input__label--premium"
+                [hasError]="submitted && !!f.phone.invalid"></app-input>
+            </div>
+
+            <div class="contact-page__field contact-page__grid--full">
+              <app-select formControlName="serviceType" label="Asunto (opcional)" [options]="serviceOptions"
+                customStyle="app-select--premium" customLabelStyle="app-select__label--premium"
+                [hasError]="submitted && !!f.serviceType.invalid"></app-select>
+            </div>
+
+            <div class="contact-page__field contact-page__grid--full">
+              <app-textarea formControlName="message" label="Mensaje" placeholder="Cuéntanos el alcance de tu proyecto."
+                customStyle="app-textarea--premium" customLabelStyle="app-textarea__label--premium"
+                [hasError]="submitted && !!f.message.invalid"></app-textarea>
+            </div>
+          </div>
+
+          <div class="contact-page__actions">
+            <button app-button type="button" class="app-btn app-btn--lime" (click)="sendWhatsApp()"
+              [disabled]="submitting">
+              Enviar por WhatsApp
+            </button>
+            <button app-button type="button" class="app-btn app-btn--line-navy" (click)="onSubmit()"
+              [disabled]="submitting || form.invalid">
+              {{ submitting ? 'Enviando...' : 'Enviar por correo' }}
+            </button>
+          </div>
+
+          @if (successMessage) {
+          <div class="contact-page__message contact-page__message--success">{{ successMessage }}</div>
+          }
+          @if (errorMsg) {
+          <div class="contact-page__message contact-page__message--error">{{ errorMsg }}</div>
+          }
+        </form>
+      </div>
+
+      <!-- Right Column: Info -->
+      <aside class="contact-page__sidebar">
+        <div class="contact-page__info-card">
+          <h2 class="contact-page__info-title">Otros canales</h2>
+
+          <div class="contact-page__info-group">
+            <p class="contact-page__info-label">WhatsApp</p>
+            <p class="contact-page__info-value">316 320 2647</p>
+          </div>
+
+          <div class="contact-page__info-group">
+            <p class="contact-page__info-label">Correo</p>
+            <p class="contact-page__info-value">administración&#64;tecsisman.com</p>
+          </div>
+
+          <div class="contact-page__info-group">
+            <p class="contact-page__info-label">Ubicación</p>
+            <p class="contact-page__info-value">Manizales, Colombia</p>
+          </div>
+
+          <div class="contact-page__info-group">
+            <p class="contact-page__info-label">Horario</p>
+            <p class="contact-page__info-value">Lun–Vie · 8:00 a.m. – 6:00 p.m.</p>
+          </div>
+        </div>
+      </aside>
+
     </div>
-  </form>
-</section>
+  </section>
+</main>

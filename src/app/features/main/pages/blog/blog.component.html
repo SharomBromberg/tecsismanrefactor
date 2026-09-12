@@ -1,144 +1,428 @@
 @if (postsVm$ | async; as vm) {
-  <section class="blog-page">
-    <header class="blog-page__hero app-container">
-      <div class="blog-page__hero-copy">
-        <p class="blog-page__eyebrow">Contenido real para crecer con criterio</p>
-        <h1 class="blog-page__title">Blog tecnologico con enfoque en seguridad, conversion y operacion digital</h1>
-        <p class="blog-page__subtitle">Publicaciones administrables, comentarios de usuarios autenticados y una base editorial lista para crecer junto con tu API.</p>
-      </div>
+  <main class="blog-page">
+    <!-- 1. Premium Standard Page Header -->
+    <app-page-header
+      eyebrow="Blog & Conocimiento"
+      title="Criterio técnico, seguridad y operación digital."
+      subtitle="Artículos especializados, mejores prácticas, análisis de infraestructura, ciberseguridad y novedades tecnológicas para empresas y profesionales."
+    ></app-page-header>
 
-      <div class="blog-page__hero-stats" aria-label="Resumen editorial">
-        <article class="blog-page__stat">
-          <strong>{{ vm.totalPosts }}</strong>
-          <span>publicaciones</span>
-        </article>
-        <article class="blog-page__stat">
-          <strong>{{ vm.totalComments }}</strong>
-          <span>comentarios</span>
-        </article>
-      </div>
-    </header>
+    <div class="app-container blog-content">
+      <!-- 2. Editorial Stats & Filter Toolbar -->
+      <section class="blog-toolbar" aria-label="Filtros y categorías">
+        <div class="blog-toolbar__categories">
+          @for (cat of categories; track cat) {
+            <button
+              type="button"
+              class="blog-cat-pill"
+              [class.blog-cat-pill--active]="selectedCategory() === cat"
+              (click)="setCategory(cat)"
+            >
+              {{ cat }}
+            </button>
+          }
+        </div>
 
-    <section class="blog-page__featured app-container" aria-label="Post destacado">
-      @if (vm.featuredPost; as featuredPost) {
-        <article class="blog-page__featured-card">
-          <img class="blog-page__featured-image" [src]="featuredPost.coverImage" [alt]="featuredPost.title" loading="lazy" />
-          <div class="blog-page__featured-body">
-            <span class="blog-page__tag">{{ featuredPost.category }}</span>
-            <h2>{{ featuredPost.title }}</h2>
-            <p>{{ featuredPost.excerpt }}</p>
-            <div class="blog-page__meta">
-              <span>{{ featuredPost.authorDisplayName }}</span>
-              <span>{{ featuredPost.createdAt | date:'mediumDate' }}</span>
-            </div>
-            <div class="blog-page__reactions">
-              <button
-                type="button"
-                class="blog-page__reaction-btn"
-                [class.blog-page__reaction-btn--active]="featuredPost.activeReaction === 'like'"
-                (click)="react(featuredPost, 'like')"
-              >
-                Like · {{ featuredPost.likesCount }}
-              </button>
-              <button
-                type="button"
-                class="blog-page__reaction-btn"
-                [class.blog-page__reaction-btn--active]="featuredPost.activeReaction === 'dislike'"
-                (click)="react(featuredPost, 'dislike')"
-              >
-                Dislike · {{ featuredPost.dislikesCount }}
-              </button>
-            </div>
-            <div class="blog-page__content-block">
-              <p>{{ featuredPost.content }}</p>
-            </div>
-            <section class="blog-page__comments" aria-label="Comentarios del post destacado">
-              <h3>Preguntas y comentarios</h3>
+        <div class="blog-toolbar__search">
+          <svg class="blog-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            type="text"
+            class="blog-search-input"
+            placeholder="Buscar artículos por tema o palabra clave..."
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+          />
+          @if (searchQuery()) {
+            <button type="button" class="blog-search-clear" (click)="searchQuery.set('')" aria-label="Borrar búsqueda">
+              ✕
+            </button>
+          }
+        </div>
+      </section>
 
-              @if (featuredPost.comments.length === 0) {
-                <p class="blog-page__empty">Todavia no hay comentarios en esta publicacion.</p>
-              } @else {
-                <div class="blog-page__comment-list">
-                  @for (comment of featuredPost.comments; track comment.id) {
-                    <article class="blog-page__comment">
-                      <div class="blog-page__comment-header">
-                        <strong>{{ comment.authorDisplayName }}</strong>
-                        <span>{{ comment.createdAt | date:'mediumDate' }}</span>
+      <!-- 3. Featured Article (Hero Spotlight) -->
+      @if (selectedCategory() === 'Todos' && !searchQuery() && vm.featuredPost; as featured) {
+        <section class="blog-featured-section" aria-label="Artículo destacado">
+          <div class="blog-section-header">
+            <span class="blog-section-header__tag">DESTACADO EDITORIAL</span>
+            <h2 class="blog-section-header__title">Publicación recomendada</h2>
+          </div>
+
+          <article class="blog-featured-card">
+            <div class="blog-featured-card__media">
+              <img
+                [src]="featured.coverImage"
+                [alt]="featured.title"
+                loading="lazy"
+                class="blog-featured-card__img"
+              />
+              <span class="blog-featured-card__badge">{{ featured.category }}</span>
+            </div>
+
+            <div class="blog-featured-card__body">
+              <div class="blog-featured-card__meta-top">
+                <span class="blog-meta-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="blog-meta-icon">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  {{ featured.createdAt | date:'mediumDate' }}
+                </span>
+                <span class="blog-meta-dot">·</span>
+                <span class="blog-meta-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="blog-meta-icon">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  {{ featured.readTimeMinutes }} min de lectura
+                </span>
+              </div>
+
+              <h2 class="blog-featured-card__title">{{ featured.title }}</h2>
+              <p class="blog-featured-card__excerpt">{{ featured.excerpt }}</p>
+
+              <div class="blog-featured-card__author-row">
+                <div class="blog-author-avatar">
+                  {{ featured.authorDisplayName.charAt(0) | uppercase }}
+                </div>
+                <div class="blog-author-info">
+                  <strong class="blog-author-info__name">{{ featured.authorDisplayName }}</strong>
+                  <span class="blog-author-info__role">Redacción Técnica Tecsisman</span>
+                </div>
+              </div>
+
+              <div class="blog-featured-card__footer">
+                <div class="blog-reactions-group">
+                  <button
+                    type="button"
+                    class="blog-reaction-pill"
+                    [class.blog-reaction-pill--active]="featured.activeReaction === 'like'"
+                    (click)="react(featured, 'like')"
+                    title="Me gusta"
+                  >
+                    <span class="blog-reaction-pill__icon">👍</span>
+                    <span class="blog-reaction-pill__count">{{ featured.likesCount }}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="blog-reaction-pill"
+                    [class.blog-reaction-pill--active]="featured.activeReaction === 'dislike'"
+                    (click)="react(featured, 'dislike')"
+                    title="No me gusta"
+                  >
+                    <span class="blog-reaction-pill__icon">👎</span>
+                    <span class="blog-reaction-pill__count">{{ featured.dislikesCount }}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="blog-comments-pill"
+                    (click)="togglePostExpand(featured.id)"
+                    title="Ver comentarios"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="blog-comments-icon">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>{{ featured.comments.length }} comentarios</span>
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  class="blog-read-btn"
+                  (click)="togglePostExpand(featured.id)"
+                >
+                  <span>{{ expandedPostId() === featured.id ? 'Ocultar artículo' : 'Leer artículo completo' }}</span>
+                  <span class="blog-read-btn__arrow">{{ expandedPostId() === featured.id ? '▲' : '→' }}</span>
+                </button>
+              </div>
+
+              <!-- Expanded Reader & Comments Thread -->
+              @if (expandedPostId() === featured.id) {
+                <div class="blog-expanded-view">
+                  <div class="blog-expanded-view__content">
+                    <h3 class="blog-expanded-view__heading">Contenido del artículo</h3>
+                    <p class="blog-expanded-view__text">{{ featured.content }}</p>
+                  </div>
+
+                  <!-- Comments section -->
+                  <div class="blog-comments-thread">
+                    <h4 class="blog-comments-thread__title">
+                      Comentarios ({{ featured.comments.length }})
+                    </h4>
+
+                    @if (featured.comments.length === 0) {
+                      <div class="blog-comments-empty">
+                        <p>Sé el primero en dejar una pregunta o comentario técnico sobre este artículo.</p>
                       </div>
-                      <p>{{ comment.message }}</p>
-                    </article>
-                  }
+                    } @else {
+                      <div class="blog-comments-list">
+                        @for (comment of featured.comments; track comment.id) {
+                          <div class="blog-comment-bubble">
+                            <div class="blog-comment-bubble__avatar">
+                              {{ comment.authorDisplayName.charAt(0) | uppercase }}
+                            </div>
+                            <div class="blog-comment-bubble__content">
+                              <div class="blog-comment-bubble__header">
+                                <strong>{{ comment.authorDisplayName }}</strong>
+                                <span>{{ comment.createdAt | date:'mediumDate' }}</span>
+                              </div>
+                              <p class="blog-comment-bubble__msg">{{ comment.message }}</p>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    }
+
+                    <!-- Comment form -->
+                    @if (isAuthenticated) {
+                      <form
+                        class="blog-comment-form"
+                        [formGroup]="getCommentForm(featured.id)"
+                        (ngSubmit)="submitComment(featured)"
+                      >
+                        <label [for]="'comment-' + featured.id" class="blog-comment-form__label">
+                          Deja tu comentario o pregunta técnica
+                        </label>
+                        <textarea
+                          [id]="'comment-' + featured.id"
+                          formControlName="message"
+                          rows="3"
+                          class="blog-comment-form__input"
+                          placeholder="Escribe tu análisis, inquietud o aporte aquí..."
+                        ></textarea>
+
+                        @if (getCommentForm(featured.id).controls['message'].touched && getCommentForm(featured.id).controls['message'].invalid) {
+                          <span class="blog-comment-form__error">Tu comentario debe tener entre 8 y 600 caracteres.</span>
+                        }
+
+                        @if (feedbackByPostId[featured.id]) {
+                          <span class="blog-comment-form__feedback">{{ feedbackByPostId[featured.id] }}</span>
+                        }
+
+                        <button app-button type="submit" class="app-btn app-btn--navy-solid blog-comment-form__submit">
+                          Publicar comentario
+                        </button>
+                      </form>
+                    } @else {
+                      <div class="blog-login-callout">
+                        <div class="blog-login-callout__text">
+                          <strong>¿Quieres participar en la discusión técnica?</strong>
+                          <p>Inicia sesión con tu cuenta para comentar y hacer preguntas directamente al equipo de ingeniería.</p>
+                        </div>
+                        <a app-button routerLink="/login" [queryParams]="{ redirectTo: '/Blog' }" class="app-btn app-btn--line-navy">
+                          Iniciar sesión
+                        </a>
+                      </div>
+                    }
+                  </div>
                 </div>
               }
+            </div>
+          </article>
+        </section>
+      }
 
-              @if (isAuthenticated) {
-                <form class="blog-page__comment-form" [formGroup]="getCommentForm(featuredPost.id)" (ngSubmit)="submitComment(featuredPost)">
-                  <label [for]="'comment-' + featuredPost.id">Participa en la conversación</label>
-                  <textarea [id]="'comment-' + featuredPost.id" formControlName="message" rows="4" placeholder="Comparte tu duda o comentario"></textarea>
-                  @if (getCommentForm(featuredPost.id).controls['message'].touched && getCommentForm(featuredPost.id).controls['message'].invalid) {
-                    <small class="blog-page__form-error">Escribe entre 8 y 600 caracteres.</small>
-                  }
-                  @if (feedbackByPostId[featuredPost.id]) {
-                    <small class="blog-page__form-feedback">{{ feedbackByPostId[featuredPost.id] }}</small>
-                  }
-                  <button app-button type="submit" class="app-btn app-btn--gradient">Publicar comentario</button>
-                </form>
-              } @else {
-                <div class="blog-page__login-callout">
-                  <p>Inicia sesion o registrate para comentar y hacer preguntas en el blog.</p>
-                  <a app-button routerLink="/login" class="app-btn app-btn--inverse">Iniciar sesion</a>
-                </div>
+      <!-- 4. Articles Grid Section -->
+      @if (filterPosts(vm.allPosts); as filteredList) {
+        <section class="blog-grid-section" aria-label="Listado de publicaciones">
+          <div class="blog-section-header">
+            <div>
+              <span class="blog-section-header__tag">CATÁLOGO EDITORIAL</span>
+              <h2 class="blog-section-header__title">
+                @if (selectedCategory() === 'Todos' && !searchQuery()) {
+                  Todas las publicaciones
+                } @else if (searchQuery()) {
+                  Resultados para: "{{ searchQuery() }}"
+                } @else {
+                  Publicaciones de {{ selectedCategory() }}
+                }
+              </h2>
+            </div>
+            <span class="blog-section-header__count">{{ filteredList.length }} {{ filteredList.length === 1 ? 'artículo' : 'artículos' }}</span>
+          </div>
+
+          @if (filteredList.length === 0) {
+            <div class="blog-empty-state">
+              <div class="blog-empty-state__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="36" height="36">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </div>
+              <h3 class="blog-empty-state__title">No se encontraron artículos</h3>
+              <p class="blog-empty-state__desc">
+                No hay publicaciones que coincidan con la categoría o término buscado. Prueba con otra palabra clave o selecciona otra categoría.
+              </p>
+              <button type="button" class="app-btn app-btn--navy-solid blog-empty-state__btn" (click)="setCategory('Todos'); searchQuery.set('')">
+                Ver todos los artículos
+              </button>
+            </div>
+          } @else {
+            <div class="blog-cards-grid">
+              @for (post of filteredList; track trackByPostId($index, post)) {
+                <article class="blog-card">
+                  <div class="blog-card__media">
+                    <img [src]="post.coverImage" [alt]="post.title" loading="lazy" class="blog-card__img" />
+                    <span class="blog-card__badge">{{ post.category }}</span>
+                  </div>
+
+                  <div class="blog-card__body">
+                    <div class="blog-card__meta">
+                      <span class="blog-meta-item">
+                        {{ post.createdAt | date:'mediumDate' }}
+                      </span>
+                      <span class="blog-meta-dot">·</span>
+                      <span class="blog-meta-item">
+                        {{ post.readTimeMinutes }} min
+                      </span>
+                    </div>
+
+                    <h3 class="blog-card__title">{{ post.title }}</h3>
+                    <p class="blog-card__excerpt">{{ post.excerpt }}</p>
+
+                    <div class="blog-card__author">
+                      <div class="blog-card__avatar">
+                        {{ post.authorDisplayName.charAt(0) | uppercase }}
+                      </div>
+                      <span class="blog-card__author-name">{{ post.authorDisplayName }}</span>
+                    </div>
+
+                    <div class="blog-card__footer">
+                      <div class="blog-reactions-group">
+                        <button
+                          type="button"
+                          class="blog-reaction-pill"
+                          [class.blog-reaction-pill--active]="post.activeReaction === 'like'"
+                          (click)="react(post, 'like')"
+                          title="Me gusta"
+                        >
+                          <span>👍</span>
+                          <span>{{ post.likesCount }}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          class="blog-reaction-pill"
+                          [class.blog-reaction-pill--active]="post.activeReaction === 'dislike'"
+                          (click)="react(post, 'dislike')"
+                          title="No me gusta"
+                        >
+                          <span>👎</span>
+                          <span>{{ post.dislikesCount }}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          class="blog-comments-pill"
+                          (click)="togglePostExpand(post.id)"
+                          title="Ver comentarios"
+                        >
+                          <span>💬</span>
+                          <span>{{ post.comments.length }}</span>
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        class="blog-card__expand-btn"
+                        (click)="togglePostExpand(post.id)"
+                      >
+                        {{ expandedPostId() === post.id ? 'Cerrar' : 'Leer' }}
+                      </button>
+                    </div>
+
+                    <!-- Expanded Article Reader in Card -->
+                    @if (expandedPostId() === post.id) {
+                      <div class="blog-card__expanded">
+                        <div class="blog-card__content-full">
+                          <p>{{ post.content }}</p>
+                        </div>
+
+                        <div class="blog-card__comments-wrap">
+                          <h4 class="blog-card__comments-title">Comentarios ({{ post.comments.length }})</h4>
+
+                          @if (post.comments.length === 0) {
+                            <p class="blog-card__comments-empty">Aún no hay comentarios.</p>
+                          } @else {
+                            <div class="blog-card__comments-list">
+                              @for (c of post.comments; track c.id) {
+                                <div class="blog-card__comment-item">
+                                  <strong>{{ c.authorDisplayName }}:</strong>
+                                  <span>{{ c.message }}</span>
+                                </div>
+                              }
+                            </div>
+                          }
+
+                          @if (isAuthenticated) {
+                            <form
+                              class="blog-card__comment-form"
+                              [formGroup]="getCommentForm(post.id)"
+                              (ngSubmit)="submitComment(post)"
+                            >
+                              <textarea
+                                formControlName="message"
+                                rows="2"
+                                class="blog-card__comment-input"
+                                placeholder="Escribe tu comentario..."
+                              ></textarea>
+                              @if (feedbackByPostId[post.id]) {
+                                <span class="blog-card__comment-msg">{{ feedbackByPostId[post.id] }}</span>
+                              }
+                              <button app-button type="submit" class="app-btn app-btn--navy-solid blog-card__comment-submit">
+                                Enviar
+                              </button>
+                            </form>
+                          } @else {
+                            <a routerLink="/login" [queryParams]="{ redirectTo: '/Blog' }" class="blog-card__login-link">
+                              Inicia sesión para comentar →
+                            </a>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </article>
               }
-            </section>
-          </div>
-        </article>
+            </div>
+          }
+        </section>
       }
-    </section>
 
-    <section class="blog-page__grid app-container" aria-label="Mas publicaciones">
-      @for (post of vm.posts; track trackByPostId($index, post)) {
-        <article class="blog-card">
-          <img class="blog-card__image" [src]="post.coverImage" [alt]="post.title" loading="lazy" />
-          <div class="blog-card__body">
-            <span class="blog-card__tag">{{ post.category }}</span>
-            <h3 class="blog-card__title">{{ post.title }}</h3>
-            <p class="blog-card__excerpt">{{ post.excerpt }}</p>
-            <p class="blog-card__content">{{ post.content }}</p>
-            <div class="blog-card__meta">
-              <span>{{ post.authorDisplayName }}</span>
-              <span>{{ post.createdAt | date:'mediumDate' }}</span>
-            </div>
-            <div class="blog-card__reactions">
-              <button
-                type="button"
-                class="blog-card__reaction-btn"
-                [class.blog-card__reaction-btn--active]="post.activeReaction === 'like'"
-                (click)="react(post, 'like')"
-              >
-                Like · {{ post.likesCount }}
-              </button>
-              <button
-                type="button"
-                class="blog-card__reaction-btn"
-                [class.blog-card__reaction-btn--active]="post.activeReaction === 'dislike'"
-                (click)="react(post, 'dislike')"
-              >
-                Dislike · {{ post.dislikesCount }}
-              </button>
-            </div>
-            <div class="blog-card__comments">
-              <strong>{{ post.comments.length }}</strong>
-              <span>comentarios</span>
-            </div>
-            @if (isAuthenticated) {
-              <form class="blog-card__comment-form" [formGroup]="getCommentForm(post.id)" (ngSubmit)="submitComment(post)">
-                <textarea formControlName="message" rows="3" placeholder="Haz una pregunta o comparte tu opinion"></textarea>
-                <button app-button type="submit" class="app-btn app-btn--dark-blue">Comentar</button>
-              </form>
-            }
+      <!-- 5. Technical Digest / Community CTA Banner -->
+      <section class="blog-cta-banner">
+        <div class="blog-cta-banner__content">
+          <span class="blog-cta-banner__eyebrow">COMUNIDAD & ASESORÍA</span>
+          <h2 class="blog-cta-banner__title">¿Requieres asesoría técnica para tu infraestructura?</h2>
+          <p class="blog-cta-banner__desc">
+            Nuestro equipo de ingenieros diseña, implementa y asegura plataformas de misión crítica. Conéctate con nosotros para evaluar tus requerimientos.
+          </p>
+          <div class="blog-cta-banner__actions">
+            <a
+              app-button
+              href="https://wa.me/573163202647?text=Hola%20Tecsisman,%20le%C3%AD%20su%20blog%20y%20quiero%20asesor%C3%ADa%20t%C3%A9cnica"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="app-btn blog-cta-banner__wa-btn"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.9C17.18 3.03 14.69 2 12.04 2ZM12.05 20.15C10.57 20.15 9.12 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.68 12.05 3.68C14.25 3.68 16.32 4.54 17.88 6.1C19.44 7.66 20.3 9.72 20.3 11.92C20.3 16.46 16.6 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.24 14.87 12.99 14.75C12.74 14.62 11.94 14.36 10.99 13.51C10.25 12.85 9.75 12.04 9.6 11.79C9.46 11.54 9.59 11.41 9.71 11.28C9.82 11.17 9.96 10.99 10.08 10.84C10.21 10.7 10.25 10.59 10.33 10.43C10.42 10.26 10.37 10.12 10.31 10C10.25 9.87 9.75 8.65 9.54 8.15C9.34 7.66 9.14 7.73 8.98 7.72C8.83 7.71 8.66 7.71 8.49 7.71C8.33 7.71 8.06 7.77 7.83 8.02C7.6 8.27 6.96 8.87 6.96 10.09C6.96 11.31 7.85 12.49 7.97 12.65C8.1 12.82 9.71 15.3 12.18 16.36C12.77 16.61 13.22 16.76 13.58 16.88C14.17 17.07 14.71 17.04 15.13 16.98C15.6 16.91 16.57 16.39 16.78 15.81C16.98 15.23 16.98 14.73 16.92 14.63C16.86 14.52 16.82 14.51 16.57 14.39Z"/>
+              </svg>
+              <span>Consultar por WhatsApp</span>
+            </a>
+            <a app-button routerLink="/servicios" class="app-btn app-btn--line-navy blog-cta-banner__sec-btn">
+              Ver catálogo de servicios
+            </a>
           </div>
-        </article>
-      }
-    </section>
-  </section>
+        </div>
+      </section>
+    </div>
+  </main>
 }

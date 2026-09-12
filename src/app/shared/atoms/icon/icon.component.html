@@ -85,6 +85,34 @@
         <path d="M12 2.8L14.78 8.42L20.98 9.32L16.49 13.69L17.55 19.86L12 16.94L6.45 19.86L7.51 13.69L3.02 9.32L9.22 8.42L12 2.8Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
       </svg>
     }
+    @case ('edit') {
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <path d="M16.5 3.5L20.5 7.5L8.3 19.7H4.3V15.7L16.5 3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 6L18 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    }
+    @case ('trash') {
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <path d="M4.5 7H19.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        <path d="M9 7V4.8C9 4.36 9.36 4 9.8 4H14.2C14.64 4 15 4.36 15 4.8V7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6.5 7L7.3 19.2C7.35 19.98 8 20.6 8.78 20.6H15.22C16 20.6 16.65 19.98 16.7 19.2L17.5 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10.2 11V16.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M13.8 11V16.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    }
+    @case ('plus') {
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <path d="M12 4.5V19.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M4.5 12H19.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    }
+    @case ('alert') {
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <path d="M12 3.8L21.3 19.8C21.7 20.5 21.2 21.4 20.4 21.4H3.6C2.8 21.4 2.3 20.5 2.7 19.8L12 3.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M12 9.8V13.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        <circle cx="12" cy="17.1" r="1.05" fill="currentColor"/>
+      </svg>
+    }
     @default {
       <ng-content></ng-content>
     }

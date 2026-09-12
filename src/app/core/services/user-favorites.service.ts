@@ -81,6 +81,25 @@ export class UserFavoritesService {
     return updated.includes(productId);
   }
 
+  remove(username: string, productId: string): void {
+    const normalizedUsername = this.normalizeUsername(username);
+    if (!normalizedUsername || !productId) {
+      return;
+    }
+
+    const favorites = this.favoritesSubject.value;
+    const current = favorites[normalizedUsername] ?? [];
+    const updated = current.filter((id) => id !== productId);
+
+    const next = {
+      ...favorites,
+      [normalizedUsername]: updated,
+    };
+
+    this.writeFavorites(next);
+    this.favoritesSubject.next(next);
+  }
+
   private readFavorites(): FavoriteMap {
     const raw = localStorage.getItem(this.storageKey);
     if (!raw) {

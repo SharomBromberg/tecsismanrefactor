@@ -1,43 +1,20 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
+:host {
+  display: block;
+}
+
 .hero {
-  position: relative;
-  padding-top: $spacing-5xl;
   background: $blue-01;
   color: $white-00;
-  overflow: hidden;
-  isolation: isolate;
-
-  &__bg {
-    position: absolute;
-    inset: 0;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transform: scale(1.03);
-    }
-  }
-
-  &__overlay {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 12% 18%, rgba($green-02, 0.24), transparent 42%),
-      radial-gradient(circle at 88% 8%, rgba($blue-00, 0.28), transparent 36%),
-      linear-gradient(120deg, rgba($blue-01, 0.92) 0%, rgba($blue-01, 0.82) 52%, rgb(9 74 117 / 90%) 100%);
-  }
+  padding: clamp(48px, 7vw, 72px) 0 0;
 
   &__content {
-    position: relative;
-    z-index: 1;
-    padding: $spacing-2xl 0;
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
     gap: $gap-lg;
-    align-items: center;
+    align-items: end;
+    padding-bottom: clamp(48px, 7vw, 80px);
   }
 
   &__copy {
@@ -45,137 +22,78 @@
     gap: $spacing-md;
     align-content: start;
     min-width: 0;
-    animation: hero-fade-up 520ms ease-out both;
   }
 
   &__eyebrow {
     margin: 0;
     text-transform: uppercase;
-    letter-spacing: 0.09em;
-    font-weight: 700;
-    color: rgba($white-00, 0.88);
+    letter-spacing: 0.18em;
+    color: $green-00;
 
-    @include inter-subtitle(0.82rem);
+    @include inter-body(0.72rem);
+
+    font-weight: 700;
   }
 
   &__title {
     margin: 0;
+    max-width: 15ch;
 
-    @include poppins-cta(clamp(2rem, 4.2vw, 3rem));
+    @include poppins-cta(clamp(2.1rem, 6vw, 4rem));
 
-    line-height: 1.12;
-    max-width: 19ch;
-    text-wrap: balance;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
   }
 
   &__subtitle {
     margin: 0;
-    color: rgba($white-00, 0.92);
-    max-width: 56ch;
+    max-width: 52ch;
+    color: rgba($white-00, 0.78);
 
     @include inter-subtitle(1rem);
 
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   &__actions {
     display: flex;
+    flex-wrap: wrap;
     gap: $spacing-sm;
-    flex-wrap: nowrap;
-    animation: hero-fade-up 620ms ease-out both;
+    margin-top: $spacing-2xs;
 
     a[app-button] {
-      min-height: 2.9rem;
+      height: 3.375rem;
+      padding-inline: $spacing-xl;
+      font-size: 1rem;
       font-weight: 700;
-      padding-inline: $spacing-md;
+      border-radius: $radius-2xs;
     }
   }
 
-  &__cta-main {
-    color: $blue-01;
-  }
-
-  &__cta-secondary {
-    border-color: rgba($white-00, 0.55);
-  }
-
-  &__stats {
+  &__facts {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: $spacing-xs;
-    padding: $spacing-sm;
-    border-radius: $radius-md;
-    background: rgba($blue-01, 0.28);
-    border: 1px solid rgba($white-00, 0.26);
-    backdrop-filter: blur(3px);
+    border-top: 1px solid rgba($white-00, 0.14);
   }
 
-  &__stat {
-    border-radius: $radius-sm;
-    padding: $spacing-sm $spacing-xs;
+  &__fact {
     display: grid;
-    justify-items: center;
-    align-content: center;
     gap: $spacing-2xs;
-    text-align: center;
-    background: rgba($white-00, 0.08);
-    border: 1px solid rgba($white-00, 0.18);
-
-    app-icon {
-      opacity: 0.95;
-    }
+    padding: $spacing-md 0;
+    border-bottom: 1px solid rgba($white-00, 0.14);
   }
 
-  &__stat-value {
-    margin: 0;
-    font-weight: 800;
-    color: $white-00;
+  &__fact-value {
+    @include poppins-cta(clamp(1.35rem, 2.6vw, 1.7rem));
 
-    @include poppins-cta(1.35rem);
-
-    line-height: 1;
+    letter-spacing: -0.03em;
+    color: $green-00;
   }
 
-  &__stat-label {
-    margin: 0;
-    color: rgba($white-00, 0.88);
-
-    @include inter-body(0.74rem);
-
-    letter-spacing: 0.01em;
-  }
-
-  &__services {
-    display: grid;
-    gap: $spacing-sm;
-    animation: hero-fade-up 760ms ease-out both;
-  }
-
-  &__service-card {
-    padding: $spacing-md;
-    border-radius: $radius-md;
-    background: linear-gradient(160deg, rgba($white-00, 0.2) 0%, rgba($white-00, 0.1) 100%);
-    border: 1px solid rgba($white-00, 0.24);
-    box-shadow: 0 12px 28px rgba($blue-01, 0.22);
-    backdrop-filter: blur(3px);
-  }
-
-  &__service-title {
-    margin: 0;
-
-    @include poppins-cta(1.05rem);
-
-    line-height: 1.25;
-    color: $white-00;
-  }
-
-  &__service-text {
-    margin: $spacing-xs 0 0;
-
-    @include inter-body(0.9rem);
+  &__fact-label {
+    @include inter-body(0.92rem);
 
     line-height: 1.45;
-    color: rgba($white-00, 0.9);
+    color: rgba($white-00, 0.72);
   }
 }
 
@@ -183,119 +101,23 @@
   .hero {
     &__content {
       grid-template-columns: 1fr;
-      padding: $spacing-xl 0 $spacing-lg;
+      align-items: start;
       gap: $gap-md;
-    }
-
-    &__title {
-      @include poppins-cta(2.3rem);
-
-      max-width: 20ch;
-    }
-
-    &__services {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-}
-
-@include respond-to('tablet-portrait', 'down') {
-  .hero {
-    &__content {
-      padding: $spacing-lg 0 $spacing-md;
-      width: min(100%, calc(100% - #{$spacing-md * 2}));
-      margin-inline: auto;
-    }
-
-    &__title {
-      @include poppins-cta(2rem);
-    }
-
-    &__subtitle {
-      @include inter-subtitle(0.98rem);
-    }
-
-    &__actions {
-      flex-wrap: wrap;
-
-      a[app-button] {
-        flex: 1 1 100%;
-        justify-content: center;
-      }
-    }
-
-    &__stats {
-      padding: $spacing-xs;
-    }
-
-    &__stat {
-      padding: $spacing-xs $spacing-2xs;
-    }
-
-    &__services {
-      grid-template-columns: 1fr;
+      padding-bottom: $spacing-2xl;
     }
   }
 }
 
 @include respond-to('mobile-large', 'down') {
   .hero {
-    &__content {
-      width: min(100%, calc(100% - #{$spacing-sm * 2}));
+    padding-top: $spacing-2xl;
+
+    &__actions {
+      flex-direction: column;
+
+      a[app-button] {
+        justify-content: center;
+      }
     }
-
-    &__title {
-      @include poppins-cta(1.7rem);
-
-      max-width: 18ch;
-    }
-
-    &__eyebrow {
-      @include inter-subtitle(0.75rem);
-    }
-
-    &__subtitle {
-      @include inter-subtitle(0.92rem);
-    }
-
-    &__stats {
-      gap: $spacing-2xs;
-    }
-
-    &__stat {
-      min-height: $size-2xl;
-    }
-
-    &__stat-value {
-      @include poppins-cta(1.1rem);
-    }
-
-    &__stat-label {
-      @include inter-body(0.68rem);
-    }
-
-    &__service-card {
-      padding: $spacing-sm;
-    }
-  }
-}
-
-@keyframes hero-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__copy,
-  .hero__actions,
-  .hero__services {
-    animation: none;
   }
 }

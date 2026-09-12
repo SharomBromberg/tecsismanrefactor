@@ -1,99 +1,43 @@
 @use '../../../../../assets/tokens/index.scss' as *;
+@use '../../admin-shared.scss' as *;
 
 .admin-card {
-  background: $white-00;
-  border: 1px solid rgba($blue-01, 0.12);
-  border-radius: $radius-lg;
-  padding: $spacing-md;
-  box-shadow: 0 12px 28px rgba($blue-01, 0.08);
+  @include admin-card;
 
   &__title {
-    margin: 0 0 0.9rem;
-    color: $admin-text-strong;
-    font-size: 1.08rem;
+    @include admin-card-title;
   }
 }
 
 .admin-form {
-  display: grid;
-  gap: 0.65rem;
+  @include admin-form;
 
   &--grid {
     grid-template-columns: 1fr;
   }
 
   &__label {
-    color: $admin-text-medium;
-    font-weight: 700;
-    font-size: 0.82rem;
+    @include admin-form-label;
   }
 
   &__control {
-    width: 100%;
-    border: 1px solid $admin-border;
-    border-radius: $radius-sm;
-    color: $admin-text-medium;
-    padding: $spacing-xs;
-    background: $white-00;
-  }
+    @include admin-form-control;
 
-  &__control:invalid {
-    border-color: $admin-danger-soft;
-  }
-
-  &__control:focus {
-    outline: 2px solid rgba($admin-accent, 0.25);
-    border-color: $admin-accent;
-  }
-
-  &__control--textarea {
-    min-height: 5.5rem;
-    resize: vertical;
-  }
-
-  &__submit {
-    border: 0;
-    border-radius: $radius-md;
-    background: linear-gradient(90deg, $admin-accent 0%, $admin-accent-strong 100%);
-    color: $white-00;
-    font-weight: 700;
-    padding: $spacing-xs $spacing-sm;
-    cursor: pointer;
-
-    &:disabled {
-      opacity: 0.62;
-      cursor: not-allowed;
+    &--textarea {
+      @include admin-form-textarea;
     }
   }
 
   &__error {
-    color: $admin-danger;
-    font-size: 0.8rem;
-    font-weight: 600;
+    @include admin-form-error;
   }
 
   &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-xs;
-  }
-
-  &__secondary {
-    border: 1px solid rgba($blue-01, 0.14);
-    border-radius: $radius-md;
-    background: rgba($white-01, 0.9);
-    color: $blue-01;
-    font-weight: 700;
-    padding: $spacing-xs $spacing-sm;
-    cursor: pointer;
+    @include admin-form-actions;
   }
 
   &__checkbox {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: $admin-text-medium;
-    font-weight: 600;
+    @include admin-checkbox-row;
   }
 
   &__span-2 {
@@ -110,7 +54,7 @@
 
 .admin-image-card {
   border: 1px solid $admin-border;
-  border-radius: $radius-md;
+  border-radius: $radius-xs;
   background: $admin-surface-mist;
   overflow: hidden;
 
@@ -136,15 +80,8 @@
     white-space: nowrap;
   }
 
-  button {
-    border: 0;
-    border-radius: $radius-sm;
-    background: $admin-danger-bg;
-    color: $admin-danger-strong;
-    font-weight: 700;
-    font-size: 0.72rem;
-    padding: $spacing-2xs $spacing-xs;
-    cursor: pointer;
+  &__remove {
+    @include admin-icon-button;
   }
 }
 

@@ -1,0 +1,82 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.app-textarea {
+    outline: none;
+    width: 100%;
+    resize: vertical;
+    font-family: $inter-font;
+    font-size: 1rem;
+    font-weight: 400;
+
+    &--light-00 {
+        border: 1px solid $gray-02;
+        background: $white-00;
+        border-radius: $radius-md;
+        padding: $spacing-sm $spacing-md;
+        color: $gray-00;
+
+        &::placeholder {
+            color: $gray-03;
+        }
+
+        &:focus {
+            border: 1px solid $green-02;
+            background: $white-02;
+        }
+    }
+
+    &--premium {
+        border: 1px solid rgba($blue-01, 0.12);
+        background: $white-00;
+        border-radius: 2px;
+        padding: 12px 14px;
+        color: $blue-01;
+        min-height: 96px;
+
+        &::placeholder {
+            color: rgba($blue-01, 0.45);
+        }
+
+        &:focus {
+            border: 1px solid $blue-01;
+        }
+    }
+
+    &--error {
+        border-color: $form-error !important;
+        outline: none;
+
+        &:focus {
+            border-color: $form-error;
+            box-shadow: 0 0 0 2px rgba($form-error, 0.15);
+        }
+    }
+
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    &__label {
+        font-family: $inter-font;
+        font-size: 1rem;
+        font-weight: 400;
+        color: $white-00;
+        margin-bottom: $spacing-xs;
+        display: block;
+
+        &--light {
+            color: $gray-00;
+            font-weight: 700;
+        }
+
+        &--premium {
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: rgba($blue-01, 0.74);
+        }
+    }
+}

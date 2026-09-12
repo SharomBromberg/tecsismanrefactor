@@ -2,15 +2,12 @@
   <div class="app-container featured-products__container">
     <div class="featured-products__header">
       <div class="featured-products__copy">
-        <p class="featured-products__eyebrow">Productos destacados</p>
-        <h2 id="featured-products-title" class="featured-products__title">Selecciones clave para acelerar tu infraestructura</h2>
-        <p class="featured-products__subtitle">
-          Descubre soluciones destacadas por el equipo y agrega al carrito los productos mas relevantes sin salir del inicio.
-        </p>
+        <p class="featured-products__eyebrow">Tienda</p>
+        <h2 id="featured-products-title" class="featured-products__title">Equipos y servicios listos para pedir</h2>
       </div>
 
-      <a app-button class="app-btn app-btn--dark-blue featured-products__catalog-link" routerLink="/Productos">
-        Ver catalogo completo
+      <a app-button class="app-btn app-btn--line-navy featured-products__catalog-link" routerLink="/Productos">
+        Todo el catálogo
       </a>
     </div>
 
@@ -38,6 +35,7 @@
                 <app-product-card
                   [product]="item.product"
                   [categoryName]="item.categoryName"
+                  variant="grid"
                   (addToCart)="addToCart($event)"
                 />
               </div>

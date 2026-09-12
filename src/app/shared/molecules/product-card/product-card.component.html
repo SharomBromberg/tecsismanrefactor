@@ -1,42 +1,72 @@
 <article class="product-card" [class.product-card--grid]="variant === 'grid'">
   <div class="product-card__media">
-    @if (product.images.length > 0) {
-    <img class="product-card__image" [src]="product.images[0]" [alt]="product.name" loading="lazy" />
-    } @else {
-    <div class="product-card__placeholder" aria-hidden="true"></div>
-    }
+    <a class="product-card__media-link" [routerLink]="['/Productos', product._id]" aria-label="Ver detalle del producto">
+      @if (product.images.length > 0) {
+        <img class="product-card__image" [src]="product.images[0]" [alt]="product.name" loading="lazy" />
+      } @else {
+        <div class="product-card__placeholder" aria-hidden="true">
+          <span>Foto próximamente</span>
+        </div>
+      }
+    </a>
 
     <span class="product-card__badge">{{ categoryName }}</span>
 
     @if (showFavorite) {
-    <button type="button" class="product-card__favorite" [class.product-card__favorite--active]="isFavorite"
-      (click)="onFavoriteToggle($event)" [attr.aria-label]="isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'">
-      <app-icon [name]="isFavorite ? 'heart-filled' : 'heart'" size="sm"></app-icon>
-    </button>
+      <button
+        type="button"
+        class="product-card__favorite"
+        [class.product-card__favorite--active]="isFavorite"
+        (click)="onFavoriteToggle($event)"
+        [attr.aria-label]="isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+      >
+        <app-icon [name]="isFavorite ? 'heart-filled' : 'heart'" size="sm"></app-icon>
+      </button>
     }
   </div>
 
   <div class="product-card__body">
     <div class="product-card__copy">
-      <h3 class="product-card__title">{{ product.name }}</h3>
+      <h3 class="product-card__title">
+        <a [routerLink]="['/Productos', product._id]" class="product-card__title-link">{{ product.name }}</a>
+      </h3>
+
+      <div class="product-card__rating-row">
+        <app-rating-stars
+          [rating]="Math.round(product.rating || 5)"
+          [readOnly]="true"
+          size="sm"
+        ></app-rating-stars>
+        <span class="product-card__rating-meta">
+          {{ (product.rating || 5).toFixed(1) }} ({{ product.comments.length || 1 }})
+        </span>
+      </div>
+
       <p class="product-card__description">{{ product.description }}</p>
     </div>
 
     <div class="product-card__footer">
       <div class="product-card__price-block">
-        <span class="product-card__price-label">Desde</span>
-        <strong class="product-card__price">{{ product.price | currency:'COP':'symbol-narrow':'1.0-0':'es-CO'
-          }}</strong>
+        <p class="product-card__price">
+          {{ product.price | currency:'COP':'symbol':'1.0-0' }}
+        </p>
       </div>
 
       <div class="product-card__actions">
-        <a app-button class="app-btn app-btn--white-outline product-card__action"
-          [routerLink]="['/Productos', product._id]">
-          Ver detalle
+        <a
+          app-button
+          class="app-btn app-btn--line-navy product-card__action"
+          [routerLink]="['/Productos', product._id]"
+        >
+          Detalle
         </a>
-        <button app-button type="button"
-          class="app-btn app-btn--gradient product-card__action product-card__action--primary" (click)="onAddToCart()">
-          Agregar al carrito
+        <button
+          app-button
+          type="button"
+          class="app-btn app-btn--navy-solid product-card__action"
+          (click)="onAddToCart()"
+        >
+          Agregar
         </button>
       </div>
     </div>

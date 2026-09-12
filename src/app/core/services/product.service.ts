@@ -126,6 +126,7 @@ export class ProductService {
       featured: product.featured || false,
       tags: product.tags || [],
       filenames: product.filenames || [],
+      attributes: product.attributes || undefined,
     };
     this.productsSubject.next([...this.productsSubject.value, newProduct]);
     return of(undefined);

@@ -1,16 +1,29 @@
 <section class="booking" aria-labelledby="booking-title">
-  <div class="app-container booking__container">
-    <h2 id="booking-title" class="booking__title">Agenda tu Cita</h2>
+  <div class="app-container">
+    <div class="booking__intro">
+      <p class="booking__eyebrow">Cómo se compra</p>
+      <h2 id="booking-title" class="booking__title">Te asesoramos y cerramos por WhatsApp.</h2>
+    </div>
 
-    <div class="booking__grid" role="list">
-      @for (service of appointmentServices(); track service.id) {
-        <div class="booking__item" role="listitem">
-          <app-card
-            [data]="service"
-            (actionClick)="handleBookingClick(service.id)">
-          </app-card>
-        </div>
+    <div class="booking__steps">
+      @for (step of steps; track step.number) {
+        <article class="booking__step">
+          <span class="booking__step-number">{{ step.number }}</span>
+          <h3 class="booking__step-title">{{ step.title }}</h3>
+          <p class="booking__step-text">{{ step.description }}</p>
+        </article>
       }
     </div>
+  </div>
+</section>
+
+<section class="booking-cta" aria-label="Solicitar cotización">
+  <div class="app-container booking-cta__inner">
+    <div class="booking-cta__copy">
+      <h2 class="booking-cta__title">¿Tienes un proyecto en mente?</h2>
+      <p class="booking-cta__text">Cuéntanos qué necesitas y te respondemos con alcance y presupuesto.</p>
+    </div>
+
+    <a app-button routerLink="/Contacto" class="app-btn app-btn--lime booking-cta__action">Solicitar cotización</a>
   </div>
 </section>

@@ -1,38 +1,39 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { CardComponent } from '../../molecules/card/card.component';
-import { CardData } from '../../../core/interfaces/card-data.interface';
-import { statusClassButton } from '../../../core/interfaces/buttoninterface';
-import { buildWhatsAppUrl } from '@core/constants/contact.constants';
-import {
-  BOOKING_SERVICE_IDS,
-  SERVICES_FLAT_CARDS,
-} from '@core/constants/services-catalog.constants';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ButtonComponent } from '../../atoms/button/button.component';
+
+interface PurchaseStep {
+  number: string;
+  title: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [RouterLink, ButtonComponent],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.scss'],
 })
 export class BookingComponent {
-  appointmentServices = signal<CardData[]>(
-    SERVICES_FLAT_CARDS.filter(
-      (service) =>
-        typeof service.id === 'string' &&
-        BOOKING_SERVICE_IDS.includes(service.id),
-    ).map((service) => ({
-      ...service,
-      buttonText: 'Programar',
-      buttonVariant: statusClassButton.BUTTON_DARK_BLUE,
-    })),
-  );
-
-  handleBookingClick(serviceId: string | number): void {
-    const whatsappUrl = buildWhatsAppUrl(
-      `Hola, quiero agendar el servicio ${serviceId.toString()}.`,
-    );
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-  }
+  readonly steps: PurchaseStep[] = [
+    {
+      number: '01',
+      title: 'Arma tu pedido',
+      description:
+        'Agrega equipos y servicios al carrito. El precio en pesos está siempre a la vista.',
+    },
+    {
+      number: '02',
+      title: 'Déjanos tus datos',
+      description:
+        'Completas envío y contacto en un formulario corto. Toma menos de un minuto.',
+    },
+    {
+      number: '03',
+      title: 'Un asesor te acompaña',
+      description:
+        'Te escribimos por WhatsApp para confirmar disponibilidad, entrega y la forma de pago que prefieras.',
+    },
+  ];
 }

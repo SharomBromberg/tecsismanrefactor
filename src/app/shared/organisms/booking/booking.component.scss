@@ -1,44 +1,139 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
+:host {
+  display: block;
+}
+
 .booking {
   background: $white-00;
   padding: $spacing-2xl 0;
 
-  &__container {
+  &__intro {
     display: grid;
-    gap: $spacing-xl;
+    gap: $spacing-sm;
+    max-width: 30rem;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba($blue-01, 0.74);
+
+    @include inter-body(0.72rem);
+
+    font-weight: 700;
   }
 
   &__title {
     margin: 0;
     color: $blue-01;
-    text-align: center;
 
-    @include poppins-cta(2rem);
+    @include poppins-cta(clamp(1.65rem, 4vw, 2.5rem));
+
+    line-height: 1.1;
+    letter-spacing: -0.03em;
   }
 
-  &__grid {
+  &__steps {
     display: grid;
     grid-template-columns: 1fr;
-    gap: $spacing-lg;
+    gap: 1px;
+    background: rgba($blue-01, 0.12);
+    border: 1px solid rgba($blue-01, 0.12);
   }
 
-  &__item {
-    display: flex;
+  &__step {
+    background: $white-00;
+    padding: $spacing-lg;
+    display: grid;
+    gap: $spacing-sm;
+    align-content: start;
+  }
+
+  &__step-number {
+    @include poppins-cta(0.9rem);
+
+    color: rgba($blue-01, 0.66);
+  }
+
+  &__step-title {
+    margin: 0;
+    color: $blue-01;
+
+    @include poppins-cta(1.05rem);
+  }
+
+  &__step-text {
+    margin: 0;
+    color: rgba($blue-01, 0.78);
+
+    @include inter-body(1rem);
+
+    line-height: 1.65;
   }
 }
 
-@include respond-to('tablet-wide') {
-  .booking {
-    padding: $spacing-4xl 0;
+.booking-cta {
+  background: $blue-01;
+  color: $white-00;
+  padding: $spacing-2xl 0;
 
-    &__title {
-      @include poppins-cta(2.25rem);
-    }
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: $gap-lg;
+  }
 
-    &__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: $spacing-xl;
-    }
+  &__copy {
+    display: grid;
+    gap: $spacing-sm;
+    min-width: 0;
+  }
+
+  &__title {
+    margin: 0;
+    max-width: 18ch;
+    color: $white-00;
+
+    @include poppins-cta(clamp(1.65rem, 4vw, 2.5rem));
+
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  &__text {
+    margin: 0;
+    max-width: 48ch;
+    color: rgba($white-00, 0.74);
+
+    @include inter-subtitle(1.05rem);
+
+    line-height: 1.6;
+  }
+
+  &__action {
+    height: 3.375rem;
+    padding-inline: $spacing-xl;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: $radius-2xs;
+    flex-shrink: 0;
+  }
+}
+
+@include respond-to('tablet-portrait') {
+  .booking__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@include respond-to('mobile-large', 'down') {
+  .booking-cta__action {
+    width: 100%;
+    justify-content: center;
   }
 }

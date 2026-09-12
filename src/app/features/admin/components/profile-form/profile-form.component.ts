@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
+import { InputComponent } from '@shared/atoms/input/input.component';
 import { UserRole } from '@core/interfaces/auth';
 
 @Component({
   selector: 'app-admin-profile-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, InputComponent],
   templateUrl: './profile-form.component.html',
   styleUrls: ['./profile-form.component.scss'],
 })
@@ -14,8 +16,6 @@ export class ProfileFormComponent implements OnChanges {
   @Input() username = '';
   @Input() displayName = '';
   @Input() role: UserRole = 'admin';
-  @Input() profileFeedback = '';
-  @Input() passwordFeedback = '';
 
   @Output() saveDisplayName = new EventEmitter<string>();
   @Output() changePassword = new EventEmitter<{

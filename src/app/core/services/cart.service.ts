@@ -17,19 +17,12 @@ export class CartService {
   readonly items$ = this.itemsSubject.asObservable();
 
   readonly summary$ = this.items$.pipe(
-    map((items) => {
-      const subtotal = items.reduce(
-        (acc, item) => acc + item.product.price * item.quantity,
-        0,
-      );
-      const tax = subtotal * this.taxRate;
-      const total = subtotal + tax;
-      const itemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
-
-      const summary: CartSummary = { subtotal, tax, total, itemsCount };
-      return summary;
-    }),
+    map((items) => this.calculateSummary(items)),
   );
+
+  getSummaryForItems(items: CartItem[]): CartSummary {
+    return this.calculateSummary(items);
+  }
 
   addToCart(product: Product, quantity = 1): void {
     if (quantity <= 0) {
@@ -96,5 +89,17 @@ export class CartService {
   private writeItems(items: CartItem[]): void {
     this.itemsSubject.next(items);
     localStorage.setItem(this.storageKey, JSON.stringify(items));
+  }
+
+  private calculateSummary(items: CartItem[]): CartSummary {
+    const subtotal = items.reduce(
+      (acc, item) => acc + item.product.price * item.quantity,
+      0,
+    );
+    const tax = subtotal * this.taxRate;
+    const total = subtotal + tax;
+    const itemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
+
+    return { subtotal, tax, total, itemsCount };
   }
 }

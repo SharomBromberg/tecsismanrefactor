@@ -8,6 +8,9 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
+import { IconComponent } from '@shared/atoms/icon/icon.component';
+import { InputComponent } from '@shared/atoms/input/input.component';
 import {
   AdminProductCreatePayload,
   AdminProductUpdatePayload,
@@ -19,7 +22,13 @@ import { Product } from '@core/interfaces/product';
 @Component({
   selector: 'app-admin-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonComponent,
+    IconComponent,
+    InputComponent,
+  ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss'],
 })
@@ -41,6 +50,8 @@ export class ProductFormComponent implements OnChanges {
     stock: [1, [Validators.required, Validators.min(0)]],
     imageUrl: [''],
     tags: [''],
+    sizes: [''],
+    colors: [''],
     featured: [false],
   });
 
@@ -71,6 +82,16 @@ export class ProductFormComponent implements OnChanges {
       .map((tag) => tag.trim())
       .filter(Boolean);
 
+    const parsedSizes = (raw.sizes ?? '')
+      .split(',')
+      .map((size) => size.trim())
+      .filter(Boolean);
+
+    const parsedColors = (raw.colors ?? '')
+      .split(',')
+      .map((color) => color.trim())
+      .filter(Boolean);
+
     const payload: AdminProductCreatePayload = {
       name: raw.name ?? '',
       description: raw.description ?? '',
@@ -81,6 +102,10 @@ export class ProductFormComponent implements OnChanges {
       filenames: this.selectedLocalImages.map((image) => image.name),
       featured: !!raw.featured,
       tags: parsedTags,
+      attributes: {
+        sizes: parsedSizes.length ? parsedSizes : undefined,
+        colors: parsedColors.length ? parsedColors : undefined,
+      },
     };
 
     if (this.product) {
@@ -196,6 +221,8 @@ export class ProductFormComponent implements OnChanges {
       stock: this.product.stock ?? 0,
       imageUrl: this.product.images.join(', '),
       tags: (this.product.tags ?? []).join(', '),
+      sizes: (this.product.attributes?.sizes ?? []).join(', '),
+      colors: (this.product.attributes?.colors ?? []).join(', '),
       featured: !!this.product.featured,
     });
   }
@@ -210,6 +237,8 @@ export class ProductFormComponent implements OnChanges {
       stock: 1,
       imageUrl: '',
       tags: '',
+      sizes: '',
+      colors: '',
       featured: false,
     });
   }

@@ -6,15 +6,15 @@ import { MenuElement } from '../../core/interfaces/menu';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/atoms/button/button.component';
 import { IconComponent } from '../../shared/atoms/icon/icon.component';
-
+import { LogoComponent } from '../../shared/atoms/logo/logo.component';
+import { LocaleStubComponent } from '../../shared/molecules/locale-stub/locale-stub.component';
 import { CartService } from '../../core/services/cart.service';
 import { CartDrawerService } from '../../core/services/cart-drawer.service';
-import { LogoComponent } from '@shared/atoms/logo/logo.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, ButtonComponent, IconComponent, LogoComponent],
+  imports: [CommonModule, RouterModule, ButtonComponent, IconComponent, LogoComponent, LocaleStubComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
@@ -53,37 +53,33 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   get accountRoute(): string {
-    const role = this.authService.currentSession()?.role;
-    return role === 'admin' ? '/admin' : '/user';
+    return this.authService.isStaff() ? '/admin' : '/cuenta';
   }
 
   get greetingName(): string {
-    const fullName =
-      this.authService.currentSession()?.displayName?.trim() || '';
-    if (!fullName) {
-      return 'Usuario';
-    }
-
-    return fullName.split(' ')[0];
+    const fullName = this.authService.currentSession()?.displayName?.trim() || '';
+    return fullName ? fullName.split(' ')[0] : 'Usuario';
   }
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    if (this.isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
 
   closeMenu(): void {
-    this.isMenuOpen = false;
+    if (this.isMenuOpen) {
+      this.isMenuOpen = false;
+      document.body.style.overflow = '';
+    }
   }
 
   openCartDrawer(): void {
     this.closeMenu();
     this.cartDrawerService.open();
-  }
-
-  onViewportResize(): void {
-    if (window.innerWidth > 768 && this.isMenuOpen) {
-      this.closeMenu();
-    }
   }
 
   logout(): void {

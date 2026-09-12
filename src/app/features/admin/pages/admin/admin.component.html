@@ -1,166 +1,908 @@
 @if (vm$ | async; as vm) {
 <section class="admin-page">
-  <header class="admin-header">
-    <div class="admin-header__identity">
-      <span class="admin-header__avatar">{{ initialLetter }}</span>
-      <div>
-        <p class="admin-header__eyebrow">Panel administrativo</p>
-        <h1 class="admin-header__title">Hola, {{ adminDisplayName }}</h1>
+  <!-- 1. Top Enterprise Command Bar -->
+  <header class="admin-topbar">
+    <div class="admin-topbar__inner">
+      <div class="admin-topbar__brand">
+        <div class="admin-topbar__logo">
+          <span class="admin-topbar__logo-icon">⚡</span>
+          <span class="admin-topbar__logo-text">TECSISMAN</span>
+        </div>
+        <span class="admin-topbar__divider">/</span>
+        <span class="admin-topbar__env">Panel de Control</span>
+        <span class="admin-live-badge">
+          <span class="admin-live-badge__dot"></span>
+          <span>Tienda activa</span>
+        </span>
+      </div>
+
+      <div class="admin-topbar__actions">
+        <a routerLink="/Productos" target="_blank" class="admin-topbar__store-link" title="Abrir tienda en nueva pestaña">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span>Ver tienda</span>
+        </a>
+
+        <div class="admin-user-pill">
+          <span class="admin-user-pill__avatar">{{ initialLetter }}</span>
+          <div class="admin-user-pill__info">
+            <strong class="admin-user-pill__name">{{ adminDisplayName }}</strong>
+            <span class="admin-user-pill__role">{{ roleLabel(adminRole) }}</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="admin-topbar__logout"
+          (click)="logoutAdmin()"
+          title="Cerrar sesión de administración"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Salir</span>
+        </button>
       </div>
     </div>
 
-    <div class="admin-header__actions">
-      <div class="admin-kpi">
-        <span class="admin-kpi__label">Categorias</span>
-        <strong class="admin-kpi__value">{{ vm.topLevelCategoryCount }}</strong>
+    <!-- Navigation Tabs Toolbar -->
+    <div class="admin-tabs-bar">
+      <div class="admin-tabs-bar__inner">
+        <nav class="admin-nav-tabs" aria-label="Secciones del panel">
+          @for (tab of availableTabs; track tab.id) {
+            <button
+              type="button"
+              class="admin-nav-tab"
+              [class.admin-nav-tab--active]="activeTab === tab.id"
+              (click)="setActiveTab(tab.id)"
+            >
+              @if (tab.id === 'resumen') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              } @else if (tab.id === 'productos') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+              } @else if (tab.id === 'pedidos') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              } @else if (tab.id === 'blog') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              } @else if (tab.id === 'usuarios') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              } @else {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              }
+              <span>{{ tab.label }}</span>
+
+              @if (tab.id === 'productos') {
+                <span class="admin-nav-tab__badge">{{ vm.productCount }}</span>
+              } @else if (tab.id === 'pedidos' && vm.orders.length > 0) {
+                <span class="admin-nav-tab__badge admin-nav-tab__badge--highlight">{{ vm.pendingOrdersCount }}</span>
+              } @else if (tab.id === 'blog') {
+                <span class="admin-nav-tab__badge">{{ vm.postCount }}</span>
+              }
+            </button>
+          }
+        </nav>
       </div>
-      <div class="admin-kpi">
-        <span class="admin-kpi__label">Subcategorias</span>
-        <strong class="admin-kpi__value">{{ vm.subcategoryCount }}</strong>
-      </div>
-      <div class="admin-kpi">
-        <span class="admin-kpi__label">Productos</span>
-        <strong class="admin-kpi__value">{{ vm.productCount }}</strong>
-      </div>
-      <div class="admin-kpi">
-        <span class="admin-kpi__label">Destacados</span>
-        <strong class="admin-kpi__value">{{ vm.featuredCount }}</strong>
-      </div>
-      <button class="admin-header__logout" type="button" (click)="logoutAdmin()">
-        Cerrar sesión
-      </button>
     </div>
   </header>
 
-  <section class="admin-summary-grid">
-    <div class="admin-kpi admin-kpi--wide">
-      <span class="admin-kpi__label">Posts</span>
-      <strong class="admin-kpi__value">{{ vm.postCount }}</strong>
-    </div>
-    <div class="admin-kpi admin-kpi--wide">
-      <span class="admin-kpi__label">Comentarios</span>
-      <strong class="admin-kpi__value">{{ vm.commentCount }}</strong>
-    </div>
-    <div class="admin-kpi admin-kpi--wide">
-      <span class="admin-kpi__label">Reacciones</span>
-      <strong class="admin-kpi__value">{{ vm.reactionCount }}</strong>
-    </div>
-    <div class="admin-kpi admin-kpi--wide">
-      <span class="admin-kpi__label">Items catalogo</span>
-      <strong class="admin-kpi__value">{{ vm.categoryCount + vm.productCount }}</strong>
-    </div>
-  </section>
+  <!-- 2. Main Dashboard Body -->
+  <main class="admin-body">
+    <div class="app-container">
 
-  <div class="admin-grid admin-grid--top">
-    <app-admin-profile-form
-      [username]="adminUsername"
-      [displayName]="adminDisplayName"
-      [role]="adminRole"
-      [profileFeedback]="profileFeedback"
-      [passwordFeedback]="passwordFeedback"
-      (saveDisplayName)="saveDisplayName($event)"
-      (changePassword)="changePassword($event)"
-    />
+      <!-- =========================================
+           TAB 1: RESUMEN (SHOPIFY-STYLE DASHBOARD)
+           ========================================= -->
+      @if (activeTab === 'resumen') {
+        <div class="admin-tab-view admin-tab-view--dashboard">
+          <!-- KPI Metrics Row -->
+          <section class="admin-kpis-grid" aria-label="Métricas clave">
+            <article class="admin-kpi-card">
+              <div class="admin-kpi-card__header">
+                <span class="admin-kpi-card__label">Facturación estimada</span>
+                <span class="admin-kpi-card__icon admin-kpi-card__icon--green">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                  </svg>
+                </span>
+              </div>
+              <strong class="admin-kpi-card__value">{{ vm.totalRevenue | currency:'COP':'symbol':'1.0-0' }}</strong>
+              <div class="admin-kpi-card__footer">
+                <span class="admin-trend-badge admin-trend-badge--up">● Activo</span>
+                <span class="admin-kpi-card__sub">{{ vm.completedOrdersCount }} pedido(s) despachados</span>
+              </div>
+            </article>
 
-    <app-admin-category-form
-      [categories]="vm.categories"
-      (createCategory)="createCategory($event)"
-      (updateCategory)="updateCategory($event)"
-      (deleteCategory)="removeCategory($event)"
-    />
-  </div>
+            <article class="admin-kpi-card">
+              <div class="admin-kpi-card__header">
+                <span class="admin-kpi-card__label">Catálogo de productos</span>
+                <span class="admin-kpi-card__icon admin-kpi-card__icon--blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </span>
+              </div>
+              <strong class="admin-kpi-card__value">{{ vm.productCount }} equipos</strong>
+              <div class="admin-kpi-card__footer">
+                <span class="admin-kpi-card__sub">{{ vm.categoryCount }} categorías · {{ vm.featuredCount }} destacados</span>
+              </div>
+            </article>
 
-  <div class="admin-grid admin-grid--forms">
-    <app-admin-product-form
-      [categories]="vm.categories"
-      [product]="selectedProduct"
-      (createProduct)="createProduct($event)"
-      (updateProduct)="updateProduct($event)"
-      (cancelEdit)="cancelProductEdit()"
-    />
+            <article class="admin-kpi-card">
+              <div class="admin-kpi-card__header">
+                <span class="admin-kpi-card__label">Pedidos por gestionar</span>
+                <span class="admin-kpi-card__icon admin-kpi-card__icon--amber">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </span>
+              </div>
+              <strong class="admin-kpi-card__value">{{ vm.pendingOrdersCount }} pendientes</strong>
+              <div class="admin-kpi-card__footer">
+                <span class="admin-kpi-card__sub">{{ vm.orders.length }} pedidos totales en sistema</span>
+              </div>
+            </article>
 
-    <app-admin-blog-post-form
-      [post]="selectedPost"
-      [feedback]="blogFeedback"
-      (createPost)="createBlogPost($event)"
-      (updatePost)="updateBlogPost($event)"
-      (cancelEdit)="cancelBlogEdit()"
-    />
-  </div>
+            <article class="admin-kpi-card">
+              <div class="admin-kpi-card__header">
+                <span class="admin-kpi-card__label">Salud de inventario</span>
+                <span class="admin-kpi-card__icon" [class.admin-kpi-card__icon--red]="vm.outOfStockCount > 0" [class.admin-kpi-card__icon--green]="vm.outOfStockCount === 0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                </span>
+              </div>
+              <strong class="admin-kpi-card__value">
+                @if (vm.outOfStockCount === 0 && vm.lowStockCount === 0) {
+                  100% Óptimo
+                } @else {
+                  {{ vm.outOfStockCount }} agotado(s)
+                }
+              </strong>
+              <div class="admin-kpi-card__footer">
+                <span class="admin-kpi-card__sub">{{ vm.lowStockCount }} con stock crítico</span>
+              </div>
+            </article>
+          </section>
 
-  <article class="admin-card admin-card--table">
-    <h2 class="admin-card__title">Productos creados</h2>
-    <div class="admin-table-wrap">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Destacado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of vm.productsWithCategory; track trackByProductId($index, item)) {
-            <tr>
-              <td>{{ item.product.name }}</td>
-              <td>{{ item.categoryName }}</td>
-              <td>{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</td>
-              <td>{{ item.product.stock ?? 0 }}</td>
-              <td>
-                <label class="admin-table__featured-toggle">
-                  <input
-                    type="checkbox"
-                    [checked]="!!item.product.featured"
-                    (change)="setProductFeatured(item.product, $any($event.target).checked)"
-                  />
-                  <span>{{ item.product.featured ? 'Activo' : 'Oculto' }}</span>
-                </label>
-              </td>
-              <td>
-                <button type="button" class="admin-table__action" (click)="editProduct(item.product)">Editar</button>
-                <button type="button" (click)="removeProduct(item.product)">Eliminar</button>
-              </td>
-            </tr>
+          <!-- Quick Action Shortcuts -->
+          <section class="admin-quick-actions" aria-label="Accesos directos">
+            <h2 class="admin-section-subtitle">Acciones rápidas</h2>
+            <div class="admin-quick-grid">
+              @if (canManageProducts) {
+                <button type="button" class="admin-quick-card" (click)="setActiveTab('productos'); openNewProductForm()">
+                  <div class="admin-quick-card__icon">📦</div>
+                  <div class="admin-quick-card__text">
+                    <strong>Crear nuevo producto</strong>
+                    <span>Agregar equipo al catálogo con fotos, precio y stock</span>
+                  </div>
+                  <span class="admin-quick-card__arrow">→</span>
+                </button>
+
+                <button type="button" class="admin-quick-card" (click)="setActiveTab('productos'); isCategoryModalOpen = true">
+                  <div class="admin-quick-card__icon">🏷️</div>
+                  <div class="admin-quick-card__text">
+                    <strong>Gestionar categorías</strong>
+                    <span>Organizar taxonomía y subcategorías de la tienda</span>
+                  </div>
+                  <span class="admin-quick-card__arrow">→</span>
+                </button>
+              }
+
+              @if (canManageOrders) {
+                <button type="button" class="admin-quick-card" (click)="setActiveTab('pedidos')">
+                  <div class="admin-quick-card__icon">🛍️</div>
+                  <div class="admin-quick-card__text">
+                    <strong>Revisar pedidos</strong>
+                    <span>Alistar despachos y coordinar con clientes por WhatsApp</span>
+                  </div>
+                  <span class="admin-quick-card__arrow">→</span>
+                </button>
+              }
+
+              @if (canManageBlog) {
+                <button type="button" class="admin-quick-card" (click)="setActiveTab('blog'); openNewBlogForm()">
+                  <div class="admin-quick-card__icon">📝</div>
+                  <div class="admin-quick-card__text">
+                    <strong>Escribir en el Blog</strong>
+                    <span>Publicar guía técnica, análisis o caso de éxito</span>
+                  </div>
+                  <span class="admin-quick-card__arrow">→</span>
+                </button>
+              }
+            </div>
+          </section>
+
+          <!-- Split Dashboard Row: Recent Orders & Stock Alerts -->
+          <div class="admin-dashboard-split">
+            <!-- Left: Recent Orders -->
+            <section class="admin-card admin-dashboard-split__col">
+              <div class="admin-card__header-row">
+                <div>
+                  <h2 class="admin-card__title">Últimos pedidos recibidos</h2>
+                  <p class="admin-card__subtitle">Monitorea y cambia el estado de entrega en tiempo real</p>
+                </div>
+                <button type="button" class="admin-text-btn" (click)="setActiveTab('pedidos')">
+                  Ver todos ({{ vm.orders.length }}) →
+                </button>
+              </div>
+
+              @if (vm.orders.length === 0) {
+                <div class="admin-card__empty">
+                  <p>Aún no hay pedidos registrados en la plataforma.</p>
+                </div>
+              } @else {
+                <div class="admin-recent-orders-list">
+                  @for (order of vm.orders.slice(0, 5); track trackByOrderId($index, order)) {
+                    <div class="admin-recent-order-item">
+                      <div class="admin-recent-order-item__left">
+                        <strong class="admin-recent-order-item__id">#{{ order.id }}</strong>
+                        <span class="admin-recent-order-item__customer">{{ order.customerDisplayName }}</span>
+                        <span class="admin-recent-order-item__items">{{ order.items.length }} ítem(s)</span>
+                      </div>
+
+                      <div class="admin-recent-order-item__right">
+                        <strong class="admin-recent-order-item__total">{{ order.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+                        <span
+                          class="admin-badge"
+                          [class.admin-badge--warning]="order.status === 'pending'"
+                          [class.admin-badge--info]="order.status === 'shipped'"
+                          [class.admin-badge--success]="order.status === 'delivered' || order.status === 'paid'"
+                        >
+                          {{ orderStatusLabel(order.status) }}
+                        </span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </section>
+
+            <!-- Right: Stock Alerts -->
+            <section class="admin-card admin-dashboard-split__side">
+              <div class="admin-card__header-row">
+                <h2 class="admin-card__title">Alertas de stock</h2>
+              </div>
+
+              @if (vm.outOfStockCount === 0 && vm.lowStockCount === 0) {
+                <div class="admin-stock-ok">
+                  <div class="admin-stock-ok__icon">✓</div>
+                  <strong>Inventario al 100%</strong>
+                  <p>Todos los productos cuentan con existencias suficientes en bodega.</p>
+                </div>
+              } @else {
+                <div class="admin-stock-alerts-list">
+                  @for (item of vm.productsWithCategory; track trackByProductId($index, item)) {
+                    @if (stockState(item.product) !== 'in-stock') {
+                      <div class="admin-stock-alert-item">
+                        <div class="admin-stock-alert-item__thumb">
+                          <img [src]="item.product.images[0] || 'assets/pictures/placeholder.png'" [alt]="item.product.name" />
+                        </div>
+                        <div class="admin-stock-alert-item__info">
+                          <strong>{{ item.product.name }}</strong>
+                          <span>{{ item.categoryName }}</span>
+                        </div>
+                        <span
+                          class="admin-badge"
+                          [class.admin-badge--danger]="stockState(item.product) === 'out-of-stock'"
+                          [class.admin-badge--warning]="stockState(item.product) === 'low-stock'"
+                        >
+                          {{ item.product.stock }} unid.
+                        </span>
+                      </div>
+                    }
+                  }
+                </div>
+              }
+            </section>
+          </div>
+        </div>
+      }
+
+      <!-- =========================================
+           TAB 2: PRODUCTOS & CATÁLOGO
+           ========================================= -->
+      @if (activeTab === 'productos' && canManageProducts) {
+        <div class="admin-tab-view">
+          <!-- Toolbar with search, filters and Action Buttons -->
+          <div class="admin-view-toolbar">
+            <div class="admin-view-toolbar__filters">
+              <div class="admin-search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-search-icon">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Buscar producto por nombre o SKU..."
+                  class="admin-search-input"
+                  [(ngModel)]="productSearchTerm"
+                />
+              </div>
+
+              <select class="admin-select" [(ngModel)]="productCategoryFilter">
+                <option value="all">Todas las categorías</option>
+                @for (c of vm.categories; track c._id) {
+                  <option [value]="c._id">{{ c.name }}</option>
+                }
+              </select>
+
+              <select class="admin-select" [(ngModel)]="productStockFilter">
+                <option value="all">Todos los estados de stock</option>
+                <option value="in-stock">En stock (5+)</option>
+                <option value="low-stock">Bajo stock (1-4)</option>
+                <option value="out-of-stock">Agotado (0)</option>
+              </select>
+            </div>
+
+            <div class="admin-view-toolbar__actions">
+              <button
+                type="button"
+                class="app-btn app-btn--line-navy"
+                (click)="isCategoryModalOpen = !isCategoryModalOpen"
+              >
+                🏷️ Categorías ({{ vm.categoryCount }})
+              </button>
+
+              <button
+                type="button"
+                class="app-btn app-btn--navy-solid"
+                (click)="openNewProductForm()"
+              >
+                + Crear producto
+              </button>
+            </div>
+          </div>
+
+          <!-- Slide-over / Inline Product Form -->
+          @if (isProductFormOpen) {
+            <div class="admin-form-panel">
+              <div class="admin-form-panel__header">
+                <h3>{{ selectedProduct ? 'Editar producto: ' + selectedProduct.name : 'Crear nuevo producto para el catálogo' }}</h3>
+                <button type="button" class="admin-form-panel__close" (click)="cancelProductEdit()">✕</button>
+              </div>
+              <app-admin-product-form
+                [categories]="vm.categories"
+                [product]="selectedProduct"
+                (createProduct)="createProduct($event)"
+                (updateProduct)="updateProduct($event)"
+                (cancelEdit)="cancelProductEdit()"
+              />
+            </div>
           }
-        </tbody>
-      </table>
-    </div>
-  </article>
 
-  <article class="admin-card admin-card--table">
-    <h2 class="admin-card__title">Publicaciones del blog</h2>
-    <div class="admin-table-wrap">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Categoría</th>
-            <th>Autor</th>
-            <th>Comentarios</th>
-            <th>Reacciones</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (post of vm.posts; track trackByPostId($index, post)) {
-            <tr>
-              <td>{{ post.title }}</td>
-              <td>{{ post.category }}</td>
-              <td>{{ post.authorDisplayName }}</td>
-              <td>{{ post.comments.length }}</td>
-              <td>{{ post.reactions.likes.length + post.reactions.dislikes.length }}</td>
-              <td>
-                <button type="button" class="admin-table__action" (click)="editBlogPost(post)">Editar</button>
-                <button type="button" (click)="removeBlogPost(post)">Eliminar</button>
-              </td>
-            </tr>
+          <!-- Categories Manager Panel -->
+          @if (isCategoryModalOpen) {
+            <div class="admin-form-panel">
+              <div class="admin-form-panel__header">
+                <h3>Gestión de Categorías y Subcategorías</h3>
+                <button type="button" class="admin-form-panel__close" (click)="isCategoryModalOpen = false">✕</button>
+              </div>
+              <app-admin-category-form
+                [categories]="vm.categories"
+                (createCategory)="createCategory($event)"
+                (updateCategory)="updateCategory($event)"
+                (deleteCategory)="removeCategory($event)"
+              />
+            </div>
           }
-        </tbody>
-      </table>
+
+          <!-- Products High-Density Data Table -->
+          @if (filterProductsList(vm.productsWithCategory); as productList) {
+            <article class="admin-card admin-card--table">
+              <div class="admin-table-header">
+                <h2 class="admin-table-header__title">Catálogo de productos</h2>
+                <span class="admin-table-header__count">{{ productList.length }} productos listados</span>
+              </div>
+
+              <div class="admin-table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th>Categoría</th>
+                      <th>Precio (COP)</th>
+                      <th>Inventario</th>
+                      <th>Destacado</th>
+                      <th class="admin-table__th-actions">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of productList; track trackByProductId($index, item)) {
+                      <tr>
+                        <td>
+                          <div class="admin-table__product-cell">
+                            <span class="admin-table__thumb">
+                              <img [src]="item.product.images[0] || 'assets/pictures/placeholder.png'" [alt]="item.product.name" />
+                            </span>
+                            <div class="admin-table__product-meta">
+                              <strong class="admin-table__product-name">{{ item.product.name }}</strong>
+                              <span class="admin-table__product-sku">ID: {{ item.product._id }}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="admin-pill-tag">{{ item.categoryName }}</span>
+                        </td>
+                        <td>
+                          <strong class="admin-table__price">{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</strong>
+                        </td>
+                        <td>
+                          <span
+                            class="admin-badge"
+                            [class.admin-badge--danger]="stockState(item.product) === 'out-of-stock'"
+                            [class.admin-badge--warning]="stockState(item.product) === 'low-stock'"
+                            [class.admin-badge--success]="stockState(item.product) === 'in-stock'"
+                          >
+                            {{ stockStateLabel(stockState(item.product)) }} ({{ item.product.stock ?? 0 }})
+                          </span>
+                        </td>
+                        <td>
+                          <label class="admin-toggle-switch" title="Mostrar en vitrina destacada">
+                            <input
+                              type="checkbox"
+                              [checked]="!!item.product.featured"
+                              (change)="setProductFeatured(item.product, $any($event.target).checked)"
+                            />
+                            <span class="admin-toggle-switch__slider"></span>
+                          </label>
+                        </td>
+                        <td>
+                          <div class="admin-table__actions">
+                            <button
+                              type="button"
+                              class="admin-action-btn admin-action-btn--edit"
+                              (click)="editProduct(item.product)"
+                              title="Editar producto"
+                            >
+                              <app-icon name="edit" size="sm"></app-icon>
+                              <span>Editar</span>
+                            </button>
+                            <button
+                              type="button"
+                              class="admin-action-btn admin-action-btn--delete"
+                              (click)="removeProduct(item.product)"
+                              title="Eliminar producto"
+                            >
+                              <app-icon name="trash" size="sm"></app-icon>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    } @empty {
+                      <tr>
+                        <td colspan="6" class="admin-table__empty">
+                          No se encontraron productos con los filtros seleccionados.
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          }
+        </div>
+      }
+
+      <!-- =========================================
+           TAB 3: PEDIDOS & DESPACHOS
+           ========================================= -->
+      @if (activeTab === 'pedidos' && canManageOrders) {
+        <div class="admin-tab-view">
+          <div class="admin-view-toolbar">
+            <div class="admin-view-toolbar__filters">
+              <div class="admin-search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-search-icon">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Buscar por # de pedido, cliente o ciudad..."
+                  class="admin-search-input"
+                  [(ngModel)]="orderSearchTerm"
+                />
+              </div>
+
+              <select class="admin-select" [(ngModel)]="orderStatusFilter">
+                <option value="all">Todos los estados</option>
+                @for (opt of orderStatusOptions; track opt.value) {
+                  <option [value]="opt.value">{{ opt.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="admin-view-toolbar__summary">
+              <span>Total en pedidos: <strong>{{ vm.totalRevenue | currency:'COP':'symbol':'1.0-0' }}</strong></span>
+            </div>
+          </div>
+
+          @if (filterOrdersList(vm.orders); as orderList) {
+            <article class="admin-card admin-card--table">
+              <div class="admin-table-header">
+                <h2 class="admin-table-header__title">Historial de Pedidos y Despachos</h2>
+                <span class="admin-table-header__count">{{ orderList.length }} pedidos</span>
+              </div>
+
+              <div class="admin-table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Pedido & Fecha</th>
+                      <th>Cliente & Contacto</th>
+                      <th>Artículos</th>
+                      <th>Total</th>
+                      <th>Estado del pedido</th>
+                      <th class="admin-table__th-actions">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (order of orderList; track trackByOrderId($index, order)) {
+                      <tr>
+                        <td>
+                          <div class="admin-order-id-cell">
+                            <strong>#{{ order.id }}</strong>
+                            <span>{{ order.createdAt | date:'short' }}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="admin-order-customer-cell">
+                            <strong>{{ order.customerDisplayName }}</strong>
+                            <span>{{ order.city || 'Bogotá D.C.' }} · {{ order.phone || 'Sin teléfono' }}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="admin-order-items-cell">
+                            <span class="admin-order-items-badge">{{ order.items.length }} ítems</span>
+                            <span class="admin-order-items-desc">
+                              @for (item of order.items; track item.productId) {
+                                {{ item.quantity }}× {{ item.name || 'Equipo' }}@if (!$last){, }
+                              }
+                            </span>
+                          </div>
+                        </td>
+                        <td>
+                          <strong class="admin-table__price">{{ order.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+                        </td>
+                        <td>
+                          <select
+                            class="admin-status-select"
+                            [class.admin-status-select--pending]="order.status === 'pending'"
+                            [class.admin-status-select--shipped]="order.status === 'shipped'"
+                            [class.admin-status-select--delivered]="order.status === 'delivered' || order.status === 'paid'"
+                            [value]="order.status"
+                            (change)="updateOrderStatus(order, $any($event.target).value)"
+                          >
+                            @for (opt of orderStatusOptions; track opt.value) {
+                              <option [value]="opt.value">{{ opt.label }}</option>
+                            }
+                          </select>
+                        </td>
+                        <td>
+                          <a
+                            [href]="getWhatsAppCustomerLink(order)"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="admin-wa-btn"
+                            title="Contactar al cliente por WhatsApp"
+                          >
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.9C17.18 3.03 14.69 2 12.04 2ZM12.05 20.15C10.57 20.15 9.12 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.68 12.05 3.68C14.25 3.68 16.32 4.54 17.88 6.1C19.44 7.66 20.3 9.72 20.3 11.92C20.3 16.46 16.6 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.24 14.87 12.99 14.75C12.74 14.62 11.94 14.36 10.99 13.51C10.25 12.85 9.75 12.04 9.6 11.79C9.46 11.54 9.59 11.41 9.71 11.28C9.82 11.17 9.96 10.99 10.08 10.84C10.21 10.7 10.25 10.59 10.33 10.43C10.42 10.26 10.37 10.12 10.31 10C10.25 9.87 9.75 8.65 9.54 8.15C9.34 7.66 9.14 7.73 8.98 7.72C8.83 7.71 8.66 7.71 8.49 7.71C8.33 7.71 8.06 7.77 7.83 8.02C7.6 8.27 6.96 8.87 6.96 10.09C6.96 11.31 7.85 12.49 7.97 12.65C8.1 12.82 9.71 15.3 12.18 16.36C12.77 16.61 13.22 16.76 13.58 16.88C14.17 17.07 14.71 17.04 15.13 16.98C15.6 16.91 16.57 16.39 16.78 15.81C16.98 15.23 16.98 14.73 16.92 14.63C16.86 14.52 16.82 14.51 16.57 14.39Z"/>
+                            </svg>
+                            <span>WhatsApp</span>
+                          </a>
+                        </td>
+                      </tr>
+                    } @empty {
+                      <tr>
+                        <td colspan="6" class="admin-table__empty">
+                          No hay pedidos que coincidan con la búsqueda.
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          }
+        </div>
+      }
+
+      <!-- =========================================
+           TAB 4: BLOG & EDITORIAL
+           ========================================= -->
+      @if (activeTab === 'blog' && canManageBlog) {
+        <div class="admin-tab-view">
+          <div class="admin-view-toolbar">
+            <div class="admin-search-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-search-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                placeholder="Buscar artículo por título o autor..."
+                class="admin-search-input"
+                [(ngModel)]="blogSearchTerm"
+              />
+            </div>
+
+            <button
+              type="button"
+              class="app-btn app-btn--navy-solid"
+              (click)="openNewBlogForm()"
+            >
+              + Nueva publicación
+            </button>
+          </div>
+
+          @if (isBlogFormOpen) {
+            <div class="admin-form-panel">
+              <div class="admin-form-panel__header">
+                <h3>{{ selectedPost ? 'Editar artículo: ' + selectedPost.title : 'Redactar nueva publicación técnica' }}</h3>
+                <button type="button" class="admin-form-panel__close" (click)="cancelBlogEdit()">✕</button>
+              </div>
+              <app-admin-blog-post-form
+                [post]="selectedPost"
+                (createPost)="createBlogPost($event)"
+                (updatePost)="updateBlogPost($event)"
+                (cancelEdit)="cancelBlogEdit()"
+              />
+            </div>
+          }
+
+          @if (filterBlogPosts(vm.posts); as postList) {
+            <article class="admin-card admin-card--table">
+              <div class="admin-table-header">
+                <h2 class="admin-table-header__title">Publicaciones del Blog</h2>
+                <span class="admin-table-header__count">{{ postList.length }} artículos</span>
+              </div>
+
+              <div class="admin-table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Artículo</th>
+                      <th>Categoría</th>
+                      <th>Estado</th>
+                      <th>Autor</th>
+                      <th>Comentarios</th>
+                      <th>Reacciones</th>
+                      <th class="admin-table__th-actions">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (post of postList; track trackByPostId($index, post)) {
+                      <tr>
+                        <td>
+                          <div class="admin-table__product-cell">
+                            <span class="admin-table__thumb">
+                              <img [src]="post.coverImage" [alt]="post.title" />
+                            </span>
+                            <div class="admin-table__product-meta">
+                              <strong class="admin-table__product-name">{{ post.title }}</strong>
+                              <span class="admin-table__product-sku">{{ post.createdAt | date:'mediumDate' }}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="admin-pill-tag">{{ post.category }}</span>
+                        </td>
+                        <td>
+                          <span
+                            class="admin-badge"
+                            [class.admin-badge--success]="post.status === 'published'"
+                            [class.admin-badge--warning]="post.status === 'in-review' || post.status === 'scheduled'"
+                          >
+                            {{ blogStatusLabel(post.status) }}
+                          </span>
+                        </td>
+                        <td>{{ post.authorDisplayName }}</td>
+                        <td>
+                          <button type="button" class="admin-table__link" (click)="toggleComments(post.id)">
+                            💬 {{ post.comments.length }} · {{ expandedPostId === post.id ? 'Ocultar' : 'Moderar' }}
+                          </button>
+                        </td>
+                        <td>👍 {{ post.reactions.likes.length }} · 👎 {{ post.reactions.dislikes.length }}</td>
+                        <td>
+                          <div class="admin-table__actions">
+                            <button
+                              type="button"
+                              class="admin-action-btn admin-action-btn--edit"
+                              (click)="editBlogPost(post)"
+                              title="Editar artículo"
+                            >
+                              <app-icon name="edit" size="sm"></app-icon>
+                              <span>Editar</span>
+                            </button>
+                            <button
+                              type="button"
+                              class="admin-action-btn admin-action-btn--delete"
+                              (click)="removeBlogPost(post)"
+                              title="Eliminar artículo"
+                            >
+                              <app-icon name="trash" size="sm"></app-icon>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      @if (expandedPostId === post.id) {
+                        <tr class="admin-table__expansion">
+                          <td colspan="7">
+                            <div class="admin-comments-moderation">
+                              <h4 class="admin-comments-moderation__title">Comentarios en "{{ post.title }}"</h4>
+                              @if (post.comments.length === 0) {
+                                <p class="admin-comments-empty">No hay comentarios en este artículo.</p>
+                              } @else {
+                                <div class="admin-comments-list">
+                                  @for (c of post.comments; track c.id) {
+                                    <div class="admin-comment-row">
+                                      <div class="admin-comment-row__info">
+                                        <strong>{{ c.authorDisplayName }} ({{ c.authorUsername }})</strong>
+                                        <p>{{ c.message }}</p>
+                                        <small>{{ c.createdAt | date:'short' }}</small>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        class="admin-comment-delete-btn"
+                                        (click)="removeComment(post, c)"
+                                        title="Eliminar comentario"
+                                      >
+                                        Eliminar
+                                      </button>
+                                    </div>
+                                  }
+                                </div>
+                              }
+                            </div>
+                          </td>
+                        </tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          }
+        </div>
+      }
+
+      <!-- =========================================
+           TAB 5: USUARIOS & ACCESOS
+           ========================================= -->
+      @if (activeTab === 'usuarios' && canManageUsers) {
+        <div class="admin-tab-view">
+          <div class="admin-view-toolbar">
+            <div class="admin-view-toolbar__filters">
+              <div class="admin-search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-search-icon">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Buscar por usuario o nombre completo..."
+                  class="admin-search-input"
+                  [(ngModel)]="userSearchTerm"
+                />
+              </div>
+
+              <select class="admin-select" [(ngModel)]="userRoleFilter">
+                <option value="all">Todos los roles</option>
+                @for (opt of roleOptions; track opt.value) {
+                  <option [value]="opt.value">{{ opt.label }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <article class="admin-card admin-card--table">
+            <div class="admin-table-header">
+              <h2 class="admin-table-header__title">Directorio de Usuarios y Staff</h2>
+              <span class="admin-table-header__count">{{ filteredUsers.length }} usuarios</span>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Nombre completo</th>
+                    <th>Rol asignado</th>
+                    <th>Estado de cuenta</th>
+                    <th class="admin-table__th-actions">Acciones de seguridad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of filteredUsers; track trackByUsername($index, user)) {
+                    <tr>
+                      <td>
+                        <div class="admin-user-cell">
+                          <span class="admin-user-cell__avatar">{{ (user.displayName || user.username).charAt(0) | uppercase }}</span>
+                          <span class="admin-user-cell__username">{{ user.username }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <strong>{{ user.displayName }}</strong>
+                      </td>
+                      <td>
+                        <select
+                          class="admin-select admin-select--sm"
+                          [value]="user.role"
+                          (change)="changeUserRole(user, $any($event.target).value)"
+                        >
+                          @for (opt of roleOptions; track opt.value) {
+                            <option [value]="opt.value">{{ opt.label }}</option>
+                          }
+                        </select>
+                      </td>
+                      <td>
+                        <span
+                          class="admin-badge"
+                          [class.admin-badge--success]="user.status === 'active'"
+                          [class.admin-badge--danger]="user.status === 'suspended'"
+                        >
+                          {{ user.status === 'active' ? 'Activo' : 'Suspendido' }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="admin-table__actions">
+                          <button
+                            type="button"
+                            class="admin-sec-btn"
+                            (click)="resetUserPassword(user)"
+                            title="Generar nueva clave temporal"
+                          >
+                            Restablecer clave
+                          </button>
+
+                          <button
+                            type="button"
+                            class="admin-sec-btn"
+                            [class.admin-sec-btn--danger]="user.status === 'active'"
+                            (click)="toggleUserStatus(user)"
+                          >
+                            {{ user.status === 'active' ? 'Suspender' : 'Reactivar' }}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      }
+
+      <!-- =========================================
+           TAB 6: MI PERFIL & SEGURIDAD
+           ========================================= -->
+      @if (activeTab === 'perfil') {
+        <div class="admin-tab-view">
+          <div class="admin-profile-view">
+            <app-admin-profile-form
+              [username]="adminUsername"
+              [displayName]="adminDisplayName"
+              [role]="adminRole"
+              (saveDisplayName)="saveDisplayName($event)"
+              (changePassword)="changePassword($event)"
+            />
+          </div>
+        </div>
+      }
+
     </div>
-  </article>
+  </main>
 </section>
 }

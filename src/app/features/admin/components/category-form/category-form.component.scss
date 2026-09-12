@@ -1,97 +1,41 @@
 @use '../../../../../assets/tokens/index.scss' as *;
+@use '../../admin-shared.scss' as *;
 
 .admin-card {
-  background: $white-00;
-  border: 1px solid rgba($blue-01, 0.12);
-  border-radius: $radius-lg;
-  padding: $spacing-md;
-  box-shadow: 0 12px 28px rgba($blue-01, 0.08);
+  @include admin-card;
 
   &__title {
-    margin: 0 0 0.9rem;
-    color: $blue-01;
-    font-size: 1.08rem;
+    @include admin-card-title;
   }
 }
 
 .admin-form {
-  display: grid;
-  gap: 0.65rem;
+  @include admin-form;
 
   &__label {
-    color: $blue-01;
-    font-weight: 700;
-    font-size: 0.82rem;
+    @include admin-form-label;
   }
 
   &__control {
-    width: 100%;
-    border: 1px solid rgba($blue-01, 0.18);
-    border-radius: $radius-sm;
-    color: $blue-01;
-    padding: $spacing-xs;
-    background: $white-00;
-  }
-
-  &__control:focus {
-    outline: 2px solid rgba($blue-00, 0.25);
-    border-color: $blue-00;
-  }
-
-  &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-xs;
-  }
-
-  &__submit {
-    border: 0;
-    border-radius: $radius-sm;
-    background: linear-gradient(90deg, $blue-00 0%, $admin-accent-strong 100%);
-    color: $white-00;
-    font-weight: 700;
-    padding: $spacing-xs $spacing-sm;
-    cursor: pointer;
-
-    &:disabled {
-      opacity: 0.62;
-      cursor: not-allowed;
-    }
+    @include admin-form-control;
   }
 
   &__error {
-    color: $admin-danger;
-    font-size: 0.8rem;
-    font-weight: 600;
+    @include admin-form-error;
   }
 
-  &__secondary {
-    border: 1px solid rgba($blue-01, 0.14);
-    border-radius: $radius-sm;
-    background: rgba($white-01, 0.92);
-    color: $blue-01;
-    font-weight: 700;
-    padding: $spacing-xs $spacing-sm;
-    cursor: pointer;
+  &__actions {
+    @include admin-form-actions;
   }
 }
 
 .admin-list {
-  margin: $spacing-md 0 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 0.5rem;
+  @include admin-list;
+
+  margin-top: $spacing-sm;
 
   &__item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: $spacing-sm;
-    border: 1px solid rgba($blue-01, 0.1);
-    border-radius: $radius-sm;
-    padding: $spacing-xs;
-    color: $blue-01;
+    @include admin-list-item;
   }
 
   &__content {
@@ -99,11 +43,12 @@
     gap: $spacing-2xs;
 
     strong {
+      color: $admin-text-strong;
       font-size: 0.92rem;
     }
 
     small {
-      color: rgba($blue-01, 0.68);
+      color: $admin-text-soft;
       font-size: 0.76rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -111,28 +56,15 @@
   }
 
   &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-2xs;
+    @include admin-list-actions;
   }
 
-  &__danger {
-    background: $admin-danger-bg;
-    color: $admin-danger-strong;
-  }
-
-  button {
-    border: 0;
-    background: $admin-info-bg;
-    color: $admin-info-text;
-    border-radius: $radius-sm;
-    font-weight: 700;
-    padding: $spacing-xs $spacing-sm;
-    cursor: pointer;
+  &__action {
+    @include admin-icon-button;
   }
 }
 
-@media (max-width: $breakpoint-mobile-large) {
+@include respond-to('mobile-large', 'down') {
   .admin-list {
     &__item {
       flex-direction: column;
@@ -142,7 +74,7 @@
     &__actions {
       width: 100%;
 
-      button {
+      .admin-list__action {
         flex: 1 1 calc(50% - #{$spacing-2xs});
       }
     }

@@ -1,31 +1,41 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
 .page-header {
-    background: $blue-01;
+  background: $blue-01;
+  color: $white-00;
+  padding: clamp(48px, 7vw, 72px) 0;
+  border-bottom: 1px solid rgba($white-00, 0.12);
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: $green-00;
+    margin: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: $poppins-font;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     color: $white-00;
-    padding: $spacing-xl 0;
+  }
 
-    &__inner {
-        display: flex;
-        flex-direction: column;
-        gap: $spacing-xs;
-    }
-
-    &__eyebrow {
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.8rem;
-        color: $green-00;
-    }
-
-    &__title {
-        margin: 0;
-        font-size: 2rem;
-    }
-
-    &__subtitle {
-        margin: 0;
-        color: rgba($white-00, 0.78);
-        max-width: 640px;
-    }
-}
+  &__subtitle {
+    margin: $spacing-2xs 0 0;
+    color: rgba($white-00, 0.78);
+    font-size: clamp(1rem, 1.5vw, 1.12rem);
+    line-height: 1.6;
+    max-width: 54ch;
+  }
+}

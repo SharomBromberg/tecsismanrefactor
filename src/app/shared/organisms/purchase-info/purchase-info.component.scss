@@ -2,9 +2,9 @@
 
 .product-info {
   background: $white-00;
-  padding: $spacing-xl;
-  border-radius: $radius-md;
-  border: 1px solid rgba($black-00, 0.08);
+  padding: $spacing-lg;
+  border-radius: $radius-sm;
+  border: 1px solid rgba($blue-01, 0.12);
   display: flex;
   flex-direction: column;
   gap: $spacing-md;
@@ -16,11 +16,37 @@
     @include inter-subtitle(1.35rem);
   }
 
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    flex-wrap: wrap;
+  }
+
+  &__rating-value {
+    color: rgba($blue-01, 0.74);
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  &__price-block {
+    display: grid;
+    gap: $spacing-2xs;
+    padding: $spacing-md 0;
+    border-top: 1px solid rgba($blue-01, 0.12);
+    border-bottom: 1px solid rgba($blue-01, 0.12);
+  }
+
+  &__price-label {
+    color: rgba($blue-01, 0.74);
+    font-size: 0.82rem;
+  }
+
   &__price {
     margin: 0;
     color: $blue-01;
 
-    @include poppins-cta(2.75rem);
+    @include poppins-cta(2.4rem);
 
     line-height: 1;
   }
@@ -35,6 +61,16 @@
     color: $admin-success;
     font-weight: 600;
     font-size: 0.9rem;
+
+    &--warning {
+      background: rgba($admin-accent-deep, 0.12);
+      color: $admin-accent-deep;
+    }
+
+    &--danger {
+      background: $admin-danger-bg;
+      color: $admin-danger-strong;
+    }
   }
 
   &__qty-wrapper {
@@ -46,13 +82,62 @@
   &__label {
     font-weight: 700;
     color: $form-heading-text;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
-  &__quantity {
-    width: 100%;
+  &__stepper {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    border: 1px solid rgba($blue-01, 0.16);
+    border-radius: $radius-xs;
   }
 
-  // Los estilos de los botones CTA son provistos por ButtonComponent (app-btn)
+  &__step-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    background: transparent;
+    color: $blue-01;
+    font-size: 1.1rem;
+    cursor: pointer;
+
+    &:first-child {
+      border-right: 1px solid rgba($blue-01, 0.16);
+    }
+
+    &:last-child {
+      border-left: 1px solid rgba($blue-01, 0.16);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__qty-value {
+    width: 3rem;
+    text-align: center;
+    color: $blue-01;
+    font-weight: 700;
+  }
+
+  &__actions {
+    display: grid;
+    gap: $spacing-xs;
+  }
+
+  &__note {
+    margin: $spacing-2xs 0 0;
+    color: rgba($blue-01, 0.66);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  // Los estilos base de los CTA son provistos por ButtonComponent (app-btn)
   &__cta {
     width: 100%;
     justify-content: center;

@@ -54,37 +54,25 @@
       font-weight: 600;
     }
   }
+
+  &__demo {
+    background: $navy-050;
+    border: 1px dashed $navy-200;
+    border-radius: 0.75rem;
+    padding: 0.7rem 0.8rem;
+    margin-bottom: 1rem;
+
+    p {
+      margin: 0.2rem 0;
+      color: $auth-demo-text;
+      font-size: 0.88rem;
+    }
+  }
 }
 
 .register-form {
   display: grid;
   gap: 0.55rem;
-
-  &__label {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: $form-heading-text;
-  }
-
-  &__control {
-    width: 100%;
-    border-radius: 0.62rem;
-    border: 1px solid $navy-200;
-    background: $white-00;
-    color: $form-input-text;
-    padding: 0.64rem 0.7rem;
-    font-size: 0.95rem;
-  }
-
-  &__control:focus {
-    outline: 2px solid rgba($accent-600, 0.28);
-    border-color: $admin-accent;
-  }
-
-  &__control--invalid {
-    border-color: $form-error;
-    background: $error-surface-bg;
-  }
 
   &__hint {
     margin: 0;
@@ -105,18 +93,7 @@
   }
 
   &__submit {
+    width: 100%;
     margin-top: 0.35rem;
-    border: 0;
-    border-radius: 0.7rem;
-    background: linear-gradient(90deg, $accent-600 0%, $accent-700 100%);
-    color: $white-00;
-    font-weight: 700;
-    padding: 0.72rem;
-    cursor: pointer;
-  }
-
-  &__submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
   }
 }

@@ -4,6 +4,7 @@ import {
   BlogComment,
   BlogCommentCreateInput,
   BlogPost,
+  BlogPostAuthor,
   BlogPostCreateInput,
   BlogReactionInput,
 } from '../interfaces/blog';
@@ -19,7 +20,7 @@ export class BlogService {
 
   createPost(
     input: BlogPostCreateInput,
-    authorDisplayName: string,
+    author: BlogPostAuthor,
   ): { ok: boolean; message?: string } {
     const normalizedTitle = input.title.trim();
     const normalizedExcerpt = input.excerpt.trim();
@@ -46,7 +47,9 @@ export class BlogService {
       coverImage: normalizedCoverImage,
       category: normalizedCategory,
       createdAt: new Date().toISOString(),
-      authorDisplayName: authorDisplayName.trim() || 'Administrador',
+      authorDisplayName: author.displayName.trim() || 'Administrador',
+      authorUsername: author.username.trim().toLowerCase(),
+      status: input.status,
       comments: [],
       reactions: { likes: [], dislikes: [] },
     };
@@ -93,12 +96,25 @@ export class BlogService {
             content: normalizedContent,
             category: normalizedCategory,
             coverImage: normalizedCoverImage,
+            status: input.status,
           }
         : post,
     );
 
     this.writePosts(nextPosts);
     return { ok: true, message: 'Publicacion actualizada correctamente.' };
+  }
+
+  deleteComment(postId: string, commentId: string): void {
+    const nextPosts = this.postsSubject.value.map((post) =>
+      post.id === postId
+        ? {
+            ...post,
+            comments: post.comments.filter((comment) => comment.id !== commentId),
+          }
+        : post,
+    );
+    this.writePosts(nextPosts);
   }
 
   addComment(
@@ -191,6 +207,7 @@ export class BlogService {
       return parsed.map((post) => ({
         ...post,
         reactions: post.reactions ?? { likes: [], dislikes: [] },
+        status: post.status ?? 'published',
       }));
     } catch {
       return this.seedPosts();
@@ -215,46 +232,89 @@ export class BlogService {
     return [
       {
         id: 'seed-1',
-        slug: 'angular-escalable-para-ecommerce',
-        title: 'Angular escalable para ecommerce moderno',
+        slug: 'migracion-segura-servidores-linux-virtualizacion',
+        title: 'Migración segura a Servidores Linux y Virtualización Proxmox',
         excerpt:
-          'Patrones de arquitectura, performance y experiencia de usuario para tiendas que quieren crecer sin rehacer el frontend.',
+          'Estrategias para consolidar servidores físicos, optimizar recursos empresariales y asegurar alta disponibilidad sin costos desmedidos de licenciamiento.',
         content:
-          'Una base de ecommerce bien pensada necesita componentes reutilizables, estados predecibles y una experiencia de compra clara. En Tecsisman priorizamos interfaces consistentes, tiempos de carga bajos y superficies preparadas para integrarse con APIs, autenticacion y analitica sin rehacer el producto.',
+          'La virtualización con Proxmox VE y clústeres Linux permite a las empresas modernizar su centro de datos local reduciendo la huella de hardware hasta en un 60%. En esta guía detallamos los pasos clave para migrar cargas de trabajo críticas: evaluación de IOPS en almacenamiento NVMe/SAS, configuración de redes con VLANs dedicadas para tráfico de réplica, y políticas de snapshots automatizados con retención offsite.',
         coverImage: 'assets/logos/4.png',
-        category: 'Frontend',
-        createdAt: new Date('2026-06-18').toISOString(),
-        authorDisplayName: 'Tecsisman',
-        comments: [],
-        reactions: { likes: [], dislikes: [] },
+        category: 'Infraestructura',
+        createdAt: new Date('2026-07-10').toISOString(),
+        authorDisplayName: 'Ing. Carlos Mendoza · Tecsisman',
+        status: 'published',
+        comments: [
+          {
+            id: 'c-101',
+            authorUsername: 'fernando.tech',
+            authorDisplayName: 'Fernando Quintero',
+            message: 'Excelente artículo. ¿Qué recomendación dan para el almacenamiento compartido entre 3 nodos Proxmox?',
+            createdAt: new Date('2026-07-12').toISOString(),
+          },
+        ],
+        reactions: { likes: ['carlos.m', 'admin'], dislikes: [] },
       },
       {
         id: 'seed-2',
-        slug: 'seguridad-real-para-sesiones-y-formularios',
-        title: 'Seguridad real para sesiones y formularios',
+        slug: 'seguridad-perimetral-y-mitigacion-ransomware',
+        title: 'Seguridad perimetral y mitigación de ransomware en PYMES',
         excerpt:
-          'Que validar en registro, login, contacto y comentarios antes de conectar tu API definitiva.',
+          'Capas esenciales de defensa: segmentación de red, firewalls UTM, políticas de zero trust y copias de seguridad inmutables.',
         content:
-          'El frontend no reemplaza al backend en seguridad, pero si puede preparar el terreno correctamente. Reglas claras de contraseñas, mensajes coherentes, expiracion de sesion, limitacion de intentos y estructuras tipadas reducen errores cuando llega el momento de integrar servicios reales.',
+          'El 80% de los incidentes de ransomware en pequeñas y medianas empresas se originan por puertos RDP expuestos a Internet o credenciales comprometidas en VPNs sin doble factor de autenticación (2FA). Implementar una arquitectura Zero Trust con firewalls de inspección profunda (NGFW), aislamiento de backups mediante almacenamiento WORM/inmutable y auditoría de accesos es la defensa más rentable y efectiva.',
         coverImage: 'assets/logos/3.png',
-        category: 'Seguridad',
-        createdAt: new Date('2026-06-22').toISOString(),
-        authorDisplayName: 'Tecsisman',
+        category: 'Ciberseguridad',
+        createdAt: new Date('2026-07-05').toISOString(),
+        authorDisplayName: 'Equipo de Ciberseguridad · Tecsisman',
+        status: 'published',
+        comments: [],
+        reactions: { likes: ['admin'], dislikes: [] },
+      },
+      {
+        id: 'seed-3',
+        slug: 'cableado-estructurado-y-redes-alta-velocidad',
+        title: 'Diseño de cableado estructurado Cat 6A y Wi-Fi 6 empresarial',
+        excerpt:
+          'Cómo planificar la infraestructura física de telecomunicaciones para soportar transferencias de 10 Gbps y cientos de dispositivos simultáneos.',
+        content:
+          'La base de cualquier operación digital confiable es su red física. Un diseño de cableado estructurado bajo la norma TIA/EIA-568 con cable categoría 6A apantallado previene la diafonía y garantiza enlaces a 10 GbE en distancias de hasta 100 metros. Combinado con switches gestionables PoE+ y Access Points Wi-Fi 6 roaming, logramos coberturas continuas sin pérdidas de paquetes.',
+        coverImage: 'assets/logos/2.png',
+        category: 'Redes & Conectividad',
+        createdAt: new Date('2026-06-28').toISOString(),
+        authorDisplayName: 'Tecsisman Redes',
+        status: 'published',
         comments: [],
         reactions: { likes: [], dislikes: [] },
       },
       {
-        id: 'seed-3',
-        slug: 'diseno-que-convierte-mas',
-        title: 'Diseño que convierte mas y se siente premium',
+        id: 'seed-4',
+        slug: 'angular-escalable-para-ecommerce',
+        title: 'Angular escalable para ecommerce y plataformas transaccionales',
         excerpt:
-          'Hero, cards, checkout y contenido editorial deben hablar el mismo lenguaje visual si quieres una app memorable.',
+          'Patrones de arquitectura con Signals, componentes independientes (standalone) y micro-animaciones para tiendas de alto impacto.',
         content:
-          'La simetria no es rigidez: es coherencia entre espaciado, jerarquia tipografica, acciones primarias y ritmo visual. Cuando home, carrito, blog y paneles comparten reglas claras, la experiencia parece mas profesional y la conversion mejora.',
-        coverImage: 'assets/logos/2.png',
-        category: 'UX/UI',
-        createdAt: new Date('2026-06-25').toISOString(),
-        authorDisplayName: 'Tecsisman',
+          'Una base de software moderna necesita componentes atómicos reutilizables, estados predecibles y una experiencia de compra fluida. En Tecsisman estructuramos nuestras aplicaciones con Angular Signals para reactividad fina, reducción de re-renderizados innecesarios y tiempos de carga instantáneos.',
+        coverImage: 'assets/logos/4.png',
+        category: 'Desarrollo Web',
+        createdAt: new Date('2026-06-18').toISOString(),
+        authorDisplayName: 'Tecsisman Devs',
+        status: 'published',
+        comments: [],
+        reactions: { likes: [], dislikes: [] },
+      },
+      {
+        id: 'seed-5',
+        slug: 'mantenimiento-preventivo-servidores-estaciones-trabajo',
+        title: 'Mantenimiento preventivo en servidores y estaciones de alto rendimiento',
+        excerpt:
+          'La diferencia entre fallos catastróficos y 99.9% de uptime: termopastas de alta conductividad, monitoreo SMART y limpieza de flujo de aire.',
+        content:
+          'El sobrecalentamiento silencioso y la degradación de pastas térmicas en procesadores Xeon/Core i9 causa estrangulamiento térmico (thermal throttling) y reduce la vida útil de los condensadores en la placa madre. Establecer cronogramas de mantenimiento semestral con cambio de materiales térmicos y pruebas de estrés previene paradas no programadas.',
+        coverImage: 'assets/logos/1.png',
+        category: 'Hardware & Soporte',
+        createdAt: new Date('2026-06-10').toISOString(),
+        authorDisplayName: 'Soporte Técnico Especializado',
+        status: 'published',
         comments: [],
         reactions: { likes: [], dislikes: [] },
       },

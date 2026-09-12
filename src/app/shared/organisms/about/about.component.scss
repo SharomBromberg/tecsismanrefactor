@@ -1,44 +1,115 @@
 @use "../../../../assets/tokens/index.scss" as *;
 
+:host {
+  display: block;
+}
+
 .about {
-  background: $white-01;
+  background: $white-00;
   padding: $spacing-2xl 0;
-
-  &__container {
-    display: grid;
-    gap: $spacing-xl;
-  }
-
-  &__title {
-    margin: 0;
-    color: $blue-01;
-    text-align: center;
-
-    @include poppins-cta(2rem);
-  }
 
   &__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: $spacing-lg;
+    gap: $gap-xl;
+    align-items: center;
   }
 
-  &__item {
-    display: flex;
+  &__media {
+    border: 1px solid rgba($blue-01, 0.12);
+    background: $navy-050;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__copy {
+    display: grid;
+    gap: $spacing-md;
+    min-width: 0;
+  }
+
+  &__eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba($blue-01, 0.74);
+
+    @include inter-body(0.72rem);
+
+    font-weight: 700;
+  }
+
+  &__title {
+    margin: 0;
+    max-width: 18ch;
+    color: $blue-01;
+
+    @include poppins-cta(clamp(1.65rem, 4vw, 2.5rem));
+
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  &__lead {
+    margin: 0;
+    max-width: 52ch;
+    color: rgba($blue-01, 0.78);
+
+    @include inter-body(1rem);
+
+    line-height: 1.65;
+  }
+
+  &__points {
+    display: grid;
+    border-top: 1px solid rgba($blue-01, 0.12);
+    margin-top: $spacing-2xs;
+  }
+
+  &__point {
+    display: grid;
+    gap: $spacing-2xs;
+    padding: $spacing-sm 0;
+    border-bottom: 1px solid rgba($blue-01, 0.12);
+  }
+
+  &__point-title {
+    margin: 0;
+    color: $blue-01;
+
+    @include poppins-cta(1rem);
+  }
+
+  &__point-text {
+    margin: 0;
+    color: rgba($blue-01, 0.78);
+
+    @include inter-body(0.92rem);
+
+    line-height: 1.5;
   }
 }
 
-@include respond-to('tablet-wide') {
+@include respond-to('desktop-medium') {
   .about {
     padding: $spacing-4xl 0;
 
-    &__title {
-      @include poppins-cta(2.25rem);
+    &__grid {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+      gap: $gap-2xl;
     }
 
-    &__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: $spacing-xl;
+    &__media {
+      aspect-ratio: auto;
+      height: 100%;
+      min-height: 22.5rem;
     }
   }
 }

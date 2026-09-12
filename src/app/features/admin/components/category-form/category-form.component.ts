@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
+import { IconComponent } from '@shared/atoms/icon/icon.component';
+import { InputComponent } from '@shared/atoms/input/input.component';
 import { Category } from '@core/interfaces/categories';
 import {
   CategoryPayload,
@@ -10,7 +13,13 @@ import {
 @Component({
   selector: 'app-admin-category-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonComponent,
+    IconComponent,
+    InputComponent,
+  ],
   templateUrl: './category-form.component.html',
   styleUrls: ['./category-form.component.scss'],
 })

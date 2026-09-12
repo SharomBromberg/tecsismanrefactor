@@ -89,14 +89,34 @@
       </div>
 
       <div class="prod-grid">
-        @for (p of filtered(); track p._id) {
-        <app-product-card [product]="p" [categoryName]="p.featured ? 'Destacado' : categoryLabel(p.categoryId)"
-          variant="grid"></app-product-card>
+        @for (p of paginatedProducts(); track p._id) {
+        <app-product-card
+          [product]="p"
+          [categoryName]="p.featured ? 'Destacado' : categoryLabel(p.categoryId)"
+          variant="grid"
+          (addToCart)="onAddToCart($event)"
+        ></app-product-card>
         }
         @if (!filtered().length) {
         <p class="prod-page__empty">No hay productos con estos filtros.</p>
         }
       </div>
+
+      @if (totalPages() > 1) {
+      <div class="prod-pagination">
+        <button type="button" class="prod-pagination__btn" (click)="prevPage()" [disabled]="currentPage() === 1">Anterior</button>
+        
+        <div class="prod-pagination__pages">
+          @for (p of pagesArray(); track p) {
+          <button type="button" class="prod-pagination__page" [class.prod-pagination__page--active]="currentPage() === p" (click)="goToPage(p)">
+            {{ p }}
+          </button>
+          }
+        </div>
+        
+        <button type="button" class="prod-pagination__btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Siguiente</button>
+      </div>
+      }
     </main>
   </div>
 </div>

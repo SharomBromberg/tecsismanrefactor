@@ -1,0 +1,44 @@
+@use "../../../../assets/tokens/index.scss" as *;
+
+.locale-stub {
+  display: inline-flex;
+  width: auto;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  padding: 0 $spacing-sm;
+  height: 2.25rem; // 36px
+  border: 1px solid rgba($blue-01, 0.12);
+  border-radius: $radius-xs; // 2px
+  color: rgba($blue-01, 0.62);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+  
+  &--inverse {
+    border: 1px solid rgba($white-00, 0.14);
+    color: rgba($white-00, 0.62);
+  }
+
+  &--block {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    height: 3rem; // 48px
+  }
+
+  &__dot {
+    opacity: 0.4;
+  }
+
+  &__soon {
+    margin-left: auto;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    opacity: 0.55;
+    text-transform: none;
+  }
+}

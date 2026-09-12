@@ -119,6 +119,23 @@
         }
     }
 
+    &--premium {
+        border: 1px solid rgba($blue-01, 0.12);
+        background: $white-00;
+        border-radius: 2px;
+        height: 52px;
+        padding: 0 14px;
+        color: $blue-01;
+
+        &::placeholder {
+            color: rgba($blue-01, 0.45);
+        }
+
+        &:focus {
+            border: 1px solid $blue-01;
+        }
+    }
+
     /* ==========================================
      ELEMENTO: contenedor general
     ========================================== */
@@ -148,6 +165,14 @@
 
         &--light {
             color: $gray-00;
+        }
+
+        &--premium {
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: rgba($blue-01, 0.74);
         }
     }
 }

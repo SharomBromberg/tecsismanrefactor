@@ -2,14 +2,13 @@
 @use "./assets/tokens" as *;
 
 /* Base reset and typography */
-html, body {
-    height: 100%;
-    overflow-x: hidden;
+html {
+    scroll-behavior: smooth;
 }
 
 body {
     margin: 0;
-    overflow: hidden auto;
+    min-height: 100vh;
     background-color: $white-01;
     color: $gray-00;
     -webkit-font-smoothing: antialiased;
@@ -17,11 +16,104 @@ body {
     font-family: $inter-font;
 }
 
+/* Custom Premium Scrollbars */
+html, body {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(4, 49, 76, 0.45) #f1f5f9;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(4, 49, 76, 0.4) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(4, 49, 76, 0.4);
+    border-radius: 9999px;
+    border: 2px solid #f1f5f9;
+    transition: background-color 150ms ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(4, 49, 76, 0.75);
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Dark theme elements (Cart Drawer, Mobile menu, Account sidebar, Dark headers) */
+.cart-drawer,
+.cart-drawer *,
+.navbar__mobile-panel,
+.navbar__mobile-panel *,
+.account-sidebar,
+.account-sidebar *,
+.page-header,
+.page-header *,
+.cart-hero,
+.cart-hero * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.35) rgba(4, 49, 76, 0.95);
+}
+
+.cart-drawer::-webkit-scrollbar-track,
+.cart-drawer *::-webkit-scrollbar-track,
+.navbar__mobile-panel::-webkit-scrollbar-track,
+.navbar__mobile-panel *::-webkit-scrollbar-track,
+.account-sidebar::-webkit-scrollbar-track,
+.account-sidebar *::-webkit-scrollbar-track,
+.page-header::-webkit-scrollbar-track,
+.page-header *::-webkit-scrollbar-track,
+.cart-hero::-webkit-scrollbar-track,
+.cart-hero *::-webkit-scrollbar-track {
+    background: #04314c !important;
+}
+
+.cart-drawer::-webkit-scrollbar-thumb,
+.cart-drawer *::-webkit-scrollbar-thumb,
+.navbar__mobile-panel::-webkit-scrollbar-thumb,
+.navbar__mobile-panel *::-webkit-scrollbar-thumb,
+.account-sidebar::-webkit-scrollbar-thumb,
+.account-sidebar *::-webkit-scrollbar-thumb,
+.page-header::-webkit-scrollbar-thumb,
+.page-header *::-webkit-scrollbar-thumb,
+.cart-hero::-webkit-scrollbar-thumb,
+.cart-hero *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.32) !important;
+    border: 2px solid #04314c !important;
+    border-radius: 9999px !important;
+}
+
+.cart-drawer::-webkit-scrollbar-thumb:hover,
+.cart-drawer *::-webkit-scrollbar-thumb:hover,
+.navbar__mobile-panel::-webkit-scrollbar-thumb:hover,
+.navbar__mobile-panel *::-webkit-scrollbar-thumb:hover,
+.account-sidebar::-webkit-scrollbar-thumb:hover,
+.account-sidebar *::-webkit-scrollbar-thumb:hover,
+.page-header::-webkit-scrollbar-thumb:hover,
+.page-header *::-webkit-scrollbar-thumb:hover,
+.cart-hero::-webkit-scrollbar-thumb:hover,
+.cart-hero *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6) !important;
+}
+
 /* Utility container */
 .app-container {
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1240px;
     margin: 0 auto;
-    padding: 0 $spacing-md;
+    padding: 0 clamp(20px, 4vw, 36px);
+    box-sizing: border-box;
 }
 
 /* Headings scale using mixins from tokens */
@@ -30,7 +122,6 @@ h2 { @include inter-title(2rem); }
 h3 { @include inter-subtitle(1.75rem); }
 h4 { @include inter-subtitle(1.5rem); }
 p { @include inter-body(1rem); line-height: 1.6; }
-
 
 /* Generic Section Spacing */
 .section {

@@ -2,16 +2,22 @@
   <h2 class="admin-card__title">{{ title }}</h2>
   <form class="admin-form admin-form--blog" [formGroup]="form" (ngSubmit)="submit()">
     <div>
-      <label class="admin-form__label" for="blog-title">Título</label>
-      <input class="admin-form__control" id="blog-title" type="text" formControlName="title" />
+      <app-input label="Título" type="text" customLabelStyle="app-input__label--light" formControlName="title"></app-input>
     </div>
     <div>
-      <label class="admin-form__label" for="blog-category">Categoría</label>
-      <input class="admin-form__control" id="blog-category" type="text" formControlName="category" />
+      <app-input label="Categoría" type="text" customLabelStyle="app-input__label--light" formControlName="category"></app-input>
     </div>
     <div class="admin-form__full">
-      <label class="admin-form__label" for="blog-cover">Imagen</label>
-      <input class="admin-form__control" id="blog-cover" type="text" formControlName="coverImage" />
+      <app-input label="Imagen" type="text" customLabelStyle="app-input__label--light" formControlName="coverImage"></app-input>
+    </div>
+    <div class="admin-form__full">
+      <label class="admin-form__label" for="blog-status">Estado</label>
+      <select class="admin-form__control" id="blog-status" formControlName="status">
+        <option value="draft">Borrador</option>
+        <option value="in-review">En revisión</option>
+        <option value="scheduled">Programado</option>
+        <option value="published">Publicado</option>
+      </select>
     </div>
     <div class="admin-form__full">
       <label class="admin-form__label" for="blog-excerpt">Extracto</label>
@@ -21,13 +27,10 @@
       <label class="admin-form__label" for="blog-content">Contenido</label>
       <textarea class="admin-form__control admin-form__control--textarea" id="blog-content" rows="6" formControlName="content"></textarea>
     </div>
-    @if (feedback) {
-      <p class="admin-form__feedback">{{ feedback }}</p>
-    }
     <div class="admin-form__actions admin-form__full">
-      <button class="admin-form__submit" type="submit">{{ submitLabel }}</button>
+      <button app-button type="submit" class="app-btn app-btn--navy-solid">{{ submitLabel }}</button>
       @if (post) {
-        <button class="admin-form__secondary" type="button" (click)="handleCancel()">Cancelar</button>
+        <button app-button type="button" class="app-btn app-btn--line-navy" (click)="handleCancel()">Cancelar</button>
       }
     </div>
   </form>

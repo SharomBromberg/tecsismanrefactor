@@ -30,6 +30,10 @@ export class IconComponent {
     | 'heart-filled'
     | 'star-filled'
     | 'star-empty'
+    | 'edit'
+    | 'trash'
+    | 'plus'
+    | 'alert'
     | '' = '';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() customClass = '';

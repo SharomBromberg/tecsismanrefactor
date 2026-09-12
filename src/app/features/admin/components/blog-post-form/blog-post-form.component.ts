@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BlogPost, BlogPostCreateInput } from '@core/interfaces/blog';
+import { ButtonComponent } from '@shared/atoms/button/button.component';
+import { InputComponent } from '@shared/atoms/input/input.component';
+import { BlogPost, BlogPostCreateInput, BlogPostStatus } from '@core/interfaces/blog';
 
 @Component({
   selector: 'app-admin-blog-post-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, InputComponent],
   templateUrl: './blog-post-form.component.html',
   styleUrls: ['./blog-post-form.component.scss'],
 })
 export class BlogPostFormComponent implements OnChanges {
   @Input() post: BlogPost | null = null;
-  @Input() feedback = '';
   @Output() createPost = new EventEmitter<BlogPostCreateInput>();
   @Output() updatePost = new EventEmitter<{
     postId: string;
@@ -28,6 +29,7 @@ export class BlogPostFormComponent implements OnChanges {
     coverImage: ['assets/logos/4.png', [Validators.required]],
     excerpt: ['', [Validators.required, Validators.minLength(20)]],
     content: ['', [Validators.required, Validators.minLength(80)]],
+    status: ['draft' as BlogPostStatus, [Validators.required]],
   });
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -49,6 +51,7 @@ export class BlogPostFormComponent implements OnChanges {
       content: raw.content ?? '',
       coverImage: raw.coverImage ?? '',
       category: raw.category ?? '',
+      status: raw.status ?? 'draft',
     };
 
     if (this.post) {
@@ -85,6 +88,7 @@ export class BlogPostFormComponent implements OnChanges {
       coverImage: this.post.coverImage,
       excerpt: this.post.excerpt,
       content: this.post.content,
+      status: this.post.status,
     });
   }
 
@@ -95,6 +99,7 @@ export class BlogPostFormComponent implements OnChanges {
       coverImage: 'assets/logos/4.png',
       excerpt: '',
       content: '',
+      status: 'draft',
     });
   }
 }

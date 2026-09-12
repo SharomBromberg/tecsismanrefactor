@@ -1,16 +1,12 @@
-<section class="quote" aria-labelledby="quote-title">
+<section class="quote" aria-label="Testimonio de un cliente">
   <div class="app-container quote__container">
-    <h2 id="quote-title" class="quote__title">Cotiza tu sitio web</h2>
+    <div class="quote__avatar">
+      <img [src]="avatarUrl" [alt]="author" loading="lazy" />
+    </div>
 
-    <div class="quote__grid" role="list">
-      @for (service of servicesList(); track service.id) {
-        <div class="quote__item" role="listitem">
-          <app-card
-            [data]="service"
-            (actionClick)="handleQuoteClick(service.id)">
-          </app-card>
-        </div>
-      }
+    <div class="quote__copy">
+      <p class="quote__text">&ldquo;{{ quote }}&rdquo;</p>
+      <p class="quote__meta">{{ author }} · {{ role }}</p>
     </div>
   </div>
 </section>

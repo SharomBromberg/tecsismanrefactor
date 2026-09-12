@@ -1,12 +1,14 @@
 @use '../../../../assets/tokens/index.scss' as *;
 
+:host {
+  display: block;
+}
+
 .featured-products {
   position: relative;
   padding: $spacing-3xl 0;
-  background:
-    radial-gradient(circle at top left, rgba($green-00, 0.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba($blue-00, 0.1), transparent 32%),
-    linear-gradient(180deg, $navy-050 0%, $white-00 100%);
+  background: $navy-050;
+  border-top: 1px solid rgba($blue-01, 0.12);
 
   &__container {
     display: grid;
@@ -94,14 +96,11 @@
     width: $size-xl;
     height: $size-xl;
     border: 1px solid rgba($blue-01, 0.14);
-    border-radius: 999px;
-    background: rgba($white-00, 0.96);
+    border-radius: $radius-2xs;
+    background: $white-00;
     color: $blue-01;
-    box-shadow: 0 10px 24px rgba($blue-01, 0.1);
     cursor: pointer;
     transition:
-      transform 180ms ease,
-      box-shadow 180ms ease,
       opacity 180ms ease,
       background 180ms ease;
 
@@ -112,15 +111,12 @@
     }
 
     &:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba($blue-01, 0.14);
-      background: $white-00;
+      background: $navy-050;
     }
 
     &:disabled {
       opacity: 0.45;
       cursor: not-allowed;
-      box-shadow: none;
     }
   }
 
@@ -130,8 +126,8 @@
     gap: $spacing-md;
     padding: $spacing-xl;
     border: 1px dashed rgba($blue-01, 0.18);
-    border-radius: $radius-lg;
-    background: rgba($white-00, 0.82);
+    border-radius: $radius-2xs;
+    background: $white-00;
   }
 
   &__empty-text {

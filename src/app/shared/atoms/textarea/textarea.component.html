@@ -1,0 +1,17 @@
+<div class="app-textarea__wrapper">
+  @if (label) {
+    <label class="app-textarea__label" [ngClass]="customLabelStyle" [for]="inputId">{{ label }}</label>
+  }
+
+  <textarea
+    [id]="inputId"
+    class="app-textarea"
+    [ngClass]="customStyle"
+    [(ngModel)]="inputValue"
+    (input)="getTextInput($event)"
+    [placeholder]="placeholder"
+    [disabled]="isDisabled"
+    [class.app-textarea--error]="hasError"
+    [rows]="rows"
+  ></textarea>
+</div>

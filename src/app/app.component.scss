@@ -29,7 +29,14 @@
 //   }
 // }
 
+.app-main {
+  /* Compensa la altura del navbar fijo (72px) para que el contenido no quede oculto debajo */
+  padding-top: 72px;
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+}
+
 router-outlet {
-  display: block;
-  margin-top: 0;
+  display: none; // Router outlet itself shouldn't take space, its siblings (the rendered components) do.
 }

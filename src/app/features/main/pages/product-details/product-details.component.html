@@ -1,28 +1,30 @@
 <section class="product-detail app-container">
   @if (viewModel$ | async; as vm) {
-    <header class="product-header">
-      <p class="product-header__breadcrumb">Inicio / Productos / {{ vm.product.name }}</p>
+    <nav class="product-breadcrumb" aria-label="Ruta de navegación">
+      <a routerLink="/Productos">Catálogo</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ vm.categoryName }}</span>
+      <span aria-hidden="true">/</span>
+      <span class="product-breadcrumb__current">{{ vm.product.name }}</span>
+    </nav>
 
-      <div class="product-header__meta-row">
-        <span class="product-chip">Categoria: {{ vm.categoryName }}</span>
-        <span class="product-chip">SKU: {{ getSku(vm.product._id) }}</span>
+    <main class="product-main">
+      <section class="product-card product-card--gallery">
+        <app-product-gallery [images]="vm.product.images" [name]="vm.product.name" />
+      </section>
+
+      <aside class="product-card product-card--purchase">
         @if (vm.product.featured) {
           <span class="product-chip product-chip--highlight">Producto destacado</span>
         }
-      </div>
+        <p class="product-info__eyebrow">{{ vm.categoryName }} · {{ getSku(vm.product._id) }}</p>
 
-      <h1 class="product-header__title">{{ vm.product.name }}</h1>
+        <app-purchase-info
+          [product]="vm.product"
+          [rating]="vm.ratingValue"
+          [reviewCount]="vm.reviewCount"
+        />
 
-      <div class="product-header__rating-row">
-        <div class="product-header__stars" aria-label="Calificacion del producto">
-          @for (star of stars; track star) {
-            <app-icon [name]="star <= vm.ratingValue ? 'star-filled' : 'star-empty'" size="md"></app-icon>
-          }
-        </div>
-        <span class="product-header__rating-value">
-          {{ vm.ratingValue | number: '1.1-1' }}
-          <span class="product-header__reviews">({{ vm.reviewCount }} opiniones)</span>
-        </span>
         <button
           type="button"
           class="product-header__favorite"
@@ -33,64 +35,94 @@
           <app-icon [name]="vm.isFavorite ? 'heart-filled' : 'heart'" size="sm"></app-icon>
           <span>{{ vm.isFavorite ? 'En favoritos' : 'Agregar a favoritos' }}</span>
         </button>
-      </div>
-
-      @if (vm.product.tags?.length) {
-        <ul class="product-tags" aria-label="Etiquetas del producto">
-          @for (tag of vm.product.tags; track tag) {
-            <li class="product-tags__item">{{ tag }}</li>
-          }
-        </ul>
-      }
-    </header>
-
-    <main class="product-main">
-      <section class="product-card product-card--gallery">
-        <app-product-gallery [images]="vm.product.images" [name]="vm.product.name" />
-      </section>
-
-      <aside class="product-card product-card--purchase">
-        <app-purchase-info [product]="vm.product" />
       </aside>
     </main>
 
-    <section class="product-benefits" aria-label="Beneficios de compra">
-      <article class="product-benefits__item">
-        <h3>Entrega confiable</h3>
-        <p>Despacho seguro y seguimiento claro para que recibas tu pedido sin sorpresas.</p>
-      </article>
-      <article class="product-benefits__item">
-        <h3>Soporte especializado</h3>
-        <p>Asesoria tecnica y atencion cercana para ayudarte antes y despues de la compra.</p>
-      </article>
-      <article class="product-benefits__item">
-        <h3>Compra protegida</h3>
-        <p>Transacciones transparentes, detalle de costos y experiencia de checkout profesional.</p>
-      </article>
+    <section class="product-tabs-section">
+      <nav class="product-tabs" aria-label="Información del producto">
+        <button
+          type="button"
+          class="product-tabs__item"
+          [class.product-tabs__item--active]="activeTab === 'ficha'"
+          (click)="setActiveTab('ficha')"
+        >
+          Ficha técnica
+        </button>
+        <button
+          type="button"
+          class="product-tabs__item"
+          [class.product-tabs__item--active]="activeTab === 'entrega'"
+          (click)="setActiveTab('entrega')"
+        >
+          Entrega y garantía
+        </button>
+        <button
+          type="button"
+          class="product-tabs__item"
+          [class.product-tabs__item--active]="activeTab === 'opiniones'"
+          (click)="setActiveTab('opiniones')"
+        >
+          Opiniones{{ vm.reviewCount ? ' (' + vm.reviewCount + ')' : '' }}
+        </button>
+      </nav>
+
+      <div class="product-tabs__content">
+        @if (activeTab === 'ficha') {
+          <app-product-description [description]="vm.product.technicalDescription || vm.product.description" />
+
+          <dl class="product-specs">
+            @for (spec of vm.specs; track spec.label) {
+              <div class="product-specs__row">
+                <dt>{{ spec.label }}</dt>
+                <dd>{{ spec.value }}</dd>
+              </div>
+            }
+          </dl>
+        }
+
+        @if (activeTab === 'entrega') {
+          <div class="product-policy">
+            <p>Despachamos desde Bogotá. Los pedidos confirmados antes de las 2:00 p.m. salen el mismo día hábil.</p>
+            <p>La garantía se tramita a través de nosotros: nos escribes, radicamos el caso y te damos seguimiento hasta el cierre.</p>
+            <p>Instalación y configuración se cotizan aparte según el sitio.</p>
+          </div>
+        }
+
+        @if (activeTab === 'opiniones') {
+          <div class="product-reviews">
+            <app-review-list [comments]="vm.product.comments" />
+
+            @if (canReviewProduct(vm.product._id)) {
+              <app-review-form (submitted)="submitComment(vm.product._id, $event)" />
+            } @else {
+              <article class="review-gate" aria-live="polite">
+                <p>{{ getReviewRestrictionMessage(vm.product._id) }}</p>
+                <a routerLink="/carrito" class="review-gate__link">Ir a finalizar compra</a>
+              </article>
+            }
+
+            @if (reviewPermissionError) {
+              <p class="review-gate review-gate--error">{{ reviewPermissionError }}</p>
+            }
+          </div>
+        }
+      </div>
     </section>
 
-    <div class="product-details-bottom">
-      <section class="product-card product-card--description">
-        <app-product-description [description]="vm.product.technicalDescription || vm.product.description" />
+    @if (vm.relatedProducts.length) {
+      <section class="product-related">
+        <h2 class="product-section__title">{{ vm.relatedSectionTitle }}</h2>
+        <div class="product-related__grid">
+          @for (item of vm.relatedProducts; track item.product._id) {
+            <app-product-card
+              [product]="item.product"
+              [categoryName]="item.categoryName"
+              variant="grid"
+              (addToCart)="addRelatedToCart($event)"
+            />
+          }
+        </div>
       </section>
-      
-      <section class="product-reviews product-card">
-        <h2 class="product-section__title">Opiniones del producto</h2>
-        <app-review-list [comments]="vm.product.comments" />
-
-        @if (canReviewProduct(vm.product._id)) {
-          <app-review-form (submitted)="submitComment(vm.product._id, $event)" />
-        } @else {
-          <article class="review-gate" aria-live="polite">
-            <p>{{ getReviewRestrictionMessage(vm.product._id) }}</p>
-            <a routerLink="/carrito" class="review-gate__link">Ir a finalizar compra</a>
-          </article>
-        }
-
-        @if (reviewPermissionError) {
-          <p class="review-gate review-gate--error">{{ reviewPermissionError }}</p>
-        }
-      </section>
-    </div>
+    }
   }
 </section>

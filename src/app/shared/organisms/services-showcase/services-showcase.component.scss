@@ -1,5 +1,9 @@
 @use '../../../../assets/tokens/index.scss' as *;
 
+:host {
+  display: block;
+}
+
 .services-showcase {
   display: grid;
   gap: $gap-lg;
@@ -69,7 +73,6 @@
   }
 
   &__cards {
-    // hacer que todas las cards tengan el mismo tamaño por medio del display flex quiero que las cards que queden abajo esten en el centro y no a un lado: 
     display: flex;
     flex-wrap: wrap;
     gap: $gap-lg;
@@ -82,17 +85,98 @@
   }
 }
 
-//     display:flex;
-//     flex-wrap: wrap;
-//     gap: $gap-md;
-//     app-card {
-//       widht:25%;
+// --- Home teaser variant: lista compacta numerada con thumbnail ---
+.services-showcase--teaser {
+  background: $white-00;
+  padding: $spacing-2xl 0;
+  border-top: 1px solid rgba($blue-01, 0.12);
+}
 
-//       // flex: 1 1 calc(30% - #{$gap-md});
-//       min-width: 0;
-//     }
-//   }
-// }
+.services-showcase__teaser {
+  display: grid;
+  gap: $gap-xl;
+  align-items: start;
+}
+
+.services-showcase__teaser-intro {
+  display: grid;
+  gap: $spacing-md;
+  align-content: start;
+}
+
+.services-showcase__teaser-title {
+  margin: 0;
+  max-width: 14ch;
+  color: $blue-01;
+
+  @include poppins-cta(clamp(1.65rem, 4vw, 2.5rem));
+
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.services-showcase__teaser-cta {
+  justify-self: start;
+  height: 3.125rem;
+  padding-inline: $spacing-lg;
+  border-radius: $radius-2xs;
+  margin-top: $spacing-2xs;
+}
+
+.services-showcase__teaser-list {
+  border-top: 1px solid rgba($blue-01, 0.12);
+}
+
+.services-showcase__teaser-item {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  gap: $gap-sm;
+  padding: $spacing-lg 0;
+  border-bottom: 1px solid rgba($blue-01, 0.12);
+  align-items: start;
+}
+
+.services-showcase__teaser-thumb {
+  width: 3.25rem;
+  height: 3.25rem;
+  flex-shrink: 0;
+  border: 1px solid rgba($blue-01, 0.12);
+  background: $navy-050;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.services-showcase__teaser-copy {
+  display: grid;
+  gap: $spacing-xs;
+  min-width: 0;
+
+  span {
+    @include poppins-cta(0.8rem);
+
+    color: rgba($blue-01, 0.66);
+  }
+
+  h3 {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+  }
+
+  p {
+    margin: 0;
+    color: rgba($blue-01, 0.78);
+
+    @include inter-body(1rem);
+
+    line-height: 1.65;
+    max-width: 62ch;
+  }
+}
 
 @media (min-width: $breakpoint-tablet-portrait) {
   .services-showcase {
@@ -110,6 +194,25 @@
 @media (min-width: $breakpoint-desktop-medium) {
   .services-showcase__cards {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .services-showcase__teaser {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: $gap-2xl;
+  }
+
+  .services-showcase__teaser-intro {
+    position: sticky;
+    top: 6.5rem;
+  }
+
+  .services-showcase__teaser-item {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+
+  .services-showcase__teaser-thumb {
+    width: 4.5rem;
+    height: 4.5rem;
   }
 }
 

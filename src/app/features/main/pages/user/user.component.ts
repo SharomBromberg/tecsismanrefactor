@@ -1,49 +1,53 @@
-import { Component, HostListener, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BehaviorSubject, combineLatest, map, of } from 'rxjs';
 import { AuthService } from '@core/services/auth.service';
 import { UserProfileService } from '@core/services/user-profile.service';
-import { PurchaseHistoryService } from '@core/services/purchase-history.service';
 import { ProductService } from '@core/services/product.service';
 import { UserFavoritesService } from '@core/services/user-favorites.service';
+import { OrderService } from '@core/services/order.service';
+import { CartService } from '@core/services/cart.service';
+import { CartDrawerService } from '@core/services/cart-drawer.service';
+import { ToastService } from '@core/services/toast.service';
 import { ShippingAddress } from '@core/interfaces/user-profile';
-import { PurchaseEntry } from '@core/interfaces/purchase-history';
+import { Order, OrderStatus } from '@core/interfaces/order';
+import { Product } from '@core/interfaces/product';
 import { ButtonComponent } from '@shared/atoms/button/button.component';
-import { AccountSidebarComponent } from '../../../../shared/organisms/account-sidebar/account-sidebar.component';
+import { IconComponent } from '@shared/atoms/icon/icon.component';
+import { RatingStarsComponent } from '@shared/molecules/rating-star/rating-stars.component';
 
-interface PurchaseHistoryItemVm {
+export interface EnrichedOrderItem {
   productId: string;
-  productName: string;
-  image: string;
+  name: string;
   quantity: number;
-  purchasedAt: string;
   unitPrice: number;
-  total: number;
+  image: string;
+  product?: Product;
 }
 
-interface UserPanelVm {
-  items: PurchaseHistoryItemVm[];
-  totalOrders: number;
-  totalSpent: number;
+export interface EnrichedOrder extends Order {
+  enrichedItems: EnrichedOrderItem[];
 }
 
-interface FavoriteItemVm {
+export interface FavoriteItemVm {
   productId: string;
   name: string;
   image: string;
   price: number;
+  categoryName: string;
+  product: Product;
 }
 
-type FavoriteSort = 'recent' | 'price-asc' | 'price-desc';
+export type FavoriteSort = 'recent' | 'price-asc' | 'price-desc';
 
-type AccountSection =
+export type AccountSection =
+  | 'history'
+  | 'favorites'
   | 'profile'
   | 'addresses'
-  | 'security'
-  | 'favorites'
-  | 'history';
+  | 'security';
 
 @Component({
   selector: 'app-user',
@@ -52,32 +56,35 @@ type AccountSection =
     CommonModule,
     RouterLink,
     ReactiveFormsModule,
+    CurrencyPipe,
+    DatePipe,
     ButtonComponent,
-    AccountSidebarComponent,
+    IconComponent,
   ],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })
-export class UserComponent {
+export class UserComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly userProfileService = inject(UserProfileService);
-  private readonly purchaseHistoryService = inject(PurchaseHistoryService);
+  private readonly orderService = inject(OrderService);
   private readonly productService = inject(ProductService);
   private readonly userFavoritesService = inject(UserFavoritesService);
+  private readonly cartService = inject(CartService);
+  private readonly cartDrawerService = inject(CartDrawerService);
+  private readonly toastService = inject(ToastService);
   private readonly router = inject(Router);
 
   private readonly fb = new FormBuilder();
   private readonly session = this.authService.currentSession();
-  private readonly username = this.session?.username ?? '';
+  readonly username = this.session?.username ?? '';
 
-  activeSection: AccountSection = 'profile';
-  accountMenuOpen = false;
-  isMobileViewport = false;
-  hasMobileSelection = false;
+  activeSection: AccountSection = 'history';
   profileEditMode = false;
   addressEditMode = false;
   securityEditMode = false;
-  private hasInitializedViewportState = false;
+  editingAddressId: string | null = null;
+  addresses: ShippingAddress[] = [];
 
   profileSavedMessage = '';
   profileErrorMessage = '';
@@ -85,8 +92,6 @@ export class UserComponent {
   passwordErrorMessage = '';
   addressSuccessMessage = '';
   addressErrorMessage = '';
-  editingAddressId: string | null = null;
-  addresses: ShippingAddress[] = [];
 
   readonly profileForm = this.fb.nonNullable.group({
     displayName: ['', [Validators.required, Validators.minLength(2)]],
@@ -109,18 +114,19 @@ export class UserComponent {
     reference: [''],
   });
 
-  readonly panelVm$;
-  readonly favoritesVm$;
-  readonly favoritesCount$;
   readonly favoriteSort$ = new BehaviorSubject<FavoriteSort>('recent');
 
-  constructor() {
-    this.syncViewportState();
+  readonly userOrders$;
+  readonly favoritesVm$;
+  readonly favoritesCount$;
+  readonly stats$;
 
+  constructor() {
     if (!this.username) {
-      this.panelVm$ = of({ items: [], totalOrders: 0, totalSpent: 0 });
+      this.userOrders$ = of([] as EnrichedOrder[]);
       this.favoritesVm$ = of([] as FavoriteItemVm[]);
       this.favoritesCount$ = of(0);
+      this.stats$ = of({ totalOrders: 0, totalSpent: 0, favoritesCount: 0 });
       return;
     }
 
@@ -131,176 +137,218 @@ export class UserComponent {
     this.profileForm.patchValue(profile);
     this.addresses = this.userProfileService.getAddresses(this.username);
 
-    this.panelVm$ = combineLatest([
-      this.purchaseHistoryService.getUserPurchases$(this.username),
+    // Enriched user orders with real product images and metadata
+    this.userOrders$ = combineLatest([
+      this.orderService.orders$,
       this.productService.getProducts(),
     ]).pipe(
-      map(([entries, products]) => {
-        const mappedItems = entries.map((entry: PurchaseEntry) => {
-          const product = products.find((p) => p._id === entry.productId);
-          const unitPrice = product?.price ?? 0;
+      map(([orders, products]) => {
+        const userOrders = orders.filter(
+          (o) =>
+            o.username === this.username ||
+            o.customerDisplayName === this.displayName ||
+            o.username === 'guest',
+        );
+
+        return userOrders.map((order) => {
+          const enrichedItems: EnrichedOrderItem[] = order.items.map((item) => {
+            const product = products.find(
+              (p) => p._id === item.productId || p.name === item.name,
+            );
+            return {
+              ...item,
+              image: product?.images?.[0] || 'assets/pictures/placeholder.png',
+              product,
+            };
+          });
 
           return {
-            productId: entry.productId,
-            productName: product?.name ?? 'Producto no disponible',
-            image: product?.images?.[0] ?? 'assets/pictures/placeholder.png',
-            quantity: entry.quantity,
-            purchasedAt: entry.purchasedAt,
-            unitPrice,
-            total: unitPrice * entry.quantity,
-          } as PurchaseHistoryItemVm;
+            ...order,
+            enrichedItems,
+          } as EnrichedOrder;
         });
-
-        return {
-          items: mappedItems,
-          totalOrders: mappedItems.length,
-          totalSpent: mappedItems.reduce((acc, item) => acc + item.total, 0),
-        } as UserPanelVm;
       }),
     );
 
+    // Favorites view model
     this.favoritesVm$ = combineLatest([
       this.userFavoritesService.getFavoriteIds$(this.username),
       this.productService.getProducts(),
+      this.productService.getCategories(),
       this.favoriteSort$,
     ]).pipe(
-      map(([favoriteIds, products, favoriteSort]) => {
-        const mapped = favoriteIds
+      map(([favoriteIds, products, categories, sort]) => {
+        const mapped: FavoriteItemVm[] = favoriteIds
           .map((id) => {
-            const product = products.find((item) => item._id === id);
-            if (!product) {
-              return null;
-            }
-
+            const product = products.find((p) => p._id === id);
+            if (!product) return null;
+            const categoryName =
+              categories.find((c) => c._id === product.categoryId)?.name ||
+              product.categoryId ||
+              'Tecnología';
             return {
               productId: product._id,
               name: product.name,
-              image: product.images?.[0] ?? 'assets/pictures/placeholder.png',
+              image: product.images?.[0] || 'assets/pictures/placeholder.png',
               price: product.price,
-            } as FavoriteItemVm;
+              categoryName,
+              product,
+            };
           })
-          .filter((item): item is FavoriteItemVm => !!item);
+          .filter((item): item is FavoriteItemVm => item !== null);
 
-        if (favoriteSort === 'price-asc') {
+        if (sort === 'price-asc') {
           return [...mapped].sort((a, b) => a.price - b.price);
         }
-
-        if (favoriteSort === 'price-desc') {
+        if (sort === 'price-desc') {
           return [...mapped].sort((a, b) => b.price - a.price);
         }
-
-        // "recent" respeta el orden de alta en favoritos (más reciente al final), por eso lo invertimos.
         return [...mapped].reverse();
       }),
     );
 
-    this.favoritesCount$ = this.favoritesVm$.pipe(
-      map((favorites) => favorites.length),
+    this.favoritesCount$ = this.favoritesVm$.pipe(map((favs) => favs.length));
+
+    // Combined summary statistics
+    this.stats$ = combineLatest([this.userOrders$, this.favoritesCount$]).pipe(
+      map(([orders, favoritesCount]) => ({
+        totalOrders: orders.length,
+        totalSpent: orders.reduce((acc, o) => acc + o.total, 0),
+        favoritesCount,
+      })),
     );
+  }
+
+  ngOnInit(): void {
+    if (!this.session) {
+      this.router.navigate(['/login']);
+    }
   }
 
   get displayName(): string {
     return this.authService.currentSession()?.displayName ?? 'Usuario';
   }
 
-  get sectionTitle(): string {
-    switch (this.activeSection) {
-      case 'profile':
-        return 'Informacion de perfil';
-      case 'addresses':
-        return 'Direcciones';
-      case 'security':
-        return 'Seguridad';
-      case 'favorites':
-        return 'Favoritos';
-      case 'history':
-        return 'Compras';
-      default:
-        return 'Mi cuenta';
-    }
-  }
-
-  get shouldShowContent(): boolean {
-    return !this.isMobileViewport || this.hasMobileSelection;
-  }
-
-  @HostListener('window:resize')
-  onWindowResize(): void {
-    this.syncViewportState();
-  }
-
-  toggleAccountMenu(): void {
-    if (this.isMobileViewport) {
-      // Mobile-first flow: keep menu visible until the user selects a section.
-      if (this.accountMenuOpen && !this.hasMobileSelection) {
-        return;
-      }
-
-      const nextMenuState = !this.accountMenuOpen;
-      this.accountMenuOpen = nextMenuState;
-
-      if (nextMenuState) {
-        this.hasMobileSelection = false;
-        this.profileEditMode = false;
-        this.addressEditMode = false;
-        this.securityEditMode = false;
-      }
-
-      return;
-    }
-
-    this.accountMenuOpen = !this.accountMenuOpen;
-  }
-
-  showMobileMenu(): void {
-    if (!this.isMobileViewport) {
-      return;
-    }
-
-    this.accountMenuOpen = true;
-    this.hasMobileSelection = false;
-    this.profileEditMode = false;
-    this.addressEditMode = false;
-    this.securityEditMode = false;
+  get email(): string {
+    return (
+      this.profileForm.controls.email.value ||
+      this.session?.username ||
+      'usuario@tecsisman.com'
+    );
   }
 
   setSection(section: AccountSection): void {
     this.activeSection = section;
-
-    if (this.isMobileViewport) {
-      this.hasMobileSelection = true;
-      this.accountMenuOpen = false;
-    }
-
     this.profileEditMode = false;
     this.addressEditMode = false;
     this.securityEditMode = false;
-  }
-
-  onSectionSelected(section: string): void {
-    this.setSection(section as AccountSection);
   }
 
   setFavoriteSort(sort: FavoriteSort): void {
     this.favoriteSort$.next(sort);
   }
 
+  // Actions on Orders
+  reorder(order: EnrichedOrder): void {
+    let addedCount = 0;
+    order.enrichedItems.forEach((item) => {
+      if (item.product) {
+        this.cartService.addToCart(item.product, item.quantity);
+        addedCount++;
+      }
+    });
+
+    if (addedCount > 0) {
+      this.toastService.show(
+        `Se agregaron ${addedCount} productos de tu pedido al carrito.`,
+        'success',
+      );
+      this.cartDrawerService.open();
+    } else {
+      this.toastService.show(
+        'Los productos de este pedido no están disponibles actualmente.',
+        'info',
+      );
+    }
+  }
+
+  contactWhatsAppOrder(order: EnrichedOrder): void {
+    const lines = [
+      `*Consulta de Pedido — Tecsisman*`,
+      `Número de Pedido: *#${order.id}*`,
+      `Cliente: ${this.displayName}`,
+      `Total: $ ${order.total.toLocaleString('es-CO')}`,
+      `Estado actual: ${this.getStatusLabel(order.status)}`,
+      '',
+      'Hola, quisiera recibir información sobre el estado de mi despacho y entrega.',
+    ];
+    const text = lines.join('\n');
+    window.open(
+      `https://wa.me/573163202647?text=${encodeURIComponent(text)}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  }
+
+  getStatusLabel(status: OrderStatus): string {
+    switch (status) {
+      case 'pending':
+        return 'Pendiente de confirmación';
+      case 'paid':
+        return 'Pago confirmado / En alistamiento';
+      case 'shipped':
+        return 'En camino / Despachado';
+      case 'delivered':
+        return 'Entregado con éxito';
+      case 'refunded':
+        return 'Reembolsado';
+      default:
+        return 'En proceso';
+    }
+  }
+
+  getStatusClass(status: OrderStatus): string {
+    switch (status) {
+      case 'pending':
+        return 'status-badge--pending';
+      case 'paid':
+        return 'status-badge--paid';
+      case 'shipped':
+        return 'status-badge--shipped';
+      case 'delivered':
+        return 'status-badge--delivered';
+      case 'refunded':
+        return 'status-badge--refunded';
+      default:
+        return 'status-badge--default';
+    }
+  }
+
+  // Favorite actions
+  addFavoriteToCart(product: Product): void {
+    this.cartService.addToCart(product, 1);
+    this.toastService.show(`${product.name} agregado al carrito.`, 'success');
+    this.cartDrawerService.open();
+  }
+
+  removeFavorite(productId: string): void {
+    if (!this.username) return;
+    this.userFavoritesService.remove(this.username, productId);
+    this.toastService.show('Producto eliminado de tus favoritos.', 'info');
+  }
+
+  // Profile actions
   saveProfile(): void {
     this.profileSavedMessage = '';
     this.profileErrorMessage = '';
 
     if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
-      this.profileErrorMessage =
-        'Revisa los datos del perfil antes de guardar.';
+      this.profileErrorMessage = 'Por favor completa los datos requeridos.';
       return;
     }
 
-    if (!this.username) {
-      this.profileErrorMessage =
-        'No encontramos tu sesion. Inicia sesion nuevamente.';
-      return;
-    }
+    if (!this.username) return;
 
     const payload = this.profileForm.getRawValue();
     this.userProfileService.saveProfile(this.username, {
@@ -310,25 +358,23 @@ export class UserComponent {
     });
     this.authService.updateSessionDisplayName(payload.displayName);
 
-    this.profileSavedMessage = 'Perfil actualizado correctamente.';
+    this.profileSavedMessage = 'Datos de perfil actualizados con éxito.';
+    this.toastService.show('Perfil actualizado correctamente.', 'success');
     this.profileEditMode = false;
   }
 
+  // Address actions
   saveAddress(): void {
     this.addressSuccessMessage = '';
     this.addressErrorMessage = '';
 
     if (this.addressForm.invalid) {
       this.addressForm.markAllAsTouched();
-      this.addressErrorMessage = 'Revisa los datos de direccion.';
+      this.addressErrorMessage = 'Por favor revisa los campos de la dirección.';
       return;
     }
 
-    if (!this.username) {
-      this.addressErrorMessage =
-        'No encontramos tu sesion. Inicia sesion nuevamente.';
-      return;
-    }
+    if (!this.username) return;
 
     const payload = this.addressForm.getRawValue();
 
@@ -346,11 +392,11 @@ export class UserComponent {
             }
           : item,
       );
-
       this.userProfileService.saveAddresses(this.username, this.addresses);
       this.addressForm.reset();
       this.editingAddressId = null;
-      this.addressSuccessMessage = 'Direccion actualizada correctamente.';
+      this.addressSuccessMessage = 'Dirección actualizada con éxito.';
+      this.toastService.show('Dirección actualizada con éxito.', 'success');
       this.addressEditMode = false;
       return;
     }
@@ -369,15 +415,14 @@ export class UserComponent {
     this.addresses = [...this.addresses, newAddress];
     this.userProfileService.saveAddresses(this.username, this.addresses);
     this.addressForm.reset();
-    this.addressSuccessMessage = 'Direccion guardada correctamente.';
+    this.addressSuccessMessage = 'Dirección guardada con éxito.';
+    this.toastService.show('Dirección agregada con éxito.', 'success');
     this.addressEditMode = false;
   }
 
   editAddress(addressId: string): void {
     const address = this.addresses.find((item) => item.id === addressId);
-    if (!address) {
-      return;
-    }
+    if (!address) return;
 
     this.addressEditMode = true;
     this.editingAddressId = address.id;
@@ -393,114 +438,60 @@ export class UserComponent {
     });
   }
 
-  cancelAddressEdit(): void {
-    this.addressEditMode = false;
-    this.editingAddressId = null;
-    this.addressForm.reset();
-    this.addressSuccessMessage = '';
-    this.addressErrorMessage = '';
-  }
-
-  removeAddress(addressId: string): void {
-    if (!this.username) {
-      return;
-    }
-
-    const next = this.addresses.filter((item) => item.id !== addressId);
-    if (next.length > 0 && !next.some((item) => item.isDefault)) {
-      next[0] = { ...next[0], isDefault: true };
-    }
-
-    this.addresses = next;
+  deleteAddress(addressId: string): void {
+    this.addresses = this.addresses.filter((item) => item.id !== addressId);
     this.userProfileService.saveAddresses(this.username, this.addresses);
-
-    if (this.editingAddressId === addressId) {
-      this.cancelAddressEdit();
-    }
+    this.toastService.show('Dirección eliminada.', 'info');
   }
 
   setDefaultAddress(addressId: string): void {
-    if (!this.username) {
-      return;
-    }
-
     this.addresses = this.addresses.map((item) => ({
       ...item,
       isDefault: item.id === addressId,
     }));
     this.userProfileService.saveAddresses(this.username, this.addresses);
+    this.toastService.show('Dirección principal actualizada.', 'success');
   }
 
-  savePassword(): void {
+  cancelAddressEdit(): void {
+    this.addressEditMode = false;
+    this.editingAddressId = null;
+    this.addressForm.reset();
+  }
+
+  // Password actions
+  changePassword(): void {
     this.passwordSuccessMessage = '';
     this.passwordErrorMessage = '';
 
     if (this.passwordForm.invalid) {
       this.passwordForm.markAllAsTouched();
-      this.passwordErrorMessage =
-        'Completa los campos para cambiar la contraseña.';
+      this.passwordErrorMessage = 'Por favor completa todos los campos.';
       return;
     }
 
-    const payload = this.passwordForm.getRawValue();
-    if (payload.newPassword !== payload.confirmPassword) {
-      this.passwordErrorMessage = 'La confirmacion no coincide.';
+    const { currentPassword, newPassword, confirmPassword } =
+      this.passwordForm.getRawValue();
+
+    if (newPassword !== confirmPassword) {
+      this.passwordErrorMessage = 'Las nuevas contraseñas no coinciden.';
       return;
     }
 
-    const result = this.authService.changeCurrentUserPassword(
-      payload.currentPassword,
-      payload.newPassword,
-    );
-
-    if (!result.ok) {
-      this.passwordErrorMessage =
-        result.message ?? 'No fue posible actualizar la contraseña.';
+    const ok = this.authService.changePassword(currentPassword, newPassword);
+    if (!ok) {
+      this.passwordErrorMessage = 'La contraseña actual no es correcta.';
       return;
     }
 
     this.passwordSuccessMessage = 'Contraseña actualizada correctamente.';
+    this.toastService.show('Contraseña actualizada con éxito.', 'success');
     this.passwordForm.reset();
     this.securityEditMode = false;
   }
 
-  removeFavorite(productId: string): void {
-    if (!this.username) {
-      return;
-    }
-
-    this.userFavoritesService.toggle(this.username, productId);
-  }
-
-  logoutUser(): void {
+  logout(): void {
     this.authService.logout();
-    void this.router.navigate(['/login']);
-  }
-
-  private syncViewportState(): void {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const wasMobileViewport = this.isMobileViewport;
-    const nextIsMobile = window.innerWidth <= 1024;
-    this.isMobileViewport = nextIsMobile;
-
-    if (!this.hasInitializedViewportState) {
-      this.accountMenuOpen = !nextIsMobile;
-      this.hasMobileSelection = !nextIsMobile;
-      this.hasInitializedViewportState = true;
-      return;
-    }
-
-    if (nextIsMobile && !wasMobileViewport) {
-      this.accountMenuOpen = true;
-      this.hasMobileSelection = false;
-    }
-
-    if (!nextIsMobile && wasMobileViewport) {
-      this.accountMenuOpen = true;
-      this.hasMobileSelection = true;
-    }
+    this.router.navigate(['/Inicio']);
   }
 }

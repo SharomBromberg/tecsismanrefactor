@@ -1,0 +1,11 @@
+<div class="static-slot" [class.static-slot--compact]="compact">
+  @if (url()) {
+    <img [src]="url()" [alt]="alt" class="static-slot__img" loading="lazy" />
+  } @else {
+    @if (compact) {
+      <span aria-hidden="true" class="static-slot__dot"></span>
+    } @else {
+      <span class="static-slot__empty">Próximamente</span>
+    }
+  }
+</div>

@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, Input, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { CardComponent } from '../../molecules/card/card.component';
+import { ButtonComponent } from '../../atoms/button/button.component';
 import {
   SERVICES_GROUPS,
   SERVICES_TECH_STACK,
@@ -8,14 +10,29 @@ import {
 } from '../../../core/constants/services-catalog.constants';
 import { statusClassButton } from '../../../core/interfaces/buttoninterface';
 
+interface HomeTeaserService {
+  id: string;
+  number: string;
+  title: string;
+  text: string;
+  thumbnailUrl: string;
+  thumbnailAlt: string;
+}
+
 @Component({
   selector: 'app-services-showcase',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CommonModule, RouterLink, CardComponent, ButtonComponent],
   templateUrl: './services-showcase.component.html',
   styleUrls: ['./services-showcase.component.scss'],
 })
 export class ServicesShowcaseComponent {
+  /**
+   * 'full': grid completo de tarjetas por grupo (usado en /servicios).
+   * 'home-teaser': lista compacta numerada con thumbnail (usada en Home).
+   */
+  @Input() variant: 'full' | 'home-teaser' = 'full';
+
   readonly stack = signal<string[]>(SERVICES_TECH_STACK);
   readonly serviceGroups = signal<ServiceGroupData[]>(
     SERVICES_GROUPS.map((group) => {
@@ -61,5 +78,20 @@ export class ServicesShowcaseComponent {
         ],
       };
     }),
+  );
+
+  /**
+   * Vista derivada de serviceGroups() para el teaser de Home: un item por
+   * grupo (no duplica el contenido de SERVICES_GROUPS, solo lo resume).
+   */
+  readonly homeTeaserServices = computed<HomeTeaserService[]>(() =>
+    this.serviceGroups().map((group, index) => ({
+      id: group.id,
+      number: String(index + 1).padStart(2, '0'),
+      title: group.eyebrow,
+      text: group.lead,
+      thumbnailUrl: group.cards[0]?.imageUrl ?? '',
+      thumbnailAlt: group.cards[0]?.imageAlt ?? group.eyebrow,
+    })),
   );
 }

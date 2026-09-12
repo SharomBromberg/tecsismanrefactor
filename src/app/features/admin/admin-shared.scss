@@ -1,0 +1,128 @@
+@use '../../../assets/tokens/index.scss' as *;
+
+// Shared building blocks for every /admin surface. Each admin component is
+// still its own encapsulated Angular component (their own .scss file), but
+// they all @use these mixins so cards/forms/lists resolve to one set of
+// values instead of drifting component-by-component (borders, radii and
+// text colors used to differ across product-form/category-form/blog-post-
+// form/profile-form before this partial existed).
+
+@mixin admin-card {
+  background: $white-00;
+  border: 1px solid $admin-border;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+}
+
+@mixin admin-card-title {
+  margin: 0 0 $spacing-md;
+  color: $admin-text-strong;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+@mixin admin-card-eyebrow {
+  margin: 0 0 $spacing-2xs;
+  color: $admin-text-soft;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@mixin admin-form {
+  display: grid;
+  gap: $spacing-sm;
+}
+
+@mixin admin-form-label {
+  display: block;
+  margin-bottom: $spacing-2xs;
+  color: $admin-text-medium;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+@mixin admin-form-control {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid $admin-border;
+  border-radius: $radius-xs;
+  padding: $spacing-sm;
+  color: $admin-text-strong;
+  background: $white-00;
+  font: inherit;
+
+  &:focus {
+    outline: 2px solid rgba($admin-accent, 0.22);
+    outline-offset: 1px;
+    border-color: $admin-accent;
+  }
+}
+
+@mixin admin-form-textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+@mixin admin-form-error {
+  margin: 0;
+  color: $admin-danger;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+@mixin admin-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+@mixin admin-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: $admin-text-medium;
+  font-weight: 600;
+  font-size: 0.88rem;
+
+  input[type='checkbox'] {
+    width: 1.05rem;
+    height: 1.05rem;
+    accent-color: $admin-accent-strong;
+  }
+}
+
+@mixin admin-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: $spacing-xs;
+}
+
+@mixin admin-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-sm;
+  border: 1px solid $admin-border;
+  border-radius: $radius-xs;
+  padding: $spacing-sm;
+}
+
+@mixin admin-list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2xs;
+}
+
+// Icon-labelled app-button content (icon + <span>) needs a small gap that
+// the button atom itself doesn't provide (it only spaces its own internal
+// .app-btn__icon, not projected content) — combined with .app-btn for
+// specificity so it always wins over the atom's base rule.
+@mixin admin-icon-button {
+  &.app-btn {
+    gap: $spacing-2xs;
+  }
+}

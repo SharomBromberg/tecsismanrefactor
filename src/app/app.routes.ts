@@ -17,6 +17,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'inicio',
+    redirectTo: 'Inicio',
+    pathMatch: 'full',
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./features/auth/pages/login/login.component').then(
@@ -39,12 +44,35 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'Admin',
+    redirectTo: 'admin',
+    pathMatch: 'full',
+  },
+  {
+    path: 'cuenta',
+    canActivate: [userRoleGuard],
+    loadComponent: () =>
+      import('./features/main/pages/user/user.component').then(
+        (m) => m.UserComponent,
+      ),
+  },
+  {
+    path: 'Cuenta',
+    redirectTo: 'cuenta',
+    pathMatch: 'full',
+  },
+  {
     path: 'user',
     canActivate: [userRoleGuard],
     loadComponent: () =>
       import('./features/main/pages/user/user.component').then(
         (m) => m.UserComponent,
       ),
+  },
+  {
+    path: 'Usuario',
+    redirectTo: 'cuenta',
+    pathMatch: 'full',
   },
   {
     path: 'Productos',
@@ -54,34 +82,8 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'Admin',
-    redirectTo: 'admin',
-    pathMatch: 'full',
-  },
-  {
-    path: 'Servicios',
-    loadComponent: () =>
-      import('./features/main/pages/services/services.component').then(
-        (m) => m.ServicesComponent,
-      ),
-  },
-  {
-    path: 'Contacto',
-    loadComponent: () =>
-      import('./features/main/pages/contact/contact.component').then(
-        (m) => m.ContactComponent,
-      ),
-  },
-  {
-    path: 'Blog',
-    loadComponent: () =>
-      import('./features/main/pages/blog/blog.component').then(
-        (m) => m.BlogComponent,
-      ),
-  },
-  {
-    path: 'Usuario',
-    redirectTo: 'user',
+    path: 'productos',
+    redirectTo: 'Productos',
     pathMatch: 'full',
   },
   {
@@ -92,11 +94,72 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'productos/:id',
+    loadComponent: () =>
+      import('./features/main/pages/product-details/product-details.component').then(
+        (m) => m.ProductDetailsComponent,
+      ),
+  },
+  {
+    path: 'Servicios',
+    loadComponent: () =>
+      import('./features/main/pages/services/services.component').then(
+        (m) => m.ServicesComponent,
+      ),
+  },
+  {
+    path: 'servicios',
+    redirectTo: 'Servicios',
+    pathMatch: 'full',
+  },
+  {
+    path: 'Contacto',
+    loadComponent: () =>
+      import('./features/main/pages/contact/contact.component').then(
+        (m) => m.ContactComponent,
+      ),
+  },
+  {
+    path: 'contacto',
+    redirectTo: 'Contacto',
+    pathMatch: 'full',
+  },
+  {
+    path: 'Blog',
+    loadComponent: () =>
+      import('./features/main/pages/blog/blog.component').then(
+        (m) => m.BlogComponent,
+      ),
+  },
+  {
+    path: 'blog',
+    redirectTo: 'Blog',
+    pathMatch: 'full',
+  },
+  {
     path: 'carrito',
-    canActivate: [userRoleGuard],
     loadComponent: () =>
       import('./shared/organisms/shopping-cart/shopping-cart.component').then(
         (m) => m.ShoppingCartComponent,
       ),
+  },
+  {
+    path: 'Carrito',
+    redirectTo: 'carrito',
+    pathMatch: 'full',
+  },
+  {
+    path: 'checkout',
+    redirectTo: 'carrito',
+    pathMatch: 'full',
+  },
+  {
+    path: 'Checkout',
+    redirectTo: 'carrito',
+    pathMatch: 'full',
+  },
+  {
+    path: '**',
+    redirectTo: 'Inicio',
   },
 ];

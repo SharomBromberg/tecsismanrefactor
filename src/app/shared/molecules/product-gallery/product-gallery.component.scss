@@ -17,17 +17,17 @@
     width: 60px;
     height: 60px;
     padding: 0;
-    border: 1px solid rgb(0 0 0 / 10%);
-    border-radius: $radius-sm;
+    border: 1px solid rgba($blue-01, 0.14);
+    border-radius: $radius-xs;
     overflow: hidden;
     cursor: pointer;
-    background: $white-00;
-    transition: all 0.2s ease;
+    background: $admin-surface-mist;
+    transition: border-color 0.2s ease;
 
-    &:hover { border-color: $green-02; }
-    
+    &:hover { border-color: $blue-01; }
+
     &.is-active {
-      border: 2px solid $green-02; // El borde verde que buscabas
+      border: 2px solid $blue-01;
     }
 
     img {
@@ -40,9 +40,9 @@
 
   &__main {
     flex: 1;
-    background: $white-00;
-    border-radius: $radius-lg;
-    border: 1px solid rgb(0 0 0 / 5%);
+    background: $admin-surface-mist;
+    border-radius: $radius-sm;
+    border: 1px solid rgba($blue-01, 0.12);
     display: flex;
     align-items: center;
     justify-content: center;

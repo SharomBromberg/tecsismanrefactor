@@ -1,345 +1,615 @@
-<section
-  class="user-panel app-container"
-  [class.menu-open]="accountMenuOpen"
-  [class.mobile-no-selection]="isMobileViewport && !hasMobileSelection"
-  aria-labelledby="user-panel-title"
->
-  @if (!isMobileViewport || !hasMobileSelection) {
-    <app-account-sidebar
-      [open]="accountMenuOpen"
-      [mobile]="isMobileViewport"
-      [activeSection]="activeSection"
-      [displayName]="displayName"
-      [email]="profileForm.controls.email.value"
-      (toggleSidebar)="toggleAccountMenu()"
-      (sectionSelected)="onSectionSelected($event)"
-      (logoutRequested)="logoutUser()"
-    />
-  }
+<main class="user-page">
+  <!-- 1. Hero Header -->
+  <header class="user-hero">
+    <div class="app-container">
+      <div class="user-hero__content">
+        <div class="user-hero__badge-row">
+          <p class="user-hero__eyebrow">PANEL DE CONTROL</p>
+          <span class="user-hero__verified">
+            <span class="user-hero__verified-dot"></span>
+            Cliente Verificado
+          </span>
+        </div>
+        <h1 class="user-hero__title">Hola, {{ displayName }}</h1>
+        <p class="user-hero__subtitle">
+          Gestiona tus pedidos activos, productos favoritos, direcciones de entrega y seguridad de tu cuenta.
+        </p>
+      </div>
+    </div>
+  </header>
 
-  <main class="user-content" [class.user-content--hidden-mobile]="!shouldShowContent">
-    @if (panelVm$ | async; as vm) {
-      @if (isMobileViewport && hasMobileSelection) {
-        <button app-button type="button" class="app-btn app-btn--ghost user-content__menu-bar" (click)="showMobileMenu()" aria-label="Volver al menu de cuenta">
-          Abrir menu de cuenta
-        </button>
-      }
-
-      <header class="user-panel__header">
-        <p class="user-panel__eyebrow">Mi cuenta</p>
-        <h1 id="user-panel-title">{{ sectionTitle }}</h1>
-        <p class="user-panel__subtitle">Configura tu informacion y visualiza tus compras como en un ecommerce real.</p>
-      </header>
-
-      <section class="user-panel__stats" aria-label="Resumen de compras">
-        <article class="user-stat">
-          <p class="user-stat__label">Compras registradas</p>
-          <p class="user-stat__value">{{ vm.totalOrders }}</p>
-        </article>
-        <article class="user-stat">
-          <p class="user-stat__label">Total invertido</p>
-          <p class="user-stat__value">{{ vm.totalSpent | currency:'COP':'symbol':'1.0-0' }}</p>
-        </article>
-        <article class="user-stat">
-          <p class="user-stat__label">Accesos rapidos</p>
-          <div class="user-stat__actions">
-            <a routerLink="/Productos">Catalogo</a>
-            <a routerLink="/Contacto">Soporte</a>
+  <div class="app-container user-main-container">
+    <!-- 2. Metrics / Stats Bar -->
+    @if (stats$ | async; as stats) {
+      <section class="user-stats-grid" aria-label="Resumen de actividad">
+        <article class="user-stat-card" (click)="setSection('history')">
+          <div class="user-stat-card__icon">
+            <app-icon name="history" size="md"></app-icon>
+          </div>
+          <div class="user-stat-card__info">
+            <span class="user-stat-card__label">Pedidos Realizados</span>
+            <strong class="user-stat-card__value">{{ stats.totalOrders }}</strong>
           </div>
         </article>
-        <article class="user-stat">
-          <p class="user-stat__label">Favoritos</p>
-          <p class="user-stat__value">{{ favoritesCount$ | async }}</p>
+
+        <article class="user-stat-card">
+          <div class="user-stat-card__icon user-stat-card__icon--cash">
+            <app-icon name="cart" size="md"></app-icon>
+          </div>
+          <div class="user-stat-card__info">
+            <span class="user-stat-card__label">Total Invertido</span>
+            <strong class="user-stat-card__value">{{ stats.totalSpent | currency:'COP':'symbol':'1.0-0' }}</strong>
+          </div>
+        </article>
+
+        <article class="user-stat-card" (click)="setSection('favorites')">
+          <div class="user-stat-card__icon user-stat-card__icon--fav">
+            <app-icon name="heart" size="md"></app-icon>
+          </div>
+          <div class="user-stat-card__info">
+            <span class="user-stat-card__label">Favoritos Guardados</span>
+            <strong class="user-stat-card__value">{{ stats.favoritesCount }}</strong>
+          </div>
+        </article>
+
+        <article class="user-stat-card" (click)="setSection('profile')">
+          <div class="user-stat-card__icon user-stat-card__icon--user">
+            <app-icon name="user" size="md"></app-icon>
+          </div>
+          <div class="user-stat-card__info">
+            <span class="user-stat-card__label">Estado de Cuenta</span>
+            <strong class="user-stat-card__value user-stat-card__value--active">Activa</strong>
+          </div>
         </article>
       </section>
+    }
 
-      @if (activeSection === 'profile') {
-        <article class="user-card">
-          <h2 class="user-card__title">Perfil y contacto</h2>
+    <!-- 3. Navigation Tabs -->
+    <nav class="user-tabs" aria-label="Secciones de la cuenta">
+      <button
+        type="button"
+        class="user-tab"
+        [class.user-tab--active]="activeSection === 'history'"
+        (click)="setSection('history')"
+      >
+        <app-icon name="history" size="sm"></app-icon>
+        <span>Mis Pedidos</span>
+      </button>
 
-          <section class="user-readonly">
-            <article>
-              <p class="user-readonly__label">Nombre</p>
-              <p class="user-readonly__value">{{ profileForm.controls.displayName.value }}</p>
-            </article>
-            <article>
-              <p class="user-readonly__label">Correo</p>
-              <p class="user-readonly__value">{{ profileForm.controls.email.value }}</p>
-            </article>
-            <article>
-              <p class="user-readonly__label">Telefono</p>
-              <p class="user-readonly__value">{{ profileForm.controls.phone.value }}</p>
-            </article>
-          </section>
-
-          @if (!profileEditMode) {
-            <button app-button type="button" class="app-btn app-btn--ghost user-card__action" (click)="profileEditMode = true">Editar perfil</button>
+      <button
+        type="button"
+        class="user-tab"
+        [class.user-tab--active]="activeSection === 'favorites'"
+        (click)="setSection('favorites')"
+      >
+        <app-icon name="heart" size="sm"></app-icon>
+        <span>Favoritos</span>
+        @if (favoritesCount$ | async; as favCount) {
+          @if (favCount > 0) {
+            <span class="user-tab__badge">{{ favCount }}</span>
           }
+        }
+      </button>
 
-          @if (profileEditMode) {
-            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="user-form" novalidate>
-              <div class="user-form__field">
-                <label for="profile-display-name">Nombre visible</label>
-                <input
-                  id="profile-display-name"
-                  type="text"
-                  formControlName="displayName"
-                  [class.is-invalid]="profileForm.controls.displayName.touched && profileForm.controls.displayName.invalid"
-                  autocomplete="name"
-                />
-              </div>
+      <button
+        type="button"
+        class="user-tab"
+        [class.user-tab--active]="activeSection === 'profile'"
+        (click)="setSection('profile')"
+      >
+        <app-icon name="user" size="sm"></app-icon>
+        <span>Datos Personales</span>
+      </button>
 
-              <div class="user-form__field">
-                <label for="profile-email">Correo</label>
-                <input
-                  id="profile-email"
-                  type="email"
-                  formControlName="email"
-                  [class.is-invalid]="profileForm.controls.email.touched && profileForm.controls.email.invalid"
-                  autocomplete="email"
-                />
-              </div>
+      <button
+        type="button"
+        class="user-tab"
+        [class.user-tab--active]="activeSection === 'addresses'"
+        (click)="setSection('addresses')"
+      >
+        <app-icon name="location" size="sm"></app-icon>
+        <span>Direcciones</span>
+      </button>
 
-              <div class="user-form__field">
-                <label for="profile-phone">Telefono</label>
-                <input
-                  id="profile-phone"
-                  type="tel"
-                  formControlName="phone"
-                  [class.is-invalid]="profileForm.controls.phone.touched && profileForm.controls.phone.invalid"
-                  autocomplete="tel"
-                />
-              </div>
+      <button
+        type="button"
+        class="user-tab"
+        [class.user-tab--active]="activeSection === 'security'"
+        (click)="setSection('security')"
+      >
+        <app-icon name="lock" size="sm"></app-icon>
+        <span>Seguridad</span>
+      </button>
 
-              @if (profileErrorMessage) {
-                <p class="user-form__error">{{ profileErrorMessage }}</p>
-              }
-              @if (profileSavedMessage) {
-                <p class="user-form__success">{{ profileSavedMessage }}</p>
-              }
+      <button
+        type="button"
+        class="user-tab user-tab--logout"
+        (click)="logout()"
+        title="Cerrar sesión"
+      >
+        <app-icon name="logout" size="sm"></app-icon>
+        <span>Salir</span>
+      </button>
+    </nav>
 
-              <div class="user-form__actions">
-                <button app-button type="submit" class="app-btn app-btn--dark-blue user-form__submit" [disabled]="profileForm.invalid">Guardar cambios</button>
-                <button app-button type="button" class="app-btn app-btn--ghost user-form__cancel" (click)="profileEditMode = false">Cancelar</button>
-              </div>
-            </form>
-          }
-        </article>
-      }
-
-      @if (activeSection === 'addresses') {
-        <article class="user-card">
-          <h2 class="user-card__title">Direcciones de envio</h2>
-
-          @if (!addressEditMode) {
-            <button app-button type="button" class="app-btn app-btn--ghost user-card__action" (click)="addressEditMode = true">Agregar direccion</button>
-          }
-
-          @if (addressEditMode) {
-            <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="user-form" novalidate>
-              <p class="user-form__caption">
-                @if (editingAddressId) {
-                  Editar direccion
-                } @else {
-                  Nueva direccion
-                }
-              </p>
-
-              <div class="user-form__field">
-                <label for="address-label">Etiqueta</label>
-                <input id="address-label" type="text" formControlName="label" placeholder="Casa, Oficina..." />
-              </div>
-
-              <div class="user-form__field">
-                <label for="address-recipient">Destinatario</label>
-                <input id="address-recipient" type="text" formControlName="recipient" />
-              </div>
-
-              <div class="user-form__field">
-                <label for="address-phone">Telefono</label>
-                <input id="address-phone" type="tel" formControlName="phone" />
-              </div>
-
-              <div class="user-form__field">
-                <label for="address-city">Ciudad</label>
-                <input id="address-city" type="text" formControlName="city" />
-              </div>
-
-              <div class="user-form__field user-form__field--full">
-                <label for="address-line">Direccion</label>
-                <input id="address-line" type="text" formControlName="addressLine" />
-              </div>
-
-              <div class="user-form__field user-form__field--full">
-                <label for="address-reference">Referencia</label>
-                <input id="address-reference" type="text" formControlName="reference" placeholder="Apartamento, torre, punto de referencia" />
-              </div>
-
-              @if (addressErrorMessage) {
-                <p class="user-form__error">{{ addressErrorMessage }}</p>
-              }
-              @if (addressSuccessMessage) {
-                <p class="user-form__success">{{ addressSuccessMessage }}</p>
-              }
-
-              <div class="user-form__actions">
-                <button app-button type="submit" class="app-btn app-btn--dark-blue user-form__submit" [disabled]="addressForm.invalid">
-                  @if (editingAddressId) {
-                    Actualizar direccion
-                  } @else {
-                    Guardar direccion
-                  }
-                </button>
-                <button app-button type="button" class="app-btn app-btn--ghost user-form__cancel" (click)="cancelAddressEdit()">Cancelar</button>
-              </div>
-            </form>
-          }
-
-          <div class="address-list">
-            @for (address of addresses; track address.id) {
-              <article class="address-item">
-                <div>
-                  <h3>{{ address.label }} @if (address.isDefault) { <span>(Predeterminada)</span> }</h3>
-                  <p>{{ address.recipient }} - {{ address.phone }}</p>
-                  <p>{{ address.addressLine }}, {{ address.city }}</p>
-                  @if (address.reference) {
-                    <p>Ref: {{ address.reference }}</p>
-                  }
-                </div>
-                <div class="address-item__actions">
-                  <button app-button type="button" class="app-btn app-btn--ghost" (click)="editAddress(address.id)">Editar</button>
-                  @if (!address.isDefault) {
-                    <button app-button type="button" class="app-btn app-btn--primary" (click)="setDefaultAddress(address.id)">Usar por defecto</button>
-                  }
-                  <button app-button type="button" class="app-btn app-btn--danger" (click)="removeAddress(address.id)">Eliminar</button>
-                </div>
-              </article>
-            }
+    <!-- 4. Tab Contents -->
+    <!-- TAB 1: MIS PEDIDOS (HISTORIAL Y ESTADO) -->
+    @if (activeSection === 'history') {
+      <section class="user-section" aria-labelledby="orders-heading">
+        <header class="user-section__header">
+          <div>
+            <span class="user-section__eyebrow">SEGUIMIENTO DE ÓRDENES</span>
+            <h2 id="orders-heading" class="user-section__title">Tus Pedidos y Compras</h2>
           </div>
-        </article>
-      }
+          <a app-button class="app-btn app-btn--line-navy" routerLink="/Productos">
+            Explorar catálogo
+          </a>
+        </header>
 
-      @if (activeSection === 'security') {
-        <article class="user-card">
-          <h2 class="user-card__title">Seguridad</h2>
-
-          @if (!securityEditMode) {
-            <section class="user-readonly">
-              <article>
-                <p class="user-readonly__label">Contraseña</p>
-                <p class="user-readonly__value">********</p>
-              </article>
-            </section>
-
-            <button app-button type="button" class="app-btn app-btn--ghost user-card__action" (click)="securityEditMode = true">Cambiar contraseña</button>
-          }
-
-          @if (securityEditMode) {
-            <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="user-form" novalidate>
-              <div class="user-form__field">
-                <label for="current-password">Contraseña actual</label>
-                <input id="current-password" type="password" formControlName="currentPassword" autocomplete="current-password" />
+        @if (userOrders$ | async; as orders) {
+          @if (orders.length === 0) {
+            <div class="user-empty-state">
+              <div class="user-empty-state__icon">
+                <app-icon name="history" size="lg"></app-icon>
               </div>
+              <h3 class="user-empty-state__title">Aún no tienes pedidos registrados</h3>
+              <p class="user-empty-state__lead">
+                Cuando realices una compra o envíes una cotización por WhatsApp, podrás consultar aquí el estado de tu despacho y continuar pedidos previos.
+              </p>
+              <a app-button class="app-btn app-btn--lime user-empty-state__btn" routerLink="/Productos">
+                Ir al catálogo de productos
+              </a>
+            </div>
+          } @else {
+            <div class="user-orders-list">
+              @for (order of orders; track order.id) {
+                <article class="order-card">
+                  <!-- Order Card Header -->
+                  <header class="order-card__header">
+                    <div class="order-card__meta">
+                      <span class="order-card__ref">#{{ order.id }}</span>
+                      <span class="order-card__date">
+                        {{ order.createdAt | date:'d MMMM, y · h:mm a':'':'es-CO' }}
+                      </span>
+                    </div>
 
-              <div class="user-form__field">
-                <label for="new-password">Nueva contraseña</label>
-                <input id="new-password" type="password" formControlName="newPassword" autocomplete="new-password" />
-              </div>
+                    <div class="order-card__status-wrap">
+                      <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                        {{ getStatusLabel(order.status) }}
+                      </span>
+                    </div>
+                  </header>
 
-              <div class="user-form__field">
-                <label for="confirm-password">Confirmar nueva contraseña</label>
-                <input id="confirm-password" type="password" formControlName="confirmPassword" autocomplete="new-password" />
-              </div>
+                  <!-- Order Items -->
+                  <div class="order-card__items">
+                    @for (item of order.enrichedItems; track item.productId) {
+                      <div class="order-item-row">
+                        <div class="order-item-row__media">
+                          <img [src]="item.image" [alt]="item.name" loading="lazy" />
+                        </div>
 
-              @if (passwordErrorMessage) {
-                <p class="user-form__error">{{ passwordErrorMessage }}</p>
+                        <div class="order-item-row__info">
+                          <h4 class="order-item-row__name">{{ item.name }}</h4>
+                          <span class="order-item-row__calc">
+                            {{ item.quantity }} × {{ item.unitPrice | currency:'COP':'symbol':'1.0-0' }}
+                          </span>
+                        </div>
+
+                        <strong class="order-item-row__total">
+                          {{ (item.unitPrice * item.quantity) | currency:'COP':'symbol':'1.0-0' }}
+                        </strong>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Order Card Footer -->
+                  <footer class="order-card__footer">
+                    <div class="order-card__financials">
+                      <div class="order-card__sub-row">
+                        <span>Subtotal:</span>
+                        <span>{{ order.subtotal | currency:'COP':'symbol':'1.0-0' }}</span>
+                      </div>
+                      <div class="order-card__total-row">
+                        <span>Total:</span>
+                        <strong>{{ order.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+                      </div>
+                    </div>
+
+                    <div class="order-card__actions">
+                      <button
+                        app-button
+                        type="button"
+                        class="app-btn app-btn--navy-solid order-card__btn"
+                        (click)="reorder(order)"
+                      >
+                        <app-icon name="cart" size="sm"></app-icon>
+                        <span>Continuar / Reordenar</span>
+                      </button>
+
+                      <button
+                        app-button
+                        type="button"
+                        class="app-btn app-btn--line-navy order-card__btn"
+                        (click)="contactWhatsAppOrder(order)"
+                      >
+                        <span>Consultar por WhatsApp</span>
+                      </button>
+                    </div>
+                  </footer>
+                </article>
               }
-              @if (passwordSuccessMessage) {
-                <p class="user-form__success">{{ passwordSuccessMessage }}</p>
-              }
-
-              <div class="user-form__actions">
-                <button app-button type="submit" class="app-btn app-btn--dark-blue user-form__submit" [disabled]="passwordForm.invalid">Actualizar contraseña</button>
-                <button app-button type="button" class="app-btn app-btn--ghost user-form__cancel" (click)="securityEditMode = false">Cancelar</button>
-              </div>
-            </form>
+            </div>
           }
-        </article>
-      }
+        }
+      </section>
+    }
 
-      @if (activeSection === 'favorites') {
-        <article class="user-card">
-          <div class="favorites-toolbar">
-            <h2 class="user-card__title">Favoritos</h2>
-            <label for="favorites-sort" class="favorites-toolbar__label">Ordenar por</label>
+    <!-- TAB 2: MIS FAVORITOS -->
+    @if (activeSection === 'favorites') {
+      <section class="user-section" aria-labelledby="favorites-heading">
+        <header class="user-section__header">
+          <div>
+            <span class="user-section__eyebrow">GUARDADOS PARA DESPUÉS</span>
+            <h2 id="favorites-heading" class="user-section__title">Mis Productos Favoritos</h2>
+          </div>
+
+          <div class="user-section__controls">
             <select
-              id="favorites-sort"
-              class="favorites-toolbar__select"
-              [value]="favoriteSort$ | async"
+              class="user-sort-select"
               (change)="setFavoriteSort($any($event.target).value)"
             >
-              <option value="recent">Recientes</option>
+              <option value="recent">Más recientes</option>
               <option value="price-asc">Precio: menor a mayor</option>
               <option value="price-desc">Precio: mayor a menor</option>
             </select>
           </div>
+        </header>
 
-          @if (favoritesVm$ | async; as favorites) {
-            @if (favorites.length === 0) {
-              <div class="purchase-empty">
-                <p>Aun no tienes productos favoritos.</p>
-                <a routerLink="/Productos">Descubrir productos</a>
+        @if (favoritesVm$ | async; as favorites) {
+          @if (favorites.length === 0) {
+            <div class="user-empty-state">
+              <div class="user-empty-state__icon user-empty-state__icon--fav">
+                <app-icon name="heart" size="lg"></app-icon>
               </div>
-            } @else {
-              <div class="purchase-list">
-                @for (item of favorites; track item.productId) {
-                  <article class="purchase-item">
-                    <img [src]="item.image" [alt]="item.name" />
-                    <div class="purchase-item__meta">
-                      <h3>{{ item.name }}</h3>
-                      <p>{{ item.price | currency:'COP':'symbol':'1.0-0' }}</p>
-                    </div>
-                    <div class="purchase-item__price">
-                      <a [routerLink]="['/Productos', item.productId]">Ver</a>
-                      <button app-button type="button" class="app-btn app-btn--danger" (click)="removeFavorite(item.productId)">Quitar</button>
-                    </div>
-                  </article>
-                }
-              </div>
-            }
-          }
-        </article>
-      }
-
-      @if (activeSection === 'history') {
-        <article class="user-card user-card--history">
-          <h2 class="user-card__title">Historial de compras</h2>
-
-          @if (vm.items.length === 0) {
-            <div class="purchase-empty">
-              <p>Aun no tienes compras registradas.</p>
-              <a routerLink="/Productos">Explorar productos</a>
+              <h3 class="user-empty-state__title">No tienes favoritos guardados</h3>
+              <p class="user-empty-state__lead">
+                Haz clic en el ícono de corazón en cualquier producto del catálogo para guardarlo y revisarlo en cualquier momento.
+              </p>
+              <a app-button class="app-btn app-btn--lime user-empty-state__btn" routerLink="/Productos">
+                Explorar catálogo
+              </a>
             </div>
           } @else {
-            <div class="purchase-list" aria-label="Compras registradas">
-              @for (item of vm.items; track item.productId + item.purchasedAt) {
-                <article class="purchase-item">
-                  <img [src]="item.image" [alt]="item.productName" />
-                  <div class="purchase-item__meta">
-                    <h3>{{ item.productName }}</h3>
-                    <p>Cantidad: {{ item.quantity }}</p>
-                    <p>Fecha: {{ item.purchasedAt | date:'mediumDate' }}</p>
+            <div class="user-favorites-grid">
+              @for (fav of favorites; track fav.productId) {
+                <article class="fav-card">
+                  <div class="fav-card__media">
+                    <img [src]="fav.image" [alt]="fav.name" loading="lazy" />
+                    <span class="fav-card__badge">{{ fav.categoryName }}</span>
+                    <button
+                      type="button"
+                      class="fav-card__remove-btn"
+                      (click)="removeFavorite(fav.productId)"
+                      title="Quitar de favoritos"
+                      aria-label="Quitar de favoritos"
+                    >
+                      <app-icon name="trash" size="sm"></app-icon>
+                    </button>
                   </div>
-                  <div class="purchase-item__price">
-                    <span>{{ item.unitPrice | currency:'COP':'symbol':'1.0-0' }} c/u</span>
-                    <strong>{{ item.total | currency:'COP':'symbol':'1.0-0' }}</strong>
+
+                  <div class="fav-card__body">
+                    <h3 class="fav-card__title">
+                      <a [routerLink]="['/Productos', fav.productId]">{{ fav.name }}</a>
+                    </h3>
+
+                    <p class="fav-card__price">
+                      {{ fav.price | currency:'COP':'symbol':'1.0-0' }}
+                    </p>
+
+                    <div class="fav-card__actions">
+                      <a
+                        app-button
+                        class="app-btn app-btn--line-navy fav-card__btn"
+                        [routerLink]="['/Productos', fav.productId]"
+                      >
+                        Detalle
+                      </a>
+                      <button
+                        app-button
+                        type="button"
+                        class="app-btn app-btn--navy-solid fav-card__btn"
+                        (click)="addFavoriteToCart(fav.product)"
+                      >
+                        Agregar
+                      </button>
+                    </div>
                   </div>
                 </article>
               }
             </div>
           }
-        </article>
-      }
+        }
+      </section>
     }
-  </main>
-</section>
+
+    <!-- TAB 3: DATOS PERSONALES / PERFIL -->
+    @if (activeSection === 'profile') {
+      <section class="user-section" aria-labelledby="profile-heading">
+        <header class="user-section__header">
+          <div>
+            <span class="user-section__eyebrow">INFORMACIÓN DE CUENTA</span>
+            <h2 id="profile-heading" class="user-section__title">Datos Personales y Contacto</h2>
+          </div>
+
+          @if (!profileEditMode) {
+            <button
+              app-button
+              type="button"
+              class="app-btn app-btn--line-navy"
+              (click)="profileEditMode = true"
+            >
+              Editar información
+            </button>
+          }
+        </header>
+
+        @if (!profileEditMode) {
+          <div class="user-profile-view">
+            <div class="user-profile-field">
+              <span class="user-profile-field__label">Nombre completo</span>
+              <strong class="user-profile-field__value">{{ profileForm.controls.displayName.value || 'No especificado' }}</strong>
+            </div>
+
+            <div class="user-profile-field">
+              <span class="user-profile-field__label">Correo electrónico</span>
+              <strong class="user-profile-field__value">{{ profileForm.controls.email.value || 'No especificado' }}</strong>
+            </div>
+
+            <div class="user-profile-field">
+              <span class="user-profile-field__label">Teléfono de contacto</span>
+              <strong class="user-profile-field__value">{{ profileForm.controls.phone.value || 'No especificado' }}</strong>
+            </div>
+
+            <div class="user-profile-field">
+              <span class="user-profile-field__label">Tipo de cuenta</span>
+              <strong class="user-profile-field__value">Cliente Empresarial / Persona Natural</strong>
+            </div>
+          </div>
+        } @else {
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="user-edit-form">
+            <div class="user-form-grid">
+              <div class="cart-field">
+                <label for="displayName" class="cart-field__label">Nombre completo *</label>
+                <input
+                  id="displayName"
+                  type="text"
+                  class="cart-field__input"
+                  formControlName="displayName"
+                />
+              </div>
+
+              <div class="cart-field">
+                <label for="email" class="cart-field__label">Correo electrónico *</label>
+                <input
+                  id="email"
+                  type="email"
+                  class="cart-field__input"
+                  formControlName="email"
+                />
+              </div>
+
+              <div class="cart-field cart-field--full">
+                <label for="phone" class="cart-field__label">Teléfono / WhatsApp *</label>
+                <input
+                  id="phone"
+                  type="tel"
+                  class="cart-field__input"
+                  formControlName="phone"
+                />
+              </div>
+            </div>
+
+            @if (profileErrorMessage) {
+              <p class="user-form-alert user-form-alert--error">{{ profileErrorMessage }}</p>
+            }
+
+            <div class="user-edit-form__actions">
+              <button
+                app-button
+                type="submit"
+                class="app-btn app-btn--lime"
+                [disabled]="profileForm.invalid"
+              >
+                Guardar cambios
+              </button>
+              <button
+                app-button
+                type="button"
+                class="app-btn app-btn--line-navy"
+                (click)="profileEditMode = false"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        }
+      </section>
+    }
+
+    <!-- TAB 4: DIRECCIONES DE ENVÍO -->
+    @if (activeSection === 'addresses') {
+      <section class="user-section" aria-labelledby="addresses-heading">
+        <header class="user-section__header">
+          <div>
+            <span class="user-section__eyebrow">LIBRETA DE DIRECCIONES</span>
+            <h2 id="addresses-heading" class="user-section__title">Direcciones de Entrega</h2>
+          </div>
+
+          @if (!addressEditMode) {
+            <button
+              app-button
+              type="button"
+              class="app-btn app-btn--lime"
+              (click)="addressEditMode = true"
+            >
+              + Agregar dirección
+            </button>
+          }
+        </header>
+
+        @if (addressEditMode) {
+          <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="user-edit-form">
+            <h3 class="user-form-heading">
+              {{ editingAddressId ? 'Editar dirección de entrega' : 'Nueva dirección de entrega' }}
+            </h3>
+
+            <div class="user-form-grid">
+              <div class="cart-field">
+                <label for="addr-label" class="cart-field__label">Etiqueta (ej: Oficina, Sede Norte) *</label>
+                <input id="addr-label" type="text" class="cart-field__input" formControlName="label" placeholder="Oficina Principal" />
+              </div>
+
+              <div class="cart-field">
+                <label for="addr-recipient" class="cart-field__label">Nombre del destinatario *</label>
+                <input id="addr-recipient" type="text" class="cart-field__input" formControlName="recipient" placeholder="Nombre de quien recibe" />
+              </div>
+
+              <div class="cart-field">
+                <label for="addr-city" class="cart-field__label">Ciudad *</label>
+                <input id="addr-city" type="text" class="cart-field__input" formControlName="city" placeholder="Bogotá D.C." />
+              </div>
+
+              <div class="cart-field">
+                <label for="addr-phone" class="cart-field__label">Teléfono de contacto *</label>
+                <input id="addr-phone" type="tel" class="cart-field__input" formControlName="phone" placeholder="316 320 2647" />
+              </div>
+
+              <div class="cart-field cart-field--full">
+                <label for="addr-line" class="cart-field__label">Dirección exacta *</label>
+                <input id="addr-line" type="text" class="cart-field__input" formControlName="addressLine" placeholder="Cra 45 # 23-10" />
+              </div>
+
+              <div class="cart-field cart-field--full">
+                <label for="addr-ref" class="cart-field__label">Detalle o indicaciones (opcional)</label>
+                <input id="addr-ref" type="text" class="cart-field__input" formControlName="reference" placeholder="Torre B, Oficina 402" />
+              </div>
+            </div>
+
+            @if (addressErrorMessage) {
+              <p class="user-form-alert user-form-alert--error">{{ addressErrorMessage }}</p>
+            }
+
+            <div class="user-edit-form__actions">
+              <button app-button type="submit" class="app-btn app-btn--lime" [disabled]="addressForm.invalid">
+                Guardar dirección
+              </button>
+              <button app-button type="button" class="app-btn app-btn--line-navy" (click)="cancelAddressEdit()">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        } @else {
+          @if (addresses.length === 0) {
+            <div class="user-empty-state">
+              <div class="user-empty-state__icon">
+                <app-icon name="location" size="lg"></app-icon>
+              </div>
+              <h3 class="user-empty-state__title">No tienes direcciones guardadas</h3>
+              <p class="user-empty-state__lead">
+                Guarda tus direcciones frecuentes de oficina o domicilio para agilizar tus compras.
+              </p>
+              <button app-button type="button" class="app-btn app-btn--lime user-empty-state__btn" (click)="addressEditMode = true">
+                Agregar primera dirección
+              </button>
+            </div>
+          } @else {
+            <div class="user-addresses-grid">
+              @for (addr of addresses; track addr.id) {
+                <article class="address-card" [class.address-card--default]="addr.isDefault">
+                  <div class="address-card__header">
+                    <span class="address-card__label">{{ addr.label }}</span>
+                    @if (addr.isDefault) {
+                      <span class="address-card__default-badge">Principal</span>
+                    }
+                  </div>
+
+                  <div class="address-card__body">
+                    <strong class="address-card__recipient">{{ addr.recipient }}</strong>
+                    <p class="address-card__line">{{ addr.addressLine }}</p>
+                    @if (addr.reference) {
+                      <p class="address-card__ref">{{ addr.reference }}</p>
+                    }
+                    <p class="address-card__city">{{ addr.city }} · Tel: {{ addr.phone }}</p>
+                  </div>
+
+                  <div class="address-card__actions">
+                    <button type="button" class="address-card__btn" (click)="editAddress(addr.id)">Editar</button>
+                    @if (!addr.isDefault) {
+                      <button type="button" class="address-card__btn" (click)="setDefaultAddress(addr.id)">Hacer principal</button>
+                      <button type="button" class="address-card__btn address-card__btn--delete" (click)="deleteAddress(addr.id)">Eliminar</button>
+                    }
+                  </div>
+                </article>
+              }
+            </div>
+          }
+        }
+      </section>
+    }
+
+    <!-- TAB 5: SEGURIDAD Y CONTRASEÑA -->
+    @if (activeSection === 'security') {
+      <section class="user-section" aria-labelledby="security-heading">
+        <header class="user-section__header">
+          <div>
+            <span class="user-section__eyebrow">CREDENCIALES Y PROTECCIÓN</span>
+            <h2 id="security-heading" class="user-section__title">Seguridad de la Cuenta</h2>
+          </div>
+        </header>
+
+        <div class="user-security-layout">
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="user-edit-form">
+            <h3 class="user-form-heading">Actualizar contraseña</h3>
+
+            <div class="cart-field" style="margin-bottom: 16px;">
+              <label for="currentPassword" class="cart-field__label">Contraseña actual *</label>
+              <input id="currentPassword" type="password" class="cart-field__input" formControlName="currentPassword" />
+            </div>
+
+            <div class="cart-field" style="margin-bottom: 16px;">
+              <label for="newPassword" class="cart-field__label">Nueva contraseña (mínimo 6 caracteres) *</label>
+              <input id="newPassword" type="password" class="cart-field__input" formControlName="newPassword" />
+            </div>
+
+            <div class="cart-field" style="margin-bottom: 20px;">
+              <label for="confirmPassword" class="cart-field__label">Confirmar nueva contraseña *</label>
+              <input id="confirmPassword" type="password" class="cart-field__input" formControlName="confirmPassword" />
+            </div>
+
+            @if (passwordErrorMessage) {
+              <p class="user-form-alert user-form-alert--error">{{ passwordErrorMessage }}</p>
+            }
+            @if (passwordSuccessMessage) {
+              <p class="user-form-alert user-form-alert--success">{{ passwordSuccessMessage }}</p>
+            }
+
+            <div class="user-edit-form__actions">
+              <button app-button type="submit" class="app-btn app-btn--lime" [disabled]="passwordForm.invalid">
+                Actualizar contraseña
+              </button>
+            </div>
+          </form>
+
+          <aside class="user-security-tips">
+            <h4 class="user-security-tips__title">Recomendaciones de seguridad</h4>
+            <ul class="user-security-tips__list">
+              <li>Usa contraseñas únicas con combinación de letras, números y símbolos.</li>
+              <li>No compartas tus credenciales de acceso con terceros.</li>
+              <li>Tecsisman nunca te solicitará tu contraseña por teléfono ni por correo.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    }
+  </div>
+</main>

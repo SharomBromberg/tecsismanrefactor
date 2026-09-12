@@ -2,8 +2,13 @@
   <h2 class="admin-card__title">{{ title }}</h2>
   <form [formGroup]="form" (ngSubmit)="submit()" class="admin-form admin-form--grid">
     <div>
-      <label class="admin-form__label" for="product-name">Nombre</label>
-      <input class="admin-form__control" id="product-name" type="text" formControlName="name" />
+      <app-input
+        label="Nombre"
+        type="text"
+        customLabelStyle="app-input__label--light"
+        formControlName="name"
+        [hasError]="hasError('name', 'required') || hasError('name', 'minlength')"
+      ></app-input>
       @if (hasError('name', 'required')) {
         <small class="admin-form__error">Nombre obligatorio.</small>
       }
@@ -26,16 +31,26 @@
     </div>
 
     <div>
-      <label class="admin-form__label" for="product-price">Precio</label>
-      <input class="admin-form__control" id="product-price" type="number" min="1" formControlName="price" />
+      <app-input
+        label="Precio"
+        type="number"
+        customLabelStyle="app-input__label--light"
+        formControlName="price"
+        [hasError]="hasError('price', 'required') || hasError('price', 'min')"
+      ></app-input>
       @if (hasError('price', 'required') || hasError('price', 'min')) {
         <small class="admin-form__error">El precio debe ser mayor a 0.</small>
       }
     </div>
 
     <div>
-      <label class="admin-form__label" for="product-stock">Stock</label>
-      <input class="admin-form__control" id="product-stock" type="number" min="0" formControlName="stock" />
+      <app-input
+        label="Stock"
+        type="number"
+        customLabelStyle="app-input__label--light"
+        formControlName="stock"
+        [hasError]="hasError('stock', 'required') || hasError('stock', 'min')"
+      ></app-input>
       @if (hasError('stock', 'required') || hasError('stock', 'min')) {
         <small class="admin-form__error">El stock no puede ser negativo.</small>
       }
@@ -57,8 +72,12 @@
     </div>
 
     <div>
-      <label class="admin-form__label" for="product-image">Imagenes (URL, separadas por coma)</label>
-      <input class="admin-form__control" id="product-image" type="text" formControlName="imageUrl" />
+      <app-input
+        label="Imagenes (URL, separadas por coma)"
+        type="text"
+        customLabelStyle="app-input__label--light"
+        formControlName="imageUrl"
+      ></app-input>
     </div>
 
     <div class="admin-form__span-2">
@@ -79,7 +98,15 @@
               <img [src]="image.dataUrl" [alt]="image.name" />
               <div class="admin-image-card__meta">
                 <p class="admin-image-card__name">{{ image.name }}</p>
-                <button type="button" (click)="removeLocalImage(i)">Quitar</button>
+                <button
+                  app-button
+                  type="button"
+                  class="app-btn app-btn--danger admin-image-card__remove"
+                  (click)="removeLocalImage(i)"
+                >
+                  <app-icon name="trash" size="sm"></app-icon>
+                  <span>Quitar</span>
+                </button>
               </div>
             </article>
           }
@@ -88,8 +115,15 @@
     </div>
 
     <div>
-      <label class="admin-form__label" for="product-tags">Tags (coma)</label>
-      <input class="admin-form__control" id="product-tags" type="text" formControlName="tags" />
+      <app-input label="Tags (coma)" type="text" customLabelStyle="app-input__label--light" formControlName="tags"></app-input>
+    </div>
+
+    <div>
+      <app-input label="Tallas (coma)" type="text" customLabelStyle="app-input__label--light" placeholder="Ej. S, M, L" formControlName="sizes"></app-input>
+    </div>
+
+    <div>
+      <app-input label="Colores (coma)" type="text" customLabelStyle="app-input__label--light" placeholder="Ej. Negro, Blanco" formControlName="colors"></app-input>
     </div>
 
     <label class="admin-form__checkbox admin-form__span-2">
@@ -98,9 +132,23 @@
     </label>
 
     <div class="admin-form__actions admin-form__span-2">
-      <button class="admin-form__submit" type="submit" [disabled]="form.invalid">{{ submitLabel }}</button>
+      <button
+        app-button
+        type="submit"
+        class="app-btn app-btn--navy-solid"
+        [disabled]="form.invalid"
+      >
+        {{ submitLabel }}
+      </button>
       @if (isEditing) {
-        <button class="admin-form__secondary" type="button" (click)="handleCancelEdit()">Cancelar</button>
+        <button
+          app-button
+          type="button"
+          class="app-btn app-btn--line-navy"
+          (click)="handleCancelEdit()"
+        >
+          Cancelar
+        </button>
       }
     </div>
   </form>

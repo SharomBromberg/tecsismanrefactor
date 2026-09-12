@@ -6,7 +6,7 @@ export const adminRoleGuard: CanActivateFn = (_route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.isLoggedIn('admin')) {
+  if (authService.isStaff()) {
     return true;
   }
 

@@ -4,11 +4,19 @@ import { RouterLink } from '@angular/router';
 import { Product } from '@core/interfaces/product';
 import { ButtonComponent } from '../../atoms/button/button.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { RatingStarsComponent } from '../rating-star/rating-stars.component';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, RouterLink, ButtonComponent, IconComponent],
+  imports: [
+    CommonModule,
+    CurrencyPipe,
+    RouterLink,
+    ButtonComponent,
+    IconComponent,
+    RatingStarsComponent,
+  ],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss'],
 })
@@ -20,6 +28,8 @@ export class ProductCardComponent {
   @Input() isFavorite = false;
   @Output() addToCart = new EventEmitter<Product>();
   @Output() favoriteToggle = new EventEmitter<string>();
+
+  readonly Math = Math;
 
   onAddToCart(): void {
     this.addToCart.emit(this.product);

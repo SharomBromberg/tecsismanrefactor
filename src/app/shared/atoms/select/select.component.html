@@ -1,0 +1,19 @@
+<div class="app-select__wrapper">
+  @if (label) {
+    <label class="app-select__label" [ngClass]="customLabelStyle" [for]="inputId">{{ label }}</label>
+  }
+
+  <select
+    [id]="inputId"
+    class="app-select"
+    [ngClass]="customStyle"
+    [(ngModel)]="inputValue"
+    (change)="getSelectInput($event)"
+    [disabled]="isDisabled"
+    [class.app-select--error]="hasError"
+  >
+    @for (option of options; track option.value) {
+      <option [value]="option.value">{{ option.label }}</option>
+    }
+  </select>
+</div>

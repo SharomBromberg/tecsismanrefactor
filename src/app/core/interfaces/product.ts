@@ -22,6 +22,11 @@ export interface ProductComment {
 //   filenames?: string[];
 // }
 
+export interface ProductAttributes {
+  sizes?: string[];
+  colors?: string[];
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -37,6 +42,7 @@ export interface Product {
   featured?: boolean;
   tags?: string[];
   filenames?: string[];
+  attributes?: ProductAttributes;
 }
 
 export interface CatalogCardVm {

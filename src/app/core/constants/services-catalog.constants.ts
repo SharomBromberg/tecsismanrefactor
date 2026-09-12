@@ -9,6 +9,19 @@ export interface ServiceGroupData {
   cards: CardData[];
 }
 
+export interface PremiumServiceData {
+  n: string;
+  title: string;
+  text: string;
+}
+
+export const PREMIUM_SERVICES: PremiumServiceData[] = [
+  { n: '01', title: 'Desarrollo web', text: 'Sitios corporativos, tiendas en línea y plataformas a medida sobre una base técnica lista para escalar.' },
+  { n: '02', title: 'Redes y conectividad', text: 'Diseño e instalación de redes estructuradas, con documentación y certificación de puntos.' },
+  { n: '03', title: 'Seguridad electrónica', text: 'CCTV, control de acceso y monitoreo continuo para proteger activos y personas.' },
+  { n: '04', title: 'Soporte y mantenimiento', text: 'Preventivo y correctivo para equipos de cómputo y dispositivos especializados.' },
+];
+
 export const SERVICES_TECH_STACK: string[] = [
   'Angular',
   'TypeScript',

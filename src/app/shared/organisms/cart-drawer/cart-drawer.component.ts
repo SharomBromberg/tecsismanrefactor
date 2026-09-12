@@ -5,6 +5,7 @@ import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { CartService } from '@core/services/cart.service';
 import { AuthService } from '@core/services/auth.service';
+import { OrderService } from '@core/services/order.service';
 import { PurchaseHistoryService } from '@core/services/purchase-history.service';
 import { CartDrawerService } from '@core/services/cart-drawer.service';
 import { CartItem } from '@core/interfaces/cart-item.interface';
@@ -28,6 +29,7 @@ import { ButtonComponent } from '../../atoms/button/button.component';
 export class CartDrawerComponent implements OnDestroy {
   private readonly cartService = inject(CartService);
   private readonly authService = inject(AuthService);
+  private readonly orderService = inject(OrderService);
   private readonly purchaseHistoryService = inject(PurchaseHistoryService);
   private readonly cartDrawerService = inject(CartDrawerService);
 
@@ -101,8 +103,14 @@ export class CartDrawerComponent implements OnDestroy {
       })),
     );
 
+    const summary = this.cartService.getSummaryForItems(items);
+    const order = this.orderService.createOrder(
+      { username: session.username, displayName: session.displayName },
+      items,
+      summary,
+    );
+
     this.cartService.clearCart();
-    this.checkoutMessage =
-      'Compra registrada con exito. Ya puedes calificar estos productos.';
+    this.checkoutMessage = `Compra registrada con exito. Tu numero de pedido es ${order.id}. Ya puedes calificar estos productos.`;
   }
 }

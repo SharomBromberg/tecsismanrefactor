@@ -1,14 +1,14 @@
 <article class="admin-card">
   <h2 class="admin-card__title">{{ title }}</h2>
   <form [formGroup]="form" (ngSubmit)="submit()" class="admin-form">
-    <label class="admin-form__label" for="category-name">Nombre de la categoría</label>
-    <input
-      class="admin-form__control"
-      id="category-name"
+    <app-input
+      label="Nombre de la categoría"
       type="text"
-      formControlName="name"
+      customLabelStyle="app-input__label--light"
       placeholder="Ej. Redes empresariales"
-    />
+      formControlName="name"
+      [hasError]="hasError('required') || hasError('minlength')"
+    ></app-input>
     @if (hasError('required')) {
       <small class="admin-form__error">El nombre es obligatorio.</small>
     }
@@ -25,9 +25,23 @@
     </select>
 
     <div class="admin-form__actions">
-      <button class="admin-form__submit" type="submit" [disabled]="form.invalid">{{ submitLabel }}</button>
+      <button
+        app-button
+        type="submit"
+        class="app-btn app-btn--navy-solid"
+        [disabled]="form.invalid"
+      >
+        {{ submitLabel }}
+      </button>
       @if (editingCategoryId) {
-        <button class="admin-form__secondary" type="button" (click)="cancelEdit()">Cancelar</button>
+        <button
+          app-button
+          type="button"
+          class="app-btn app-btn--line-navy"
+          (click)="cancelEdit()"
+        >
+          Cancelar
+        </button>
       }
     </div>
   </form>
@@ -40,8 +54,24 @@
           <small>{{ resolveParentName(category) }}</small>
         </div>
         <div class="admin-list__actions">
-          <button type="button" (click)="edit(category)">Editar</button>
-          <button type="button" class="admin-list__danger" (click)="remove(category)">Eliminar</button>
+          <button
+            app-button
+            type="button"
+            class="app-btn app-btn--line-navy admin-list__action"
+            (click)="edit(category)"
+          >
+            <app-icon name="edit" size="sm"></app-icon>
+            <span>Editar</span>
+          </button>
+          <button
+            app-button
+            type="button"
+            class="app-btn app-btn--danger admin-list__action"
+            (click)="remove(category)"
+          >
+            <app-icon name="trash" size="sm"></app-icon>
+            <span>Eliminar</span>
+          </button>
         </div>
       </li>
     }

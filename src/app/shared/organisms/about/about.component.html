@@ -1,13 +1,22 @@
 <section class="about" aria-labelledby="about-title">
-  <div class="app-container about__container">
-    <h2 id="about-title" class="about__title">Sobre Nosotros</h2>
+  <div class="app-container about__grid">
+    <div class="about__media">
+      <img [src]="imageUrl" [alt]="imageAlt" loading="lazy" />
+    </div>
 
-    <div class="about__grid" role="list">
-      @for (item of aboutItems; track item.id) {
-        <div class="about__item" role="listitem">
-          <app-card [data]="item"></app-card>
-        </div>
-      }
+    <div class="about__copy">
+      <p class="about__eyebrow">Sobre nosotros</p>
+      <h2 id="about-title" class="about__title">Un equipo técnico que responde directo.</h2>
+      <p class="about__lead">Somos un equipo pequeño y especializado: quien te asesora es quien ejecuta el proyecto. Eso significa respuestas rápidas, decisiones informadas y cero intermediarios.</p>
+
+      <div class="about__points">
+        @for (point of valuePoints; track point.title) {
+          <article class="about__point">
+            <h3 class="about__point-title">{{ point.title }}</h3>
+            <p class="about__point-text">{{ point.description }}</p>
+          </article>
+        }
+      </div>
     </div>
   </div>
 </section>

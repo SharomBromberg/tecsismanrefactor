@@ -1,66 +1,525 @@
-<section class="cart-page app-container" aria-labelledby="cart-title">
-	<header class="cart-page__header">
-		<div>
-			<p class="cart-page__eyebrow">Compras</p>
-			<h1 id="cart-title">Tu carrito</h1>
-			<p class="cart-page__subtitle">Revisa tus productos antes de confirmar el pedido.</p>
-		</div>
-		<a class="cart-page__back" routerLink="/Productos">Seguir comprando</a>
-	</header>
+<main class="cart-page">
+  <!-- 1. Hero Header -->
+  <header class="cart-hero">
+    <div class="app-container">
+      <div class="cart-hero__content">
+        <p class="cart-hero__eyebrow">PEDIDO</p>
+        <h1 class="cart-hero__title">Tu carrito y checkout</h1>
+        <p class="cart-hero__subtitle">
+          Revisa tus equipos seleccionados y completa tus datos para coordinar el despacho y acordar la forma de pago.
+        </p>
+      </div>
+    </div>
+  </header>
 
-	@if (items$ | async; as items) {
-		@if (checkoutMessage) {
-			<p class="cart-feedback cart-feedback--success">{{ checkoutMessage }}</p>
-		}
-		@if (checkoutError) {
-			<p class="cart-feedback cart-feedback--error">{{ checkoutError }}</p>
-		}
+  <!-- 2. Main Container -->
+  <div class="app-container cart-main-container">
+    <!-- Process Steps Indicator -->
+    <nav class="cart-steps" aria-label="Progreso del pedido">
+      <div class="cart-step" [class.cart-step--active]="!isSubmitted">
+        <span class="cart-step__num">01</span>
+        <span class="cart-step__label">Carrito de compras</span>
+      </div>
+      <div class="cart-step" [class.cart-step--active]="!isSubmitted">
+        <span class="cart-step__num">02</span>
+        <span class="cart-step__label">Datos de entrega</span>
+      </div>
+      <div class="cart-step" [class.cart-step--active]="isSubmitted">
+        <span class="cart-step__num">03</span>
+        <span class="cart-step__label">Confirmación</span>
+      </div>
+    </nav>
 
-		@if (items.length === 0) {
-			<article class="cart-empty">
-				<h2>Tu carrito esta vacio</h2>
-				<p>Agrega productos desde el catalogo para iniciar tu compra.</p>
-				<a routerLink="/Productos">Ir al catalogo</a>
-			</article>
-		} @else {
-			<div class="cart-layout">
-				<div class="cart-list">
-					@for (item of items; track item.product._id) {
-						<article class="cart-item">
-							<img [src]="item.product.images[0] || 'assets/pictures/placeholder.png'" [alt]="item.product.name" />
+    <!-- Feedback messages -->
+    @if (checkoutError) {
+      <div class="cart-alert cart-alert--error" role="alert">
+        <app-icon name="alert" size="sm"></app-icon>
+        <span>{{ checkoutError }}</span>
+      </div>
+    }
 
-							<div class="cart-item__meta">
-								<h3>{{ item.product.name }}</h3>
-								<p>{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</p>
-							</div>
+    <!-- View 1: Order Confirmed / Submitted -->
+    @if (isSubmitted && submittedOrder) {
+      <section class="cart-confirmation" aria-labelledby="confirmation-heading">
+        <div class="cart-confirmation__card">
+          <div class="cart-confirmation__icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="cart-confirmation__check-svg">
+              <path d="M5 13L9.5 17.5L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
 
-							<div class="cart-item__controls">
-								<button app-button type="button" class="cart-item__qty-btn" (click)="decrease(item)">-</button>
-								<span>{{ item.quantity }}</span>
-								<button app-button type="button" class="cart-item__qty-btn" (click)="increase(item)">+</button>
-							</div>
+          <p class="cart-confirmation__eyebrow">PEDIDO RECIBIDO</p>
+          <h2 id="confirmation-heading" class="cart-confirmation__title">¡Ya tenemos tu pedido!</h2>
+          
+          <div class="cart-confirmation__order-ref">
+            <span>Referencia de pedido:</span>
+            <strong>#{{ submittedOrder.id }}</strong>
+          </div>
 
-							<button app-button class="app-btn app-btn--danger cart-item__remove" type="button" (click)="remove(item)">Eliminar</button>
-						</article>
-					}
-				</div>
+          <p class="cart-confirmation__lead">
+            Te escribimos en minutos para confirmar disponibilidad inmediata, acordar el tiempo exacto de entrega y el medio de pago de tu preferencia (Transferencia Bancolombia, PSE, tarjeta de crédito o contra entrega).
+          </p>
 
-				@if (summary$ | async; as summary) {
-					<aside class="cart-summary">
-						<h2>Resumen</h2>
-						<p><span>Items</span><strong>{{ summary.itemsCount }}</strong></p>
-						<p><span>Subtotal</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
-						<p><span>IVA</span><strong>{{ summary.tax | currency:'COP':'symbol':'1.0-0' }}</strong></p>
-						<p class="cart-summary__total">
-							<span>Total</span>
-							<strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong>
-						</p>
+          <div class="cart-confirmation__channel-note">
+            @if (submissionChannel === 'whatsapp') {
+              <div class="cart-confirmation__channel-tag cart-confirmation__channel-tag--wa">
+                <span>Canal: WhatsApp directo</span>
+              </div>
+              <p>Si la ventana de chat no se abrió automáticamente en tu navegador, puedes escribirnos directamente a nuestra línea de atención: <strong>+57 316 320 2647</strong> indicando tu número de pedido.</p>
+            } @else if (submissionChannel === 'email') {
+              <div class="cart-confirmation__channel-tag cart-confirmation__channel-tag--mail">
+                <span>Canal: Correo electrónico</span>
+              </div>
+              <p>Hemos generado tu resumen de pedido a <strong>administración&#64;tecsisman.com</strong>. Te daremos respuesta a la brevedad.</p>
+            } @else {
+              <div class="cart-confirmation__channel-tag">
+                <span>Canal: Registro en plataforma</span>
+              </div>
+              <p>Tu orden ha quedado registrada con éxito en nuestro sistema administrativo.</p>
+            }
+          </div>
 
-						<button app-button type="button" class="app-btn app-btn--dark-blue cart-summary__primary" (click)="checkout(items)">Finalizar compra</button>
-						<button app-button type="button" class="app-btn app-btn--ghost cart-summary__ghost" (click)="clear()">Vaciar carrito</button>
-					</aside>
-				}
-			</div>
-		}
-	}
-</section>
+          <div class="cart-confirmation__actions">
+            <a app-button class="app-btn app-btn--navy-solid cart-confirmation__btn" routerLink="/Productos">
+              Seguir comprando
+            </a>
+            @if (isAuthenticated) {
+              <a app-button class="app-btn app-btn--line-navy cart-confirmation__btn" routerLink="/cuenta">
+                Ver mis pedidos
+              </a>
+            } @else {
+              <a app-button class="app-btn app-btn--line-navy cart-confirmation__btn" routerLink="/Inicio">
+                Volver al inicio
+              </a>
+            }
+          </div>
+        </div>
+      </section>
+    } @else {
+      <!-- View 2: Active Cart or Empty -->
+      @if (items$ | async; as items) {
+        @if (items.length === 0) {
+          <section class="cart-empty" aria-label="Carrito vacío">
+            <div class="cart-empty__icon-wrap">
+              <app-icon name="cart" size="lg"></app-icon>
+            </div>
+            <p class="cart-empty__eyebrow">CARRITO DE COMPRAS</p>
+            <h2 class="cart-empty__title">Tu carrito está vacío</h2>
+            <p class="cart-empty__lead">
+              Aún no has agregado productos a tu orden. Explora nuestro catálogo de hardware, accesorios, redes y servidores para armar tu pedido.
+            </p>
+            <a app-button class="app-btn app-btn--navy-solid cart-empty__btn" routerLink="/Productos">
+              Explorar catálogo
+            </a>
+          </section>
+        } @else {
+          <!-- Two Columns Layout: Items + Form (Left) and Sticky Summary (Right) -->
+          @if (summary$ | async; as summary) {
+            <div class="cart-grid">
+              <!-- Left Column: Items List & Checkout Form -->
+              <div class="cart-main-col">
+                <!-- Section 1: Cart Items -->
+                <section class="cart-section" aria-labelledby="items-heading">
+                  <header class="cart-section__header">
+                    <div>
+                      <span class="cart-section__badge">{{ items.length }} {{ items.length === 1 ? 'artículo' : 'artículos' }}</span>
+                      <h2 id="items-heading" class="cart-section__title">Equipos en tu pedido</h2>
+                    </div>
+                    <button type="button" class="cart-section__clear-btn" (click)="clear()" title="Vaciar todos los productos">
+                      <app-icon name="trash" size="sm"></app-icon>
+                      <span>Vaciar carrito</span>
+                    </button>
+                  </header>
+
+                  <div class="cart-items-list">
+                    @for (item of items; track item.product._id) {
+                      <article class="cart-item-card">
+                        <div class="cart-item-card__media">
+                          <img
+                            [src]="item.product.images[0] || 'assets/pictures/placeholder.png'"
+                            [alt]="item.product.name"
+                            loading="lazy"
+                          />
+                        </div>
+
+                        <div class="cart-item-card__body">
+                          <div class="cart-item-card__header">
+                            <span class="cart-item-card__sku">{{ item.product.categoryId | uppercase }}</span>
+                            <h3 class="cart-item-card__title">{{ item.product.name }}</h3>
+                          </div>
+
+                          <div class="cart-item-card__pricing">
+                            <span class="cart-item-card__unit-price">
+                              {{ item.product.price | currency:'COP':'symbol':'1.0-0' }} c/u
+                            </span>
+                            <span class="cart-item-card__subtotal">
+                              {{ (item.product.price * item.quantity) | currency:'COP':'symbol':'1.0-0' }}
+                            </span>
+                          </div>
+
+                          <div class="cart-item-card__footer">
+                            <div class="cart-qty-stepper" aria-label="Cantidad">
+                              <button
+                                type="button"
+                                class="cart-qty-stepper__btn"
+                                (click)="decrease(item)"
+                                [title]="item.quantity === 1 ? 'Eliminar del carrito' : 'Disminuir cantidad'"
+                                aria-label="Disminuir cantidad"
+                              >
+                                -
+                              </button>
+                              <span class="cart-qty-stepper__val">{{ item.quantity }}</span>
+                              <button
+                                type="button"
+                                class="cart-qty-stepper__btn"
+                                (click)="increase(item)"
+                                aria-label="Aumentar cantidad"
+                              >
+                                +
+                              </button>
+                            </div>
+
+                            <button
+                              type="button"
+                              class="cart-item-card__remove-btn"
+                              (click)="remove(item)"
+                              title="Eliminar este producto"
+                            >
+                              <app-icon name="trash" size="sm"></app-icon>
+                              <span>Eliminar</span>
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    }
+                  </div>
+                </section>
+
+                <!-- Section 2: Checkout / Shipping Form -->
+                <form class="cart-form" (ngSubmit)="sendWhatsApp(items, summary.subtotal)">
+                  <!-- 2.1 Datos de contacto -->
+                  <fieldset class="cart-fieldset">
+                    <legend class="cart-fieldset__legend">
+                      <span class="cart-fieldset__num">1</span>
+                      <span>Datos del cliente y facturación</span>
+                    </legend>
+
+                    <div class="cart-form__grid">
+                      <div class="cart-field" [class.cart-field--error]="isFieldInvalid('nombre')">
+                        <label for="nombre" class="cart-field__label">
+                          Nombre completo <span class="cart-field__req">*</span>
+                        </label>
+                        <input
+                          id="nombre"
+                          type="text"
+                          class="cart-field__input"
+                          placeholder="Ej: Ana Silva Moreno"
+                          [(ngModel)]="form.nombre"
+                          name="nombre"
+                          required
+                        />
+                        @if (isFieldInvalid('nombre')) {
+                          <span class="cart-field__msg">El nombre completo es obligatorio.</span>
+                        }
+                      </div>
+
+                      <div class="cart-field" [class.cart-field--error]="isFieldInvalid('documento')">
+                        <label for="documento" class="cart-field__label">
+                          Cédula de ciudadanía o NIT <span class="cart-field__req">*</span>
+                        </label>
+                        <input
+                          id="documento"
+                          type="text"
+                          class="cart-field__input"
+                          placeholder="Ej: 1.020.345.678"
+                          [(ngModel)]="form.documento"
+                          name="documento"
+                          required
+                        />
+                        @if (isFieldInvalid('documento')) {
+                          <span class="cart-field__msg">El documento o NIT es obligatorio.</span>
+                        }
+                      </div>
+
+                      <div class="cart-field" [class.cart-field--error]="isFieldInvalid('correo')">
+                        <label for="correo" class="cart-field__label">
+                          Correo electrónico <span class="cart-field__req">*</span>
+                        </label>
+                        <input
+                          id="correo"
+                          type="email"
+                          class="cart-field__input"
+                          placeholder="Ej: ana.silva@empresa.com"
+                          [(ngModel)]="form.correo"
+                          name="correo"
+                          required
+                        />
+                        @if (isFieldInvalid('correo')) {
+                          <span class="cart-field__msg">El correo electrónico es obligatorio.</span>
+                        }
+                      </div>
+
+                      <div class="cart-field" [class.cart-field--error]="isFieldInvalid('telefono')">
+                        <label for="telefono" class="cart-field__label">
+                          Teléfono celular o WhatsApp <span class="cart-field__req">*</span>
+                        </label>
+                        <input
+                          id="telefono"
+                          type="tel"
+                          class="cart-field__input"
+                          placeholder="Ej: 316 320 2647"
+                          [(ngModel)]="form.telefono"
+                          name="telefono"
+                          required
+                        />
+                        @if (isFieldInvalid('telefono')) {
+                          <span class="cart-field__msg">El teléfono es obligatorio.</span>
+                        }
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <!-- 2.2 Método de entrega -->
+                  <fieldset class="cart-fieldset">
+                    <legend class="cart-fieldset__legend">
+                      <span class="cart-fieldset__num">2</span>
+                      <span>Método y dirección de entrega</span>
+                    </legend>
+
+                    <div class="delivery-options">
+                      <label
+                        class="delivery-option"
+                        [class.delivery-option--selected]="form.entrega === 'domicilio'"
+                      >
+                        <input
+                          type="radio"
+                          name="entrega"
+                          value="domicilio"
+                          [(ngModel)]="form.entrega"
+                          class="delivery-option__radio"
+                        />
+                        <div class="delivery-option__content">
+                          <div class="delivery-option__header">
+                            <span class="delivery-option__title">Envío a domicilio</span>
+                            <span class="delivery-option__badge">
+                              {{ summary.subtotal >= 2000000 ? 'Envío gratis' : '$ 25.000 COP' }}
+                            </span>
+                          </div>
+                          <p class="delivery-option__desc">
+                            Entrega en Bogotá D.C. en 1 a 2 días hábiles · Resto del país 3 a 5 días con transportadora certificada.
+                          </p>
+                        </div>
+                      </label>
+
+                      <label
+                        class="delivery-option"
+                        [class.delivery-option--selected]="form.entrega === 'tienda'"
+                      >
+                        <input
+                          type="radio"
+                          name="entrega"
+                          value="tienda"
+                          [(ngModel)]="form.entrega"
+                          class="delivery-option__radio"
+                        />
+                        <div class="delivery-option__content">
+                          <div class="delivery-option__header">
+                            <span class="delivery-option__title">Recoger en sede principal</span>
+                            <span class="delivery-option__badge delivery-option__badge--free">Sin costo</span>
+                          </div>
+                          <p class="delivery-option__desc">
+                            Retiro inmediato en Bogotá D.C. previa confirmación de alistamiento con el asesor.
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div class="cart-form__grid">
+                      <div class="cart-field" [class.cart-field--error]="isFieldInvalid('ciudad')">
+                        <label for="ciudad" class="cart-field__label">
+                          Ciudad <span class="cart-field__req">*</span>
+                        </label>
+                        <input
+                          id="ciudad"
+                          type="text"
+                          class="cart-field__input"
+                          placeholder="Ej: Bogotá D.C."
+                          [(ngModel)]="form.ciudad"
+                          name="ciudad"
+                          required
+                        />
+                        @if (isFieldInvalid('ciudad')) {
+                          <span class="cart-field__msg">La ciudad es obligatoria.</span>
+                        }
+                      </div>
+
+                      @if (form.entrega === 'domicilio') {
+                        <div class="cart-field" [class.cart-field--error]="isFieldInvalid('direccion')">
+                          <label for="direccion" class="cart-field__label">
+                            Dirección de entrega <span class="cart-field__req">*</span>
+                          </label>
+                          <input
+                            id="direccion"
+                            type="text"
+                            class="cart-field__input"
+                            placeholder="Ej: Cra 45 # 23-10"
+                            [(ngModel)]="form.direccion"
+                            name="direccion"
+                            required
+                          />
+                          @if (isFieldInvalid('direccion')) {
+                            <span class="cart-field__msg">La dirección es obligatoria para envío a domicilio.</span>
+                          }
+                        </div>
+
+                        <div class="cart-field cart-field--full">
+                          <label for="detalle" class="cart-field__label">
+                            Apartamento, oficina o indicaciones (opcional)
+                          </label>
+                          <input
+                            id="detalle"
+                            type="text"
+                            class="cart-field__input"
+                            placeholder="Ej: Torre B, Piso 4, Oficina 402 — Timbre 102"
+                            [(ngModel)]="form.detalle"
+                            name="detalle"
+                          />
+                        </div>
+                      }
+                    </div>
+
+                    <div class="cart-field cart-field--full" style="margin-top: 16px;">
+                      <label for="notas" class="cart-field__label">
+                        Notas para el pedido o facturación electrónica (opcional)
+                      </label>
+                      <textarea
+                        id="notas"
+                        class="cart-field__textarea"
+                        rows="3"
+                        placeholder="¿Requieres factura electrónica a nombre de empresa, entrega en horario específico o configuración previa de equipos?"
+                        [(ngModel)]="form.notas"
+                        name="notas"
+                      ></textarea>
+                    </div>
+                  </fieldset>
+
+                  <!-- Reassurance callout -->
+                  <div class="checkout-callout">
+                    <div class="checkout-callout__icon">
+                      <app-icon name="lock" size="md"></app-icon>
+                    </div>
+                    <div class="checkout-callout__text">
+                      <p class="checkout-callout__title">Proceso de pago y despacho seguro</p>
+                      <p class="checkout-callout__desc">
+                        Al enviar tu pedido, nuestro equipo comercial valida el stock físico en bodega y te contacta de inmediato para acordar la forma de pago (Transferencia Bancolombia, PSE, tarjeta o pago contra entrega según cobertura).
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Submit Action Buttons -->
+                  <div class="checkout-actions">
+                    <button
+                      app-button
+                      type="submit"
+                      class="app-btn checkout-actions__btn checkout-actions__btn--wa"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" class="checkout-actions__wa-icon">
+                        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.9C17.18 3.03 14.69 2 12.04 2ZM12.05 20.15C10.57 20.15 9.12 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.68 12.05 3.68C14.25 3.68 16.32 4.54 17.88 6.1C19.44 7.66 20.3 9.72 20.3 11.92C20.3 16.46 16.6 20.15 12.05 20.15ZM16.57 14.39C16.32 14.27 15.1 13.67 14.87 13.58C14.65 13.5 14.48 13.46 14.32 13.71C14.15 13.96 13.68 14.51 13.53 14.68C13.39 14.85 13.24 14.87 12.99 14.75C12.74 14.62 11.94 14.36 10.99 13.51C10.25 12.85 9.75 12.04 9.6 11.79C9.46 11.54 9.59 11.41 9.71 11.28C9.82 11.17 9.96 10.99 10.08 10.84C10.21 10.7 10.25 10.59 10.33 10.43C10.42 10.26 10.37 10.12 10.31 10C10.25 9.87 9.75 8.65 9.54 8.15C9.34 7.66 9.14 7.73 8.98 7.72C8.83 7.71 8.66 7.71 8.49 7.71C8.33 7.71 8.06 7.77 7.83 8.02C7.6 8.27 6.96 8.87 6.96 10.09C6.96 11.31 7.85 12.49 7.97 12.65C8.1 12.82 9.71 15.3 12.18 16.36C12.77 16.61 13.22 16.76 13.58 16.88C14.17 17.07 14.71 17.04 15.13 16.98C15.6 16.91 16.57 16.39 16.78 15.81C16.98 15.23 16.98 14.73 16.92 14.63C16.86 14.52 16.82 14.51 16.57 14.39Z"/>
+                      </svg>
+                      <span>Enviar pedido por WhatsApp</span>
+                    </button>
+
+                    <button
+                      app-button
+                      type="button"
+                      class="app-btn app-btn--line-navy checkout-actions__btn"
+                      (click)="sendEmail(items, summary.subtotal)"
+                    >
+                      <span>Enviar por correo electrónico</span>
+                    </button>
+
+                    @if (isAuthenticated) {
+                      <button
+                        app-button
+                        type="button"
+                        class="app-btn app-btn--navy-solid checkout-actions__btn"
+                        (click)="sendOnline(items, summary.subtotal)"
+                      >
+                        <span>Confirmar orden en línea</span>
+                      </button>
+                    }
+                  </div>
+                </form>
+              </div>
+
+              <!-- Right Column: Sticky Summary -->
+              <aside class="cart-summary-col">
+                <div class="cart-summary-card">
+                  <h2 class="cart-summary-card__title">Resumen de compra</h2>
+
+                  <div class="cart-summary-items">
+                    @for (item of items; track item.product._id) {
+                      <div class="cart-summary-item">
+                        <span class="cart-summary-item__name">
+                          <strong>{{ item.quantity }}×</strong> {{ item.product.name }}
+                        </span>
+                        <span class="cart-summary-item__price">
+                          {{ (item.product.price * item.quantity) | currency:'COP':'symbol':'1.0-0' }}
+                        </span>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="cart-summary-calc">
+                    <div class="cart-summary-calc__row">
+                      <span>Subtotal</span>
+                      <strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+                    </div>
+
+                    <div class="cart-summary-calc__row">
+                      <span>Envío</span>
+                      <strong>
+                        @if (getShippingCost(summary.subtotal) === 0) {
+                          <span class="cart-summary-calc__free">Sin costo</span>
+                        } @else {
+                          {{ getShippingCost(summary.subtotal) | currency:'COP':'symbol':'1.0-0' }}
+                        }
+                      </strong>
+                    </div>
+
+                    <div class="cart-summary-calc__row">
+                      <span>IVA (19% incluido)</span>
+                      <strong>{{ summary.tax | currency:'COP':'symbol':'1.0-0' }}</strong>
+                    </div>
+                  </div>
+
+                  <div class="cart-summary-total">
+                    <span class="cart-summary-total__label">Total COP</span>
+                    <span class="cart-summary-total__amount">
+                      {{ getTotal(summary.subtotal) | currency:'COP':'symbol':'1.0-0' }}
+                    </span>
+                  </div>
+
+                  <div class="cart-summary-benefits">
+                    <div class="cart-summary-benefit">
+                      <span class="cart-summary-benefit__icon">✓</span>
+                      <span>Garantía oficial y soporte directo Tecsisman</span>
+                    </div>
+                    <div class="cart-summary-benefit">
+                      <span class="cart-summary-benefit__icon">✓</span>
+                      <span>Factura electrónica legal DIAN</span>
+                    </div>
+                    <div class="cart-summary-benefit">
+                      <span class="cart-summary-benefit__icon">✓</span>
+                      <span>Asesoría técnica antes de efectuar el pago</span>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          }
+        }
+      }
+    }
+  </div>
+</main>

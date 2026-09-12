@@ -1,41 +1,110 @@
-<section class="services-hero">
-  <div class="app-container services-hero__content">
-    <p class="services-hero__eyebrow">Soluciones tecnicas para crecer con confianza</p>
-    <h1 class="cta-title">Convertimos tus retos en resultados medibles</h1>
-    <p class="muted subtitle">
-      Disenamos, implementamos y damos soporte a plataformas digitales para que tu empresa
-      venda mas, opere mejor y escale sin fricciones.
-    </p>
-
-    <ul class="services-hero__trust" aria-label="Indicadores de confianza">
-      <li>Entrega incremental</li>
-      <li>Arquitectura mantenible</li>
-      <li>Acompanamiento continuo</li>
-    </ul>
-
-    <div class="services-hero__actions">
-      <a app-button class="app-btn app-btn--gradient cta-btn" routerLink="/Contacto">Agenda una asesoria</a>
-      <a app-button class="app-btn app-btn--inverse cta-btn" routerLink="/Productos">Ver soluciones</a>
+<main class="services-page">
+  <!-- 1. Hero Section (Exact Match to Image 1) -->
+  <header class="services-hero">
+    <div class="app-container">
+      <div class="services-hero__content">
+        <p class="services-hero__eyebrow">SERVICIOS</p>
+        <h1 class="services-hero__title">Cuatro frentes, un mismo estándar.</h1>
+        <p class="services-hero__subtitle">
+          Cada proyecto se documenta, se prueba y se entrega con acompañamiento directo. Así trabajamos en cada uno.
+        </p>
+      </div>
     </div>
-  </div>
-  <div class="services-hero__bg" aria-hidden="true"></div>
-</section>
+  </header>
 
-<section class="section">
-  <div class="app-container services-sections">
-    <app-services-showcase />
-  </div>
-</section>
-
-<section class="services-cta section">
-  <div class="app-container services-cta__card">
-    <div>
-      <p class="services-cta__eyebrow">Listo para avanzar</p>
-      <h2>Cuéntanos tu necesidad y te proponemos un plan concreto</h2>
-      <p>
-        Recibe una propuesta tecnica clara con tiempos, alcance y siguientes pasos para iniciar con seguridad.
-      </p>
+  <!-- 2. The 4 Pillars 2x2 Grid (Exact Match to Image 1) -->
+  <section class="services-pillars" aria-label="Frentes principales de servicio">
+    <div class="app-container">
+      <div class="services-pillars__grid">
+        @for (s of services; track s.n) {
+          <article class="pillar-card">
+            <span class="pillar-card__number">{{ s.n }}</span>
+            <h2 class="pillar-card__title">{{ s.title }}</h2>
+            <p class="pillar-card__text">{{ s.text }}</p>
+            <button
+              app-button
+              type="button"
+              class="app-btn app-btn--line-navy pillar-card__btn"
+              (click)="requestQuote(s.title)"
+            >
+              Solicitar cotización
+            </button>
+          </article>
+        }
+      </div>
     </div>
-    <a app-button class="app-btn app-btn--gradient services-cta__button" routerLink="/Contacto">Solicitar propuesta</a>
-  </div>
-</section>
+  </section>
+
+  <!-- 3. Detailed Catalog Section (Images 3 & 4) -->
+  <section class="services-catalog" aria-label="Catálogo detallado de servicios">
+    <div class="app-container">
+      <div class="services-catalog__sections">
+        @for (group of serviceGroups; track group.id) {
+          <article class="service-category-block" [id]="group.id">
+            <header class="service-category-block__header">
+              <div class="service-category-block__meta">
+                <span class="service-category-block__eyebrow">{{ group.eyebrow }}</span>
+                <h2 class="service-category-block__title">{{ group.title }}</h2>
+              </div>
+              <p class="service-category-block__lead">{{ group.lead }}</p>
+            </header>
+
+            <div
+              class="service-category-block__grid"
+              [ngClass]="{
+                'service-category-block__grid--duo': group.cards.length === 2,
+                'service-category-block__grid--trio': group.cards.length === 3,
+                'service-category-block__grid--multi': group.cards.length > 3
+              }"
+            >
+              @for (card of group.cards; track card.id) {
+                <app-card [data]="card" (actionClick)="onCardAction($event)"></app-card>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Methodology / How We Work Section (Image 5) -->
+  <section class="services-process" aria-label="Metodología y proceso">
+    <div class="app-container">
+      <header class="services-process__header">
+        <p class="services-process__eyebrow">CÓMO TRABAJAMOS</p>
+        <h2 class="services-process__title">Metodología ágil y transparente.</h2>
+      </header>
+
+      <div class="services-process__grid">
+        <article class="process-step">
+          <span class="process-step__number">01</span>
+          <h3 class="process-step__title">Diagnóstico y alcance</h3>
+          <p class="process-step__text">Analizamos tu requerimiento técnico, definimos la arquitectura y te entregamos un presupuesto claro sin costos ocultos.</p>
+        </article>
+
+        <article class="process-step">
+          <span class="process-step__number">02</span>
+          <h3 class="process-step__title">Implementación y pruebas</h3>
+          <p class="process-step__text">Ejecución directa por ingenieros bajo estándares de la industria, con pruebas exhaustivas de rendimiento y seguridad.</p>
+        </article>
+
+        <article class="process-step">
+          <span class="process-step__number">03</span>
+          <h3 class="process-step__title">Documentación y soporte</h3>
+          <p class="process-step__text">Entrega formal con memorias técnicas, planos de red, credenciales y acompañamiento continuo post-implementación.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CTA Final Banner -->
+  <section class="services-cta" aria-label="Solicitar cotización">
+    <div class="app-container services-cta__container">
+      <div class="services-cta__copy">
+        <h2 class="services-cta__title">¿Tienes un proyecto en mente?</h2>
+        <p class="services-cta__lead">Cuéntanos qué necesitas y te respondemos con alcance y presupuesto.</p>
+      </div>
+      <a app-button class="app-btn app-btn--lime services-cta__button" routerLink="/Contacto">Solicitar cotización</a>
+    </div>
+  </section>
+</main>

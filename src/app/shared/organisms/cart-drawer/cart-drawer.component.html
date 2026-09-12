@@ -13,60 +13,141 @@
   [attr.aria-hidden]="!((isOpen$ | async) ?? false)"
   [attr.aria-modal]="((isOpen$ | async) ?? false) ? true : null"
 >
-    <header class="cart-drawer__header">
-      <h2>Tus productos</h2>
-      <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__close" (click)="close()" aria-label="Cerrar carrito">
-        <app-icon name="close" size="md"></app-icon>
-      </button>
-    </header>
+  <header class="cart-drawer__header">
+    <div class="cart-drawer__title-wrap">
+      <span class="cart-drawer__eyebrow">PEDIDO ACTUAL</span>
+      <h2 class="cart-drawer__title">Tus productos</h2>
+    </div>
+    <button
+      type="button"
+      class="cart-drawer__close"
+      (click)="close()"
+      aria-label="Cerrar carrito"
+    >
+      <app-icon name="close" size="md"></app-icon>
+    </button>
+  </header>
 
-    @if (checkoutMessage) {
-      <p class="cart-drawer__feedback cart-drawer__feedback--success">{{ checkoutMessage }}</p>
-    }
-    @if (checkoutError) {
-      <p class="cart-drawer__feedback cart-drawer__feedback--error">{{ checkoutError }}</p>
-    }
-
-    @if (items$ | async; as items) {
-      <section class="cart-drawer__content">
-        @if (items.length === 0) {
-          <article class="cart-drawer__empty">
-            <p>Tu carrito esta vacio</p>
-            <a routerLink="/Productos" (click)="close()">Explorar catalogo</a>
-          </article>
-        } @else {
-          <div class="cart-drawer__items">
-            @for (item of items; track item.product._id) {
-              <article class="cart-drawer__item">
-                <img [src]="item.product.images[0] || 'assets/pictures/placeholder.png'" [alt]="item.product.name" />
-
-                <div class="cart-drawer__meta">
-                  <h3>{{ item.product.name }}</h3>
-                  <p>{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</p>
-                </div>
-
-                <div class="cart-drawer__controls">
-                  <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__qty-btn" (click)="decrease(item)">-</button>
-                  <span>{{ item.quantity }}</span>
-                  <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__qty-btn" (click)="increase(item)">+</button>
-                </div>
-
-                <button app-button class="app-btn app-btn--danger cart-drawer__remove" type="button" (click)="remove(item)">Eliminar</button>
-              </article>
-            }
+  @if (items$ | async; as items) {
+    <div class="cart-drawer__body">
+      @if (items.length === 0) {
+        <div class="cart-drawer__empty">
+          <div class="cart-drawer__empty-icon">
+            <app-icon name="cart" size="lg"></app-icon>
           </div>
+          <h3 class="cart-drawer__empty-title">Tu carrito está vacío</h3>
+          <p class="cart-drawer__empty-text">
+            Agrega productos o componentes desde el catálogo para iniciar tu orden.
+          </p>
+          <a
+            app-button
+            class="app-btn app-btn--lime cart-drawer__empty-btn"
+            routerLink="/Productos"
+            (click)="close()"
+          >
+            Explorar catálogo
+          </a>
+        </div>
+      } @else {
+        <div class="cart-drawer__list">
+          @for (item of items; track item.product._id) {
+            <article class="cart-drawer-item">
+              <div class="cart-drawer-item__media">
+                <img
+                  [src]="item.product.images[0] || 'assets/pictures/placeholder.png'"
+                  [alt]="item.product.name"
+                  loading="lazy"
+                />
+              </div>
 
-          @if (summary$ | async; as summary) {
-            <footer class="cart-drawer__summary">
-              <p><span>Subtotal:</span><strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong></p>
-              <p><span>Envio:</span><strong>$ 0</strong></p>
-              <p class="cart-drawer__total"><span>Total:</span><strong>{{ summary.total | currency:'COP':'symbol':'1.0-0' }}</strong></p>
+              <div class="cart-drawer-item__content">
+                <div class="cart-drawer-item__top">
+                  <span class="cart-drawer-item__tag">{{ item.product.categoryId | uppercase }}</span>
+                  <h3 class="cart-drawer-item__name">{{ item.product.name }}</h3>
+                </div>
 
-              <button app-button type="button" class="app-btn app-btn--gradient cart-drawer__primary" (click)="checkout(items)">Iniciar pedido</button>
-              <button app-button type="button" class="app-btn app-btn--inverse cart-drawer__ghost" (click)="clear()">Vaciar carrito</button>
-            </footer>
+                <div class="cart-drawer-item__pricing">
+                  <span class="cart-drawer-item__unit">{{ item.product.price | currency:'COP':'symbol':'1.0-0' }}</span>
+                  <strong class="cart-drawer-item__total">{{ (item.product.price * item.quantity) | currency:'COP':'symbol':'1.0-0' }}</strong>
+                </div>
+
+                <div class="cart-drawer-item__bottom">
+                  <div class="cart-drawer-item__stepper">
+                    <button
+                      type="button"
+                      class="cart-drawer-item__step-btn"
+                      (click)="decrease(item)"
+                      aria-label="Disminuir cantidad"
+                    >
+                      -
+                    </button>
+                    <span class="cart-drawer-item__qty">{{ item.quantity }}</span>
+                    <button
+                      type="button"
+                      class="cart-drawer-item__step-btn"
+                      (click)="increase(item)"
+                      aria-label="Aumentar cantidad"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="cart-drawer-item__delete-btn"
+                    (click)="remove(item)"
+                    title="Eliminar producto"
+                  >
+                    <app-icon name="trash" size="sm"></app-icon>
+                    <span>Eliminar</span>
+                  </button>
+                </div>
+              </div>
+            </article>
           }
+        </div>
+
+        @if (summary$ | async; as summary) {
+          <footer class="cart-drawer__footer">
+            <div class="cart-drawer__calc">
+              <div class="cart-drawer__calc-row">
+                <span>Subtotal ({{ summary.itemsCount }} items)</span>
+                <strong>{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+              </div>
+              <div class="cart-drawer__calc-row">
+                <span>Envío estimado</span>
+                <strong class="cart-drawer__free-shipping">
+                  {{ summary.subtotal >= 2000000 ? 'Gratis' : 'Calculado en checkout' }}
+                </strong>
+              </div>
+              <div class="cart-drawer__calc-row cart-drawer__calc-row--total">
+                <span>Total</span>
+                <strong class="cart-drawer__total-price">{{ summary.subtotal | currency:'COP':'symbol':'1.0-0' }}</strong>
+              </div>
+            </div>
+
+            <div class="cart-drawer__actions">
+              <a
+                app-button
+                class="app-btn app-btn--lime cart-drawer__btn cart-drawer__btn--primary"
+                routerLink="/carrito"
+                (click)="close()"
+              >
+                Ir a pagar y completar pedido
+              </a>
+
+              <button
+                app-button
+                type="button"
+                class="app-btn app-btn--line-inverse cart-drawer__btn cart-drawer__btn--clear"
+                (click)="clear()"
+              >
+                Vaciar carrito
+              </button>
+            </div>
+          </footer>
         }
-      </section>
-    }
-  </aside>
+      }
+    </div>
+  }
+</aside>
